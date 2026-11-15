@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Mark-and-Sweep Garbage Collection Work? - classical-computing</title>
+    <meta name="description" content="Mark-and-sweep is a foundational tracing garbage collection algorithm used in classical computing to automatically reclaim memory occupied by objects that a program can no longer reach. It operates in two distinct phases: first, it traverses the object gr">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-mark-and-sweep-garbage-collection-work">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Mark-and-Sweep Garbage Collection Work? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-mark-and-sweep-garbage-collection-work" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Mark-and-sweep is a foundational tracing garbage collection algorithm used in classical computing to automatically reclaim memory occupied by objects that a program can no longer reach. It operates in two distinct phases: first, it traverses the object gr" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-mark-and-sweep-garbage-collection-work">How Does
+Mark-and-Sweep Garbage Collection Work?</h1>
+<p>Mark-and-sweep is a foundational tracing garbage collection algorithm
+used in classical computing to automatically reclaim memory occupied by
+objects that a program can no longer reach. It operates in two distinct
+phases: first, it traverses the object graph starting from known root
+references to mark all reachable objects, and second, it scans the
+entire heap to sweep away and free any unmarked objects.</p>
+<h2 id="the-reachability-problem-and-the-root-set">The Reachability
+Problem and the Root Set</h2>
+<p>In dynamic memory management, an object allocated on the heap is
+considered <strong>live</strong> if the running program can still access
+it through a chain of references. Conversely, an object is
+<strong>unreachable</strong> (or dead) if no such path exists.</p>
+<p>To determine liveness, the garbage collector begins from a set of
+directly accessible references known as the <strong>root set</strong>
+(<span class="math inline">\(R\)</span>). Typical roots include:</p>
+<ul>
+<li>Local variables and parameters on the call stack</li>
+<li>CPU registers holding object references</li>
+<li>Global and static variables</li>
+<li>References held by native or runtime internals</li>
+</ul>
+<p>Any object <span class="math inline">\(v\)</span> in the heap <span
+class="math inline">\(H\)</span> is reachable if and only if there is a
+directed path of pointers from some root <span class="math inline">\(r
+\in R\)</span> to <span class="math inline">\(v\)</span>.</p>
+<h2 id="phase-1-the-mark-phase">Phase 1: The Mark Phase</h2>
+<p>During the mark phase, the collector performs a graph
+traversal—commonly depth-first search (DFS) or breadth-first search
+(BFS)—starting from every reference in the root set.</p>
+<ol type="1">
+<li>Each object header contains a dedicated <strong>mark bit</strong>,
+initially set to <code>0</code> (unmarked).</li>
+<li>When the collector visits an object, it checks the mark bit. If it
+is <code>0</code>, the collector sets it to <code>1</code> and pushes
+the object's outgoing references onto a worklist (such as a mark
+stack).</li>
+<li>If an object is already marked (<code>1</code>), the collector skips
+it. This prevents infinite loops when traversing cyclic data structures,
+such as circular linked lists or graphs with back-edges.</li>
+</ol>
+<p>The mark phase terminates when the worklist is empty, at which point
+every reachable object has its mark bit set to <code>1</code>.</p>
+<h2 id="phase-2-the-sweep-phase">Phase 2: The Sweep Phase</h2>
+<p>Once marking is complete, the collector linearly scans the entire
+heap from start to finish:</p>
+<ol type="1">
+<li>If an object's mark bit is <code>0</code>, the object is
+unreachable. Its memory is reclaimed and returned to a <strong>free
+list</strong> (or allocator pool) for future allocations.</li>
+<li>If an object's mark bit is <code>1</code>, the object is live. The
+collector leaves it in place and resets its mark bit back to
+<code>0</code> in preparation for the next garbage collection
+cycle.</li>
+</ol>
+<h2 id="complexity-and-trade-offs">Complexity and Trade-offs</h2>
+<p>Let <span class="math inline">\(L\)</span> be the number of live
+(reachable) objects and <span class="math inline">\(H\)</span> be the
+total size of the heap. The time complexity of mark-and-sweep is:</p>
+<p><span class="math display">\[T = O(L + H)\]</span></p>
+<p>The mark phase takes <span class="math inline">\(O(L)\)</span> time
+because it only visits reachable objects, while the sweep phase takes
+<span class="math inline">\(O(H)\)</span> time because it must inspect
+every slot in the heap.</p>
+<p>Key advantages of mark-and-sweep include:</p>
+<ul>
+<li><strong>Handles cycles naturally:</strong> Unlike naive reference
+counting, cyclic references among unreachable objects are never marked
+and are cleanly reclaimed.</li>
+<li><strong>No object relocation:</strong> Objects remain at their
+original memory addresses, meaning pointers do not need to be
+updated.</li>
+</ul>
+<p>However, the algorithm also has notable drawbacks:</p>
+<ul>
+<li><strong>Stop-the-world pauses:</strong> Classical mark-and-sweep
+halts program execution during collection to prevent the mutator from
+altering the object graph mid-traversal.</li>
+<li><strong>Memory fragmentation:</strong> Because live objects are not
+moved, freeing dead objects can leave small, non-contiguous gaps in the
+heap, making large allocations harder over time.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-mark-and-sweep-garbage-collection-work';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

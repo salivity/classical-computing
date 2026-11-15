@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Fixed-Point Arithmetic Ensure Precision? - classical-computing</title>
+    <meta name="description" content="Fixed-point arithmetic provides a deterministic and hardware-efficient method for representing fractional numbers on low-power processors that lack dedicated floating-point units. By fixing the position of the radix point within a standard integer registe">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-fixed-point-arithmetic-ensure-precision">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Fixed-Point Arithmetic Ensure Precision? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-fixed-point-arithmetic-ensure-precision" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Fixed-point arithmetic provides a deterministic and hardware-efficient method for representing fractional numbers on low-power processors that lack dedicated floating-point units. By fixing the position of the radix point within a standard integer registe" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-fixed-point-arithmetic-ensure-precision">How Does
+Fixed-Point Arithmetic Ensure Precision?</h1>
+<p>Fixed-point arithmetic provides a deterministic and
+hardware-efficient method for representing fractional numbers on
+low-power processors that lack dedicated floating-point units. By fixing
+the position of the radix point within a standard integer register,
+developers can perform fractional calculations using fast integer
+instructions. This approach guarantees identical, reproducible results
+across different hardware platforms while minimizing power consumption,
+memory usage, and silicon area.</p>
+<h2 id="representing-fractional-values-with-integers">Representing
+Fractional Values with Integers</h2>
+<p>In classical computing, a fixed-point number stores a scaled integer
+value where the scaling factor is a fixed power of two. A common
+convention is the <span class="math inline">\(Q_{m.n}\)</span> format,
+which uses <span class="math inline">\(m\)</span> bits for the integer
+part and <span class="math inline">\(n\)</span> bits for the fractional
+part. For a signed <span class="math inline">\(N\)</span>-bit integer
+stored in two's complement, <span class="math inline">\(N = m + n +
+1\)</span> (including the sign bit), or <span class="math inline">\(N =
+m + n\)</span> when <span class="math inline">\(m\)</span> includes the
+sign bit.</p>
+<p>The real value <span class="math inline">\(V\)</span> represented by
+a stored integer <span class="math inline">\(I\)</span> with <span
+class="math inline">\(n\)</span> fractional bits is:</p>
+<p><span class="math display">\[V = I \times 2^{-n}\]</span></p>
+<p>Because the scaling factor <span
+class="math inline">\(2^{-n}\)</span> is known at compile time, the
+processor does not need to store or manipulate an exponent at runtime.
+The resolution (the smallest representable difference between two
+adjacent numbers) is constant across the entire representable range and
+equals <span class="math inline">\(2^{-n}\)</span>. This uniform spacing
+contrasts with floating-point representation, where precision varies
+with the magnitude of the number.</p>
+<h2 id="arithmetic-operations-and-bitwise-scaling">Arithmetic Operations
+and Bitwise Scaling</h2>
+<p>Low-power microcontrollers and digital signal processors (DSPs)
+execute fixed-point operations using standard integer arithmetic logic
+units (ALUs).</p>
+<ul>
+<li><strong>Addition and Subtraction:</strong> When two numbers share
+the same <span class="math inline">\(Q_{m.n}\)</span> format, they are
+added or subtracted directly as integers. The radix point remains
+aligned without extra instructions.</li>
+<li><strong>Multiplication:</strong> Multiplying two <span
+class="math inline">\(Q_{m.n}\)</span> numbers produces a product with
+<span class="math inline">\(2n\)</span> fractional bits: <span
+class="math display">\[(I_1 \times 2^{-n}) \times (I_2 \times 2^{-n}) =
+(I_1 \times I_2) \times 2^{-2n}\]</span> To return the result to the
+original <span class="math inline">\(Q_{m.n}\)</span> format, the
+integer product is right-shifted by <span
+class="math inline">\(n\)</span> bits.</li>
+<li><strong>Division:</strong> Dividing two <span
+class="math inline">\(Q_{m.n}\)</span> numbers cancels the scaling
+factors. To preserve fractional precision, the dividend is left-shifted
+by <span class="math inline">\(n\)</span> bits before performing integer
+division: <span class="math display">\[I_{\text{quotient}} =
+\left\lfloor \frac{I_1 \times 2^n}{I_2} \right\rfloor\]</span></li>
+</ul>
+<p>Because bit shifts and integer operations take a fixed number of
+clock cycles, execution time is predictable, which is critical for
+real-time control systems.</p>
+<h2 id="achieving-deterministic-behavior">Achieving Deterministic
+Behavior</h2>
+<p>Floating-point arithmetic can produce slightly different results
+across different compilers, optimization levels, or hardware
+architectures due to rounding modes, fused multiply-add instructions,
+and non-associativity. In contrast, fixed-point arithmetic is strictly
+deterministic because every operation maps directly to exact integer
+arithmetic and well-defined bit shifts.</p>
+<p>To maintain this determinism, software implementations must
+explicitly handle:</p>
+<ol type="1">
+<li><strong>Overflow and Saturation:</strong> Rather than allowing
+integer wraparound, which causes severe numerical errors, fixed-point
+systems often use saturating arithmetic. If a result exceeds the maximum
+or minimum representable value, it is clamped to the boundary.</li>
+<li><strong>Rounding:</strong> When right-shifting after multiplication,
+truncating the lower <span class="math inline">\(n\)</span> bits
+introduces a systematic negative bias. Adding <span
+class="math inline">\(2^{n-1}\)</span> before shifting implements
+round-to-nearest, reducing quantization error.</li>
+<li><strong>Dynamic Range Management:</strong> Developers must analyze
+the expected signal range at each stage of an algorithm to choose
+appropriate <span class="math inline">\(Q\)</span> formats, preventing
+both overflow and excessive quantization noise.</li>
+</ol>
+<h2 id="applications-on-low-power-hardware">Applications on Low-Power
+Hardware</h2>
+<p>Fixed-point arithmetic is widely used in embedded systems where
+energy efficiency and determinism are paramount. Examples include motor
+control loops, audio signal processing, sensor fusion in wearable
+devices, and battery-powered Internet of Things (IoT) nodes. By avoiding
+the power and latency overhead of software-emulated floating-point math,
+fixed-point algorithms enable complex real-time computations on simple,
+low-cost silicon.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-fixed-point-arithmetic-ensure-precision';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

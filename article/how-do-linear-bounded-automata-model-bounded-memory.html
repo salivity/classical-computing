@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Linear Bounded Automata Model Bounded Memory? - classical-computing</title>
+    <meta name="description" content="Linear bounded automata model computation with memory proportional to input length by restricting a Turing machine&#39;s tape to the exact cells occupied by the input string. Unlike standard Turing machines that can expand onto an infinite tape, a linear boun">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-linear-bounded-automata-model-bounded-memory">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Linear Bounded Automata Model Bounded Memory? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-linear-bounded-automata-model-bounded-memory" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Linear bounded automata model computation with memory proportional to input length by restricting a Turing machine&#39;s tape to the exact cells occupied by the input string. Unlike standard Turing machines that can expand onto an infinite tape, a linear boun" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-linear-bounded-automata-model-bounded-memory">How Do
+Linear Bounded Automata Model Bounded Memory?</h1>
+<p>Linear bounded automata model computation with memory proportional to
+input length by restricting a Turing machine's tape to the exact cells
+occupied by the input string. Unlike standard Turing machines that can
+expand onto an infinite tape, a linear bounded automaton must perform
+all its read and write operations within fixed boundaries marked at the
+ends of the input. This simple constraint captures the class of
+context-sensitive languages and corresponds directly to linear-space
+computation in classical complexity theory.</p>
+<h2 id="formal-structure-of-a-linear-bounded-automaton">Formal Structure
+of a Linear Bounded Automaton</h2>
+<p>A linear bounded automaton (LBA) is a restricted nondeterministic
+Turing machine. Formally, it is defined as a tuple <span
+class="math inline">\(M = (Q, \Sigma, \Gamma, \delta, q_0,
+q_{\text{accept}}, q_{\text{reject}})\)</span>, where:</p>
+<ul>
+<li><span class="math inline">\(Q\)</span> is a finite set of
+states.</li>
+<li><span class="math inline">\(\Sigma\)</span> is the input alphabet,
+which includes two special end-marker symbols, <span
+class="math inline">\(\triangleleft\)</span> (left end-marker) and <span
+class="math inline">\(\triangleright\)</span> (right end-marker).</li>
+<li><span class="math inline">\(\Gamma\)</span> is the tape alphabet,
+with <span class="math inline">\(\Sigma \subseteq \Gamma\)</span>.</li>
+<li><span class="math inline">\(\delta : Q \times \Gamma \rightarrow
+\mathcal{P}(Q \times \Gamma \times \{L, R\})\)</span> is the transition
+function.</li>
+<li><span class="math inline">\(q_0 \in Q\)</span> is the start state,
+while <span class="math inline">\(q_{\text{accept}}\)</span> and <span
+class="math inline">\(q_{\text{reject}}\)</span> are the halting
+states.</li>
+</ul>
+<p>For an input string <span class="math inline">\(w\)</span> of length
+<span class="math inline">\(n\)</span>, the tape initially contains
+<span class="math inline">\(\triangleleft w \triangleright\)</span>,
+occupying <span class="math inline">\(n + 2\)</span> cells. The
+transition function is restricted so that the machine cannot overwrite
+<span class="math inline">\(\triangleleft\)</span> or <span
+class="math inline">\(\triangleright\)</span>, nor can it move its
+read/write head past <span class="math inline">\(\triangleleft\)</span>
+to the left or past <span class="math inline">\(\triangleright\)</span>
+to the right.</p>
+<h2 id="how-tape-compression-achieves-linear-memory">How Tape
+Compression Achieves Linear Memory</h2>
+<p>At first glance, restricting the tape to <span
+class="math inline">\(n + 2\)</span> cells appears to limit memory
+strictly to <span class="math inline">\(n\)</span> cells rather than any
+constant multiple <span class="math inline">\(c \cdot n\)</span>.
+However, an LBA can simulate <span class="math inline">\(c \cdot
+n\)</span> memory cells by expanding its tape alphabet <span
+class="math inline">\(\Gamma\)</span>.</p>
+<p>If a machine requires <span class="math inline">\(c\)</span> tracks
+of memory of length <span class="math inline">\(n\)</span>, it can group
+<span class="math inline">\(c\)</span> symbols from a base alphabet into
+a single compound symbol in <span class="math inline">\(\Gamma\)</span>.
+The size of the new tape alphabet becomes <span
+class="math inline">\(|\Gamma|^c\)</span>. Since <span
+class="math inline">\(c\)</span> is a constant independent of the input
+length <span class="math inline">\(n\)</span>, this alphabet expansion
+is finite and valid within the formal definition. Through this
+technique, known as tape compression, an LBA with <span
+class="math inline">\(n + 2\)</span> tape cells can model any
+computation that uses <span class="math inline">\(O(n)\)</span>
+space.</p>
+<h2 id="computational-power-and-complexity-classes">Computational Power
+and Complexity Classes</h2>
+<p>Because LBAs are restricted to linear space, their computational
+power sits strictly between pushdown automata and unrestricted Turing
+machines:</p>
+<ul>
+<li><strong>Context-Sensitive Languages</strong>: A language is
+context-sensitive if and only if it is recognized by a nondeterministic
+linear bounded automaton.</li>
+<li><strong>Deterministic vs. Nondeterministic LBAs</strong>: A
+deterministic LBA (DLBA) recognizes languages in <span
+class="math inline">\(\text{DSPACE}(n)\)</span>, while a
+nondeterministic LBA (NLBA) recognizes languages in <span
+class="math inline">\(\text{NSPACE}(n)\)</span>. Whether <span
+class="math inline">\(\text{DSPACE}(n) = \text{NSPACE}(n)\)</span>
+remains an open problem in theoretical computer science, known as the
+LBA problem.</li>
+<li><strong>Closure Properties</strong>: The class of languages
+recognized by NLBAs is closed under complementation, a result proven by
+the Immerman–Szelepcsényi theorem, which showed that <span
+class="math inline">\(\text{NSPACE}(s(n)) =
+\text{co-NSPACE}(s(n))\)</span> for space-constructible functions <span
+class="math inline">\(s(n) \ge \log n\)</span>.</li>
+</ul>
+<h2 id="decidability-under-linear-space-bounds">Decidability Under
+Linear Space Bounds</h2>
+<p>Unlike general Turing machines, where the halting problem is
+undecidable, the halting problem for an LBA is decidable. For a fixed
+LBA <span class="math inline">\(M\)</span> and an input of length <span
+class="math inline">\(n\)</span>, the total number of distinct
+configurations is finite:</p>
+<p><span class="math display">\[|Q| \cdot (n + 2) \cdot
+|\Gamma|^{n+2}\]</span></p>
+<p>If an LBA runs for more steps than this bound without halting, it
+must have repeated a configuration and entered an infinite loop. By
+simulating <span class="math inline">\(M\)</span> and tracking whether
+it exceeds this configuration bound, a standard Turing machine can
+decide whether <span class="math inline">\(M\)</span> accepts or rejects
+a given input. However, the emptiness problem—determining whether an
+arbitrary LBA accepts at least one string—remains undecidable.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-linear-bounded-automata-model-bounded-memory';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

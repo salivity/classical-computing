@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does the Cooley-Tukey FFT Reduce DFT Complexity? - classical-computing</title>
+    <meta name="description" content="The Cooley-Tukey Fast Fourier Transform (FFT) reduces the computational complexity of the Discrete Fourier Transform (DFT) from quadratic time to linearithmic time by using a divide-and-conquer strategy. Instead of computing all frequency components direc">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-the-cooley-tukey-fft-reduce-dft-complexity">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does the Cooley-Tukey FFT Reduce DFT Complexity? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-the-cooley-tukey-fft-reduce-dft-complexity" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Cooley-Tukey Fast Fourier Transform (FFT) reduces the computational complexity of the Discrete Fourier Transform (DFT) from quadratic time to linearithmic time by using a divide-and-conquer strategy. Instead of computing all frequency components direc" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-the-cooley-tukey-fft-reduce-dft-complexity">How Does
+the Cooley-Tukey FFT Reduce DFT Complexity?</h1>
+<p>The Cooley-Tukey Fast Fourier Transform (FFT) reduces the
+computational complexity of the Discrete Fourier Transform (DFT) from
+quadratic time to linearithmic time by using a divide-and-conquer
+strategy. Instead of computing all frequency components directly through
+redundant matrix-vector multiplications, the algorithm recursively
+splits the input sequence into smaller subsequences, computes their
+transforms, and combines the results using symmetry and periodicity
+properties of complex roots of unity.</p>
+<h2 id="the-cost-of-the-direct-discrete-fourier-transform">The Cost of
+the Direct Discrete Fourier Transform</h2>
+<p>For a sequence of <span class="math inline">\(N\)</span> complex
+numbers <span class="math inline">\(x_0, x_1, \dots, x_{N-1}\)</span>,
+the Discrete Fourier Transform produces <span
+class="math inline">\(N\)</span> frequency-domain values <span
+class="math inline">\(X_k\)</span> defined by:</p>
+<p><span class="math display">\[X_k = \sum_{n=0}^{N-1} x_n e^{-i 2\pi k
+n / N}, \quad k = 0, 1, \dots, N-1\]</span></p>
+<p>Computing each <span class="math inline">\(X_k\)</span> directly
+requires <span class="math inline">\(N\)</span> complex multiplications
+and <span class="math inline">\(N - 1\)</span> complex additions.
+Because there are <span class="math inline">\(N\)</span> output values
+to calculate, the total number of operations scales as <span
+class="math inline">\(O(N^2)\)</span>. For large datasets, this
+quadratic growth quickly becomes computationally prohibitive.</p>
+<h2 id="divide-and-conquer-with-even-and-odd-indices">Divide and Conquer
+with Even and Odd Indices</h2>
+<p>Assuming <span class="math inline">\(N\)</span> is a power of two
+(the radix-2 case), the Cooley-Tukey algorithm splits the summation into
+two smaller sums: one over the even-indexed elements <span
+class="math inline">\(x_{2m}\)</span> and one over the odd-indexed
+elements <span class="math inline">\(x_{2m+1}\)</span>, where <span
+class="math inline">\(m = 0, 1, \dots, \frac{N}{2} - 1\)</span>:</p>
+<p><span class="math display">\[X_k = \sum_{m=0}^{N/2 - 1} x_{2m} e^{-i
+2\pi k (2m) / N} + \sum_{m=0}^{N/2 - 1} x_{2m+1} e^{-i 2\pi k (2m+1) /
+N}\]</span></p>
+<p>Factoring out <span class="math inline">\(e^{-i 2\pi k / N}\)</span>
+from the odd-indexed sum and rewriting <span class="math inline">\(2m /
+N\)</span> as <span class="math inline">\(m / (N/2)\)</span> yields:</p>
+<p><span class="math display">\[X_k = \sum_{m=0}^{N/2 - 1} x_{2m} e^{-i
+2\pi k m / (N/2)} + e^{-i 2\pi k / N} \sum_{m=0}^{N/2 - 1} x_{2m+1}
+e^{-i 2\pi k m / (N/2)}\]</span></p>
+<p>Let <span class="math inline">\(E_k\)</span> denote the <span
+class="math inline">\(\frac{N}{2}\)</span>-point DFT of the even-indexed
+elements and <span class="math inline">\(O_k\)</span> denote the <span
+class="math inline">\(\frac{N}{2}\)</span>-point DFT of the odd-indexed
+elements. The equation simplifies to:</p>
+<p><span class="math display">\[X_k = E_k + W_N^k O_k\]</span></p>
+<p>where <span class="math inline">\(W_N^k = e^{-i 2\pi k / N}\)</span>
+is known as a twiddle factor.</p>
+<h2 id="exploiting-periodicity-and-symmetry">Exploiting Periodicity and
+Symmetry</h2>
+<p>At first glance, splitting one <span
+class="math inline">\(N\)</span>-point DFT into two <span
+class="math inline">\(\frac{N}{2}\)</span>-point DFTs might seem to only
+halve the work. However, the key savings come from the periodicity and
+symmetry of the twiddle factors.</p>
+<p>Because <span class="math inline">\(E_k\)</span> and <span
+class="math inline">\(O_k\)</span> are <span
+class="math inline">\(\frac{N}{2}\)</span>-point DFTs, they are periodic
+with period <span class="math inline">\(\frac{N}{2}\)</span>:</p>
+<p><span class="math display">\[E_{k + N/2} = E_k \quad \text{and} \quad
+O_{k + N/2} = O_k\]</span></p>
+<p>Furthermore, the twiddle factor satisfies the symmetry relation:</p>
+<p><span class="math display">\[W_N^{k + N/2} = e^{-i 2\pi (k + N/2) /
+N} = e^{-i\pi} e^{-i 2\pi k / N} = -W_N^k\]</span></p>
+<p>Combining these two properties gives the butterfly equations for
+<span class="math inline">\(k = 0, 1, \dots, \frac{N}{2} -
+1\)</span>:</p>
+<p><span class="math display">\[X_k = E_k + W_N^k O_k\]</span></p>
+<p><span class="math display">\[X_{k + N/2} = E_k - W_N^k
+O_k\]</span></p>
+<p>This means that once <span class="math inline">\(E_k\)</span> and
+<span class="math inline">\(O_k\)</span> are computed, both <span
+class="math inline">\(X_k\)</span> and <span class="math inline">\(X_{k
++ N/2}\)</span> are obtained using only a single complex multiplication
+(<span class="math inline">\(W_N^k O_k\)</span>) and two additions or
+subtractions.</p>
+<h2 id="recursive-complexity-analysis">Recursive Complexity
+Analysis</h2>
+<p>By applying this even-odd decomposition recursively until reaching
+base cases of size <span class="math inline">\(1\)</span>, the algorithm
+forms a binary tree of depth <span class="math inline">\(\log_2
+N\)</span>.</p>
+<p>At each level of the recursion, the total number of elements across
+all subproblems remains <span class="math inline">\(N\)</span>, and
+combining the results of each pair of subproblems requires <span
+class="math inline">\(O(N)\)</span> operations. Since there are <span
+class="math inline">\(\log_2 N\)</span> levels, the total time
+complexity <span class="math inline">\(T(N)\)</span> satisfies the
+recurrence relation:</p>
+<p><span class="math display">\[T(N) = 2T\left(\frac{N}{2}\right) +
+O(N)\]</span></p>
+<p>By the Master Theorem, this recurrence solves to:</p>
+<p><span class="math display">\[T(N) = O(N \log N)\]</span></p>
+<h2 id="generalization-beyond-powers-of-two">Generalization Beyond
+Powers of Two</h2>
+<p>While the radix-2 algorithm is the most common, the Cooley-Tukey
+framework applies to any composite size <span class="math inline">\(N =
+N_1 N_2\)</span>. By reshaping the 1D input into a 2D array of
+dimensions <span class="math inline">\(N_1 \times N_2\)</span>, the
+algorithm computes <span class="math inline">\(N_2\)</span> DFTs of size
+<span class="math inline">\(N_1\)</span>, multiplies by twiddle factors,
+and then computes <span class="math inline">\(N_1\)</span> DFTs of size
+<span class="math inline">\(N_2\)</span>. When <span
+class="math inline">\(N\)</span> has small prime factors, this
+mixed-radix approach achieves the same <span class="math inline">\(O(N
+\log N)\)</span> complexity.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-the-cooley-tukey-fft-reduce-dft-complexity';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

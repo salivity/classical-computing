@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Two-Phase Commit Coordinate Transactions? - classical-computing</title>
+    <meta name="description" content="The Two-Phase Commit protocol is a classical distributed algorithm that ensures all participating database nodes either commit or abort a transaction together. By splitting the commitment process into a voting phase and a decision phase, a central coordin">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-two-phase-commit-coordinate-transactions">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Two-Phase Commit Coordinate Transactions? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-two-phase-commit-coordinate-transactions" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Two-Phase Commit protocol is a classical distributed algorithm that ensures all participating database nodes either commit or abort a transaction together. By splitting the commitment process into a voting phase and a decision phase, a central coordin" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-two-phase-commit-coordinate-transactions">How Does
+Two-Phase Commit Coordinate Transactions?</h1>
+<p>The Two-Phase Commit protocol is a classical distributed algorithm
+that ensures all participating database nodes either commit or abort a
+transaction together. By splitting the commitment process into a voting
+phase and a decision phase, a central coordinator guarantees atomicity
+across independent machines even when individual nodes or network links
+fail.</p>
+<h2 id="roles-in-the-protocol">Roles in the Protocol</h2>
+<p>In a distributed database, a single logical transaction often
+modifies records stored on <span class="math inline">\(n\)</span>
+separate nodes, known as participants or cohorts. Because each node
+manages its own local storage and write-ahead log, nodes cannot
+independently decide whether to make changes permanent without risking
+partial updates.</p>
+<p>To solve this, the protocol designates one node as the coordinator
+for the transaction:</p>
+<ul>
+<li><strong>Coordinator</strong>: Orchestrates the protocol, collects
+votes from all participants, makes the final commit or abort decision,
+and broadcasts that decision.</li>
+<li><strong>Participants</strong>: Execute the local transaction work,
+acquire necessary locks, write durability records to disk, and follow
+the coordinator's final instruction.</li>
+</ul>
+<h2 id="phase-1-the-prepare-voting-phase">Phase 1: The Prepare (Voting)
+Phase</h2>
+<p>When the client application requests to commit a distributed
+transaction, the coordinator initiates Phase 1 by sending a
+<code>PREPARE</code> message to all <span
+class="math inline">\(n\)</span> participants.</p>
+<p>Upon receiving <code>PREPARE</code>, each participant checks whether
+it can guarantee the durability and consistency of its local
+changes:</p>
+<ol type="1">
+<li>It verifies that no local integrity constraints or concurrency rules
+have been violated.</li>
+<li>It forces all undo and redo log records for the transaction to
+stable storage (disk).</li>
+<li>If both steps succeed, the participant enters the
+<strong>prepared</strong> (or <strong>uncertain</strong>) state and
+replies with <code>VOTE_COMMIT</code>. Otherwise, it aborts locally,
+releases locks, and replies with <code>VOTE_ABORT</code>.</li>
+</ol>
+<p>Once a participant votes <code>VOTE_COMMIT</code>, it surrenders its
+autonomy. It must hold all locks on the modified data until the
+coordinator issues a final decision.</p>
+<h2 id="phase-2-the-commit-decision-phase">Phase 2: The Commit
+(Decision) Phase</h2>
+<p>The coordinator waits for responses from all <span
+class="math inline">\(n\)</span> participants. Its decision follows a
+strict logical rule:</p>
+<p><span class="math display">\[\text{Decision} = \begin{cases}
+\text{COMMIT} &amp; \text{if } \forall i \in \{1, \dots, n\},\
+\text{vote}_i = \text{VOTE\_COMMIT} \\ \text{ABORT} &amp; \text{if }
+\exists i \in \{1, \dots, n\},\ \text{vote}_i = \text{VOTE\_ABORT}
+\text{ or timeout} \end{cases}\]</span></p>
+<p>Before sending the decision over the network, the coordinator writes
+the outcome to its own local log so it can recover the decision if it
+crashes. It then sends either a <code>GLOBAL_COMMIT</code> or
+<code>GLOBAL_ABORT</code> message to every participant.</p>
+<p>Each participant receives the decision, writes a corresponding commit
+or abort record to its local log, releases its held locks, and sends an
+<code>ACK</code> back to the coordinator. Once the coordinator receives
+all acknowledgments, it marks the transaction complete.</p>
+<h2 id="handling-failures-and-the-blocking-problem">Handling Failures
+and the Blocking Problem</h2>
+<p>Write-ahead logging allows nodes to recover from crashes without
+losing atomicity. If a participant crashes before voting, it aborts upon
+recovery, and the coordinator's timeout triggers a
+<code>GLOBAL_ABORT</code>. If a participant crashes after voting
+<code>VOTE_COMMIT</code>, it remains in the uncertain state upon restart
+and queries the coordinator for the final decision.</p>
+<p>However, Two-Phase Commit is a <strong>blocking protocol</strong>. If
+the coordinator crashes after participants have voted
+<code>VOTE_COMMIT</code> but before it sends the final decision, those
+participants cannot safely commit or abort on their own. They must
+remain blocked, holding their locks and keeping data inaccessible, until
+the coordinator recovers.</p>
+<h2 id="performance-and-trade-offs">Performance and Trade-Offs</h2>
+<p>Because every transaction requires two full network round-trips and
+multiple synchronous disk flushes, Two-Phase Commit introduces
+significant latency. In classical distributed systems, it is best suited
+for workloads that require strict ACID atomicity across a small number
+of reliable nodes, whereas high-throughput systems often favor
+non-blocking consensus protocols like Paxos or Raft for replication, or
+eventual consistency patterns like Sagas.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-two-phase-commit-coordinate-transactions';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

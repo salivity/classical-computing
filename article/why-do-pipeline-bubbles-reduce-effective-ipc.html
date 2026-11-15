@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Do Pipeline Bubbles Reduce Effective IPC? - classical-computing</title>
+    <meta name="description" content="Pipeline bubbles reduce the effective instructions-per-cycle metric because they represent wasted clock cycles in which no useful instruction completes execution. In an ideal pipelined processor, one instruction finishes every clock cycle, yielding an ins">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-do-pipeline-bubbles-reduce-effective-ipc">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Do Pipeline Bubbles Reduce Effective IPC? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-do-pipeline-bubbles-reduce-effective-ipc" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Pipeline bubbles reduce the effective instructions-per-cycle metric because they represent wasted clock cycles in which no useful instruction completes execution. In an ideal pipelined processor, one instruction finishes every clock cycle, yielding an ins" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-do-pipeline-bubbles-reduce-effective-ipc">Why Do Pipeline
+Bubbles Reduce Effective IPC?</h1>
+<p>Pipeline bubbles reduce the effective instructions-per-cycle metric
+because they represent wasted clock cycles in which no useful
+instruction completes execution. In an ideal pipelined processor, one
+instruction finishes every clock cycle, yielding an
+instructions-per-cycle value of one. When hazards force the pipeline to
+stall, empty slots called bubbles propagate through the stages,
+increasing the total number of cycles required to finish a program
+without increasing the number of completed instructions.</p>
+<h2 id="understanding-instructions-per-cycle">Understanding Instructions
+Per Cycle</h2>
+<p>Instructions per cycle (IPC) measures how many instructions a
+processor completes on average during each clock cycle. For a program
+with <span class="math inline">\(N\)</span> instructions that takes
+<span class="math inline">\(C\)</span> clock cycles to execute, the
+effective IPC is given by:</p>
+<p><span class="math display">\[\text{IPC} = \frac{N}{C}\]</span></p>
+<p>In a classic scalar pipeline—such as a five-stage pipeline with
+Fetch, Decode, Execute, Memory, and Writeback—multiple instructions
+overlap in execution. Once the pipeline is full, one instruction exits
+the Writeback stage every cycle, so <span class="math inline">\(C
+\approx N\)</span> for long programs and <span
+class="math inline">\(\text{IPC} \approx 1\)</span>.</p>
+<h2 id="what-a-pipeline-bubble-is">What a Pipeline Bubble Is</h2>
+<p>A pipeline bubble, also known as a stall or a no-operation (NOP)
+slot, occurs when a stage cannot advance its instruction on a clock
+edge. Instead of passing valid work to the next stage, the control logic
+inserts a blank or NOP control signal. That empty slot travels down the
+remaining stages of the pipeline, occupying hardware resources without
+performing any architectural state update.</p>
+<h2 id="how-bubbles-increase-total-cycle-count">How Bubbles Increase
+Total Cycle Count</h2>
+<p>Each bubble adds at least one extra clock cycle to the execution time
+of the instruction stream. If a program of <span
+class="math inline">\(N\)</span> instructions encounters <span
+class="math inline">\(B\)</span> bubble cycles during its execution, the
+total cycle count becomes:</p>
+<p><span class="math display">\[C = N + B + (k - 1)\]</span></p>
+<p>where <span class="math inline">\(k\)</span> is the number of
+pipeline stages (accounting for the initial fill latency). For large
+<span class="math inline">\(N\)</span>, the effective IPC becomes:</p>
+<p><span class="math display">\[\text{IPC}_{\text{effective}} =
+\frac{N}{N + B} = \frac{1}{1 + \frac{B}{N}}\]</span></p>
+<p>Because <span class="math inline">\(B &gt; 0\)</span> whenever stalls
+occur, the denominator is strictly greater than the numerator, pulling
+<span class="math inline">\(\text{IPC}_{\text{effective}}\)</span> below
+the ideal value of <span class="math inline">\(1\)</span> (or below the
+peak issue width <span class="math inline">\(W\)</span> in a superscalar
+processor).</p>
+<h2 id="common-causes-of-pipeline-bubbles">Common Causes of Pipeline
+Bubbles</h2>
+<p>Pipeline bubbles arise from three primary types of hazards:</p>
+<ul>
+<li><strong>Data hazards:</strong> An instruction depends on the result
+of a previous instruction that has not yet completed. For example, a
+load-use hazard occurs when an instruction immediately following a
+memory load needs the loaded value before the Memory stage
+finishes.</li>
+<li><strong>Control hazards:</strong> Branch and jump instructions alter
+the program counter, which may not be resolved until the Execute or
+Memory stage. While the processor waits to determine the next
+instruction address—or flushes speculatively fetched instructions after
+a misprediction—bubbles fill the pipeline.</li>
+<li><strong>Structural hazards:</strong> Two instructions require the
+same hardware resource in the same cycle, such as a single-ported memory
+accessed simultaneously by Instruction Fetch and Memory stages, forcing
+one instruction to wait.</li>
+</ul>
+<h2 id="mitigating-the-impact-of-bubbles">Mitigating the Impact of
+Bubbles</h2>
+<p>Modern processors use several techniques to minimize <span
+class="math inline">\(B\)</span> and keep effective IPC high. Data
+forwarding (bypassing) routes results directly from the Execute or
+Memory stage back to earlier stages, eliminating many data-hazard
+stalls. Branch predictors guess the outcome of conditional branches so
+fetching can continue without waiting, while out-of-order execution
+allows independent instructions to bypass stalled ones and keep
+execution units busy.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-do-pipeline-bubbles-reduce-effective-ipc';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

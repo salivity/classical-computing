@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Separate Chaining vs Linear Probing: Cache Differences? - classical-computing</title>
+    <meta name="description" content="Separate chaining and open addressing with linear probing handle hash collisions in fundamentally different ways, leading to significant differences in CPU cache performance. While separate chaining relies on linked lists or secondary structures that scat">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/separate-chaining-vs-linear-probing-cache-differences">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Separate Chaining vs Linear Probing: Cache Differences? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/separate-chaining-vs-linear-probing-cache-differences" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Separate chaining and open addressing with linear probing handle hash collisions in fundamentally different ways, leading to significant differences in CPU cache performance. While separate chaining relies on linked lists or secondary structures that scat" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="separate-chaining-vs-linear-probing-cache-differences">Separate
+Chaining vs Linear Probing: Cache Differences?</h1>
+<p>Separate chaining and open addressing with linear probing handle hash
+collisions in fundamentally different ways, leading to significant
+differences in CPU cache performance. While separate chaining relies on
+linked lists or secondary structures that scatter data across memory,
+linear probing stores all entries in a single contiguous array. Because
+modern processors fetch memory in fixed-size cache lines rather than
+individual bytes, linear probing typically achieves much higher cache
+hit rates and faster lookup times under typical load factors.</p>
+<h2 id="memory-layout-and-spatial-locality">Memory Layout and Spatial
+Locality</h2>
+<p>In separate chaining, each bucket in the hash table holds a pointer
+to a linked list (or another dynamic container) of entries that hash to
+the same index. When a collision occurs, a new node is usually allocated
+on the heap and linked to the existing chain. Because heap allocations
+are rarely contiguous, traversing a chain requires following pointers to
+disparate memory addresses. Each pointer dereference risks a cache miss,
+forcing the CPU to stall while fetching a new cache line from main
+memory.</p>
+<p>In contrast, open addressing with linear probing stores all key-value
+pairs directly inside a single contiguous array. When a collision occurs
+at index <span class="math inline">\(h(k)\)</span>, the algorithm checks
+consecutive slots: <span class="math inline">\(h(k) + 1\)</span>, <span
+class="math inline">\(h(k) + 2\)</span>, and so on, wrapping around the
+array. Because adjacent array elements reside in the same or neighboring
+cache lines (typically 64 bytes), probing multiple slots often requires
+only a single cache line fetch.</p>
+<h2 id="cache-line-utilization-and-prefetching">Cache Line Utilization
+and Prefetching</h2>
+<p>Modern CPUs are heavily optimized for sequential memory access. When
+linear probing reads an entry at index <span
+class="math inline">\(i\)</span>, the hardware loads the entire cache
+line containing <span class="math inline">\(i\)</span> into the L1
+cache. Subsequent probes to <span class="math inline">\(i + 1\)</span>
+or <span class="math inline">\(i + 2\)</span> hit the L1 cache directly,
+incurring minimal latency. Furthermore, hardware prefetchers can detect
+sequential access patterns and load upcoming cache lines before they are
+requested.</p>
+<p>Separate chaining cannot benefit from hardware prefetching during
+collision resolution because the next memory address in a linked list is
+unknown until the current node's pointer is loaded and dereferenced.
+This serialization of memory reads—often called pointer chasing—exposes
+the full latency of main memory on every cache miss.</p>
+<h2 id="impact-of-load-factor-and-clustering">Impact of Load Factor and
+Clustering</h2>
+<p>The cache advantage of linear probing depends on the load factor
+<span class="math inline">\(\alpha = \frac{n}{m}\)</span>, where <span
+class="math inline">\(n\)</span> is the number of stored elements and
+<span class="math inline">\(m\)</span> is the table capacity. At low to
+moderate load factors (such as <span class="math inline">\(\alpha \le
+0.5\)</span> or <span class="math inline">\(\alpha \le 0.7\)</span>),
+probe sequences remain short, and most lookups complete within one or
+two cache lines.</p>
+<p>However, as <span class="math inline">\(\alpha\)</span> approaches
+<span class="math inline">\(1\)</span>, linear probing suffers from
+primary clustering, where long runs of occupied slots form. The expected
+number of probes for an unsuccessful search grows roughly as <span
+class="math inline">\(\frac{1}{2}\left(1 + \frac{1}{(1 -
+\alpha)^2}\right)\)</span>, which can span multiple cache lines and
+degrade performance. Separate chaining degrades more gracefully at high
+load factors, with expected chain length equal to <span
+class="math inline">\(\alpha\)</span>, though each step in the chain
+still incurs a potential cache miss.</p>
+<h2 id="summary-of-trade-offs">Summary of Trade-offs</h2>
+<p>Linear probing generally outperforms separate chaining in classical
+computing environments due to superior spatial locality, reduced memory
+overhead from avoiding pointers, and better utilization of CPU cache
+lines. Separate chaining remains useful when the load factor is high,
+when entries are very large (making contiguous array storage expensive
+to resize), or when stable pointers to elements are required across
+insertions and deletions.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/separate-chaining-vs-linear-probing-cache-differences';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

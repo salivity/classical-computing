@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Hardware Interrupt Controllers Prioritize Events? - classical-computing</title>
+    <meta name="description" content="Hardware interrupt controllers manage asynchronous signals from peripheral devices so that a CPU can pause its current execution, handle urgent tasks, and resume without losing state. They sit between external devices and the processor core, collecting in">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-hardware-interrupt-controllers-prioritize-events">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Hardware Interrupt Controllers Prioritize Events? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-hardware-interrupt-controllers-prioritize-events" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Hardware interrupt controllers manage asynchronous signals from peripheral devices so that a CPU can pause its current execution, handle urgent tasks, and resume without losing state. They sit between external devices and the processor core, collecting in" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-hardware-interrupt-controllers-prioritize-events">How Do
+Hardware Interrupt Controllers Prioritize Events?</h1>
+<p>Hardware interrupt controllers manage asynchronous signals from
+peripheral devices so that a CPU can pause its current execution, handle
+urgent tasks, and resume without losing state. They sit between external
+devices and the processor core, collecting interrupt requests, resolving
+conflicts when multiple devices signal simultaneously, and enforcing
+priority rules before notifying the CPU.</p>
+<h2 id="signal-collection-and-the-interrupt-request-line">Signal
+Collection and the Interrupt Request Line</h2>
+<p>Peripheral devices such as keyboards, network cards, and storage
+controllers operate independently of the CPU clock. When a device needs
+attention, it asserts an electrical signal on an Interrupt Request (IRQ)
+line connected to the interrupt controller. In legacy systems like the
+Intel 8259 Programmable Interrupt Controller (PIC), each device was
+wired to a dedicated physical pin, whereas modern systems using Advanced
+Programmable Interrupt Controllers (APIC) or ARM Generic Interrupt
+Controllers (GIC) often deliver interrupts as memory-mapped messages
+over a bus, such as Message Signaled Interrupts (MSI).</p>
+<p>The controller latches these incoming requests into an Interrupt
+Request Register (IRR). Because multiple devices can assert their lines
+at the exact same time, the controller must evaluate all pending bits in
+the IRR before forwarding a single interrupt to the CPU.</p>
+<h2 id="priority-resolution-and-arbitration">Priority Resolution and
+Arbitration</h2>
+<p>When multiple bits are set in the IRR, the interrupt controller uses
+a priority resolver to select the highest-priority pending event. In
+classical fixed-priority schemes, each IRQ line is assigned a static
+rank, often where lower IRQ numbers correspond to higher urgency. For
+example, the system timer on IRQ 0 typically outranks the keyboard on
+IRQ 1.</p>
+<p>Some controllers also support rotating priority or dynamic priority
+schemes to prevent lower-priority devices from starving under heavy
+load. If a controller has <span class="math inline">\(n\)</span>
+interrupt lines, the arbitration logic evaluates the active requests in
+hardware within a single clock cycle or a few cycles, ensuring
+deterministic selection without software overhead.</p>
+<p>Once the highest-priority request is chosen, the controller checks
+whether an interrupt of equal or higher priority is already being
+serviced by inspecting its In-Service Register (ISR). If the new request
+has a strictly higher priority than the currently active ISR bit, and
+the interrupt is not masked in the Interrupt Mask Register (IMR), the
+controller asserts the CPU's interrupt pin (such as INTR).</p>
+<h2 id="interrupting-the-cpu-and-context-switching">Interrupting the CPU
+and Context Switching</h2>
+<p>The CPU checks its interrupt pin at the boundary of each instruction
+cycle. If hardware interrupts are enabled in the processor's status
+register (for example, the Interrupt Flag <span class="math inline">\(IF
+= 1\)</span> on x86 architectures), the CPU pauses its current
+instruction stream. It then acknowledges the interrupt by sending an
+Interrupt Acknowledge (INTA) signal back to the controller.</p>
+<p>Upon receiving INTA, the controller places an interrupt vector number
+onto the data bus. The CPU uses this vector as an index into the
+Interrupt Vector Table (IVT) or Interrupt Descriptor Table (IDT) to
+locate the memory address of the corresponding Interrupt Service Routine
+(ISR). Before jumping to that address, the CPU pushes its current
+program counter and status flags onto the stack so it can restore the
+interrupted program later.</p>
+<h2 id="nesting-masking-and-end-of-interrupt">Nesting, Masking, and End
+of Interrupt</h2>
+<p>While the CPU executes the Interrupt Service Routine, the interrupt
+controller keeps track of the active priority level in its ISR register.
+If a higher-priority device asserts an IRQ during this time, the
+controller can preempt the current handler, causing a nested interrupt.
+Conversely, lower-priority interrupts remain pending in the IRR until
+the CPU finishes the higher-priority work.</p>
+<p>Software can also influence this behavior by writing to the
+controller's Interrupt Mask Register to temporarily ignore specific
+devices, or by disabling interrupts globally on the CPU during critical
+sections. When the Interrupt Service Routine completes, it sends an End
+of Interrupt (EOI) command to the controller. The EOI clears the
+corresponding bit in the ISR register, allowing the controller to
+dispatch the next highest-priority pending request from the IRR, or
+letting the CPU pop its saved state from the stack and resume normal
+execution.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-hardware-interrupt-controllers-prioritize-events';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

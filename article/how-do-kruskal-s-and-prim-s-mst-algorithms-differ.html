@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How do Kruskal&#39;s and Prim&#39;s MST algorithms differ? - classical-computing</title>
+    <meta name="description" content="Kruskal&#39;s algorithm and Prim&#39;s algorithm both find a minimum spanning tree for a connected, undirected, weighted graph, yet they construct the tree through fundamentally different strategies. Kruskal&#39;s approach sorts all edges globally by weight and adds">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-kruskal-s-and-prim-s-mst-algorithms-differ">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How do Kruskal&#39;s and Prim&#39;s MST algorithms differ? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-kruskal-s-and-prim-s-mst-algorithms-differ" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Kruskal&#39;s algorithm and Prim&#39;s algorithm both find a minimum spanning tree for a connected, undirected, weighted graph, yet they construct the tree through fundamentally different strategies. Kruskal&#39;s approach sorts all edges globally by weight and adds" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-kruskals-and-prims-mst-algorithms-differ">How do
+Kruskal's and Prim's MST algorithms differ?</h1>
+<p>Kruskal's algorithm and Prim's algorithm both find a minimum spanning
+tree for a connected, undirected, weighted graph, yet they construct the
+tree through fundamentally different strategies. Kruskal's approach
+sorts all edges globally by weight and adds them one by one if they do
+not form a cycle, whereas Prim's approach starts from a single vertex
+and grows a connected tree by repeatedly selecting the cheapest edge
+leaving the current tree. These contrasting mechanisms lead to different
+data structure requirements, intermediate states, and performance
+characteristics on sparse versus dense graphs.</p>
+<h2 id="core-algorithmic-strategies">Core Algorithmic Strategies</h2>
+<p>Given a graph <span class="math inline">\(G = (V, E)\)</span> with
+<span class="math inline">\(|V|\)</span> vertices and <span
+class="math inline">\(|E|\)</span> edges, a minimum spanning tree (MST)
+is a subset of <span class="math inline">\(|V| - 1\)</span> edges that
+connects all vertices with the minimum possible total weight.</p>
+<p>Kruskal's algorithm takes an edge-centric, global view:</p>
+<ol type="1">
+<li>Sort all edges in <span class="math inline">\(E\)</span> in
+non-decreasing order of weight.</li>
+<li>Initialize a forest where every vertex is its own separate
+tree.</li>
+<li>Iterate through the sorted edges. For each edge <span
+class="math inline">\((u, v)\)</span>, check whether <span
+class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> belong to different trees. If they do,
+add <span class="math inline">\((u, v)\)</span> to the MST and merge the
+two trees; otherwise, discard the edge to avoid a cycle.</li>
+</ol>
+<p>Prim's algorithm takes a vertex-centric, local view:</p>
+<ol type="1">
+<li>Choose an arbitrary starting vertex <span class="math inline">\(r
+\in V\)</span> and add it to the growing tree <span
+class="math inline">\(T\)</span>.</li>
+<li>Maintain a priority queue of vertices not yet in <span
+class="math inline">\(T\)</span>, keyed by the minimum weight of any
+edge connecting them to <span class="math inline">\(T\)</span>.</li>
+<li>Repeatedly extract the vertex <span class="math inline">\(v\)</span>
+with the smallest key, add <span class="math inline">\(v\)</span> and
+its connecting edge to <span class="math inline">\(T\)</span>, and
+update the keys of <span class="math inline">\(v\)</span>'s
+neighbors.</li>
+</ol>
+<h2 id="intermediate-states-and-connectivity">Intermediate States and
+Connectivity</h2>
+<p>A key structural difference lies in how the solution evolves during
+execution. Kruskal's algorithm maintains a forest of disconnected
+components that gradually merge until a single spanning tree remains.
+Because it considers edges globally, it can add edges in distant parts
+of the graph before they ever connect to one another.</p>
+<p>Prim's algorithm, by contrast, always maintains a single connected
+tree. At every step, the partial solution is a valid tree spanning a
+subset of vertices, expanding outward like a frontier. This property
+makes Prim's algorithm naturally suited for scenarios where you want to
+grow a network from a specific hub or when the graph is explored
+dynamically.</p>
+<h2 id="data-structures-and-time-complexity">Data Structures and Time
+Complexity</h2>
+<p>The two algorithms rely on different data structures, which directly
+impacts their asymptotic runtime:</p>
+<ul>
+<li><strong>Kruskal's algorithm</strong> depends on sorting and a
+Disjoint Set Union (DSU) structure with path compression and union by
+rank. Sorting the edges takes <span class="math inline">\(O(|E| \log
+|E|)\)</span> time, while the DSU operations take <span
+class="math inline">\(O(|E| \alpha(|V|))\)</span> time, where <span
+class="math inline">\(\alpha\)</span> is the inverse Ackermann function.
+Since <span class="math inline">\(|E| \le |V|^2\)</span>, <span
+class="math inline">\(\log |E| = O(\log |V|)\)</span>, giving an overall
+time complexity of <span class="math inline">\(O(|E| \log
+|V|)\)</span>.</li>
+<li><strong>Prim's algorithm</strong> depends on a priority queue. Using
+a binary heap, each vertex extraction and edge relaxation takes <span
+class="math inline">\(O(\log |V|)\)</span> time, resulting in <span
+class="math inline">\(O((|V| + |E|) \log |V|)\)</span>, or <span
+class="math inline">\(O(|E| \log |V|)\)</span> for connected graphs.
+Using a Fibonacci heap reduces the amortized cost of decrease-key
+operations to <span class="math inline">\(O(1)\)</span>, improving the
+bound to <span class="math inline">\(O(|E| + |V| \log
+|V|)\)</span>.</li>
+</ul>
+<h2 id="sparse-vs-dense-graphs">Sparse vs. Dense Graphs</h2>
+<p>Because of these complexity differences, graph density often dictates
+which algorithm is faster in practice:</p>
+<ul>
+<li><strong>Sparse graphs</strong> (<span class="math inline">\(|E|
+\approx |V|\)</span>): Kruskal's algorithm is often preferred. Sorting a
+small number of edges is fast, and the DSU operations have very low
+constant-factor overhead.</li>
+<li><strong>Dense graphs</strong> (<span class="math inline">\(|E|
+\approx |V|^2\)</span>): Prim's algorithm is typically faster. With a
+Fibonacci heap, Prim's runs in <span
+class="math inline">\(O(|V|^2)\)</span>, whereas Kruskal's remains <span
+class="math inline">\(O(|V|^2 \log |V|)\)</span> due to sorting all
+edges. Even with a simple array instead of a heap, Prim's can achieve
+<span class="math inline">\(O(|V|^2)\)</span> time on dense graphs by
+scanning all vertices at each step.</li>
+</ul>
+<h2 id="handling-disconnected-graphs">Handling Disconnected Graphs</h2>
+<p>If the input graph is disconnected, a minimum spanning tree does not
+exist, and the goal shifts to finding a minimum spanning forest.
+Kruskal's algorithm handles this naturally without modification: it
+simply processes all edges and terminates with a forest of MSTs for each
+connected component. Prim's algorithm, however, only explores the
+connected component containing its starting vertex and must be restarted
+on unvisited vertices to cover the entire graph.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-kruskal-s-and-prim-s-mst-algorithms-differ';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

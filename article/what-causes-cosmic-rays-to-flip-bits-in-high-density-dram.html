@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Causes Cosmic Rays to Flip Bits in High-Density DRAM? - classical-computing</title>
+    <meta name="description" content="Cosmic-ray-induced soft errors in high-density dynamic random-access memory occur when high-energy particles from space interact with Earth&#39;s atmosphere and strike silicon memory cells, depositing enough electrical charge to invert a stored binary state.">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-causes-cosmic-rays-to-flip-bits-in-high-density-dram">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Causes Cosmic Rays to Flip Bits in High-Density DRAM? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-causes-cosmic-rays-to-flip-bits-in-high-density-dram" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Cosmic-ray-induced soft errors in high-density dynamic random-access memory occur when high-energy particles from space interact with Earth&#39;s atmosphere and strike silicon memory cells, depositing enough electrical charge to invert a stored binary state." />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-causes-cosmic-rays-to-flip-bits-in-high-density-dram">What
+Causes Cosmic Rays to Flip Bits in High-Density DRAM?</h1>
+<p>Cosmic-ray-induced soft errors in high-density dynamic random-access
+memory occur when high-energy particles from space interact with Earth's
+atmosphere and strike silicon memory cells, depositing enough electrical
+charge to invert a stored binary state. Unlike permanent hardware
+failures, these single-event upsets are transient and leave the physical
+circuitry undamaged. As DRAM manufacturers shrink cell dimensions to
+increase memory capacity, the amount of charge required to represent a
+bit decreases, making modern memory modules more susceptible to
+radiation-induced bit flips.</p>
+<h2 id="how-cosmic-rays-reach-silicon-memory">How Cosmic Rays Reach
+Silicon Memory</h2>
+<p>Primary cosmic rays, mostly high-energy protons and alpha particles
+originating outside the solar system, constantly bombard Earth's upper
+atmosphere. When a primary cosmic ray collides with an atmospheric
+nucleus such as nitrogen or oxygen, it triggers a cascade of secondary
+particles known as an air shower.</p>
+<p>By the time this shower reaches sea level, it consists largely of
+neutrons, protons, muons, and pions. Uncharged neutrons are the primary
+threat to terrestrial electronics because they can penetrate building
+roofs, server chassis, and chip packaging without losing energy through
+electromagnetic interactions.</p>
+<h2 id="charge-deposition-in-dram-cells">Charge Deposition in DRAM
+Cells</h2>
+<p>A standard DRAM cell stores a single bit of data as an electrical
+charge in a tiny capacitor paired with an access transistor. The stored
+voltage <span class="math inline">\(V\)</span> across a capacitor with
+capacitance <span class="math inline">\(C\)</span> holds a total charge
+<span class="math inline">\(Q\)</span> given by:</p>
+<p><span class="math display">\[Q = C \cdot V\]</span></p>
+<p>When a high-energy neutron passes through the silicon substrate of a
+DRAM chip, it can collide with a silicon nucleus. This nuclear reaction
+produces secondary charged particles, such as alpha particles or heavy
+recoiling nuclei, which travel a short distance through the silicon
+crystal lattice.</p>
+<p>As these charged particles move through the silicon, they strip
+electrons from nearby atoms, creating a dense trail of electron-hole
+pairs along their path. If this ionization occurs near a DRAM storage
+capacitor or its connected bitline, the local electric field sweeps the
+generated charge carriers into the storage node.</p>
+<h2 id="critical-charge-and-bit-flipping">Critical Charge and Bit
+Flipping</h2>
+<p>Every DRAM cell has a threshold known as the critical charge, denoted
+as <span class="math inline">\(Q_{\text{crit}}\)</span>. This is the
+minimum amount of collected charge required to alter the voltage on the
+capacitor enough to cross the sense amplifier's detection threshold,
+turning a stored <code>1</code> into a <code>0</code> or vice versa.</p>
+<p>A bit flip occurs when the collected charge <span
+class="math inline">\(Q_{\text{coll}}\)</span> from the radiation strike
+exceeds this threshold:</p>
+<p>$<span class="math inline">\(Q_{\text{coll}} \ge
+Q_{\text{crit}}\)</span></p>
+<p>High-density DRAM is especially vulnerable to this condition due to
+two scaling trends:</p>
+<ul>
+<li><strong>Smaller Capacitors:</strong> Packing more bits onto a single
+die requires shrinking the physical size of each storage capacitor,
+which lowers its capacitance <span
+class="math inline">\(C\)</span>.</li>
+<li><strong>Lower Operating Voltages:</strong> Modern memory operates at
+reduced supply voltages <span class="math inline">\(V\)</span> to limit
+power consumption and heat generation.</li>
+</ul>
+<p>Because both <span class="math inline">\(C\)</span> and <span
+class="math inline">\(V\)</span> decrease in newer DRAM generations, the
+total stored charge <span class="math inline">\(Q\)</span> and the
+resulting <span class="math inline">\(Q_{\text{crit}}\)</span> drop
+significantly. Consequently, even relatively low-energy secondary
+particle strikes can deposit enough charge to corrupt stored data.</p>
+<h2 id="mitigating-soft-errors-in-classical-computing">Mitigating Soft
+Errors in Classical Computing</h2>
+<p>Because cosmic-ray-induced soft errors are unavoidable at the
+physical level, classical computing systems rely on architectural and
+circuit-level defenses to maintain data integrity:</p>
+<ul>
+<li><strong>Error-Correcting Code (ECC) Memory:</strong> Enterprise
+servers and workstations use ECC DRAM, which stores extra parity bits
+alongside data bits. Using algorithms such as Hamming codes, ECC memory
+can detect and automatically correct single-bit errors on the fly while
+flagging multi-bit errors.</li>
+<li><strong>Memory Scrubbing:</strong> Systems periodically read all
+memory locations, correct any single-bit errors found, and write the
+corrected data back to prevent multiple independent bit flips from
+accumulating in the same word.</li>
+<li><strong>Cell Design Improvements:</strong> Manufacturers use
+deep-trench or stacked capacitor geometries to maintain sufficient
+capacitance <span class="math inline">\(C\)</span> within a smaller
+horizontal footprint, helping keep <span
+class="math inline">\(Q_{\text{crit}}\)</span> above the level triggered
+by common background radiation.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-causes-cosmic-rays-to-flip-bits-in-high-density-dram';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

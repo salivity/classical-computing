@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Do Transparent D Latches Cause Race Conditions? - classical-computing</title>
+    <meta name="description" content="Level-sensitive transparent D latches are susceptible to race conditions because their outputs continuously track their data inputs for the entire duration that the clock or enable signal is active. In synchronous digital circuits, this transparency windo">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-do-transparent-d-latches-cause-race-conditions">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Do Transparent D Latches Cause Race Conditions? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-do-transparent-d-latches-cause-race-conditions" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Level-sensitive transparent D latches are susceptible to race conditions because their outputs continuously track their data inputs for the entire duration that the clock or enable signal is active. In synchronous digital circuits, this transparency windo" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-do-transparent-d-latches-cause-race-conditions">Why Do
+Transparent D Latches Cause Race Conditions?</h1>
+<p>Level-sensitive transparent D latches are susceptible to race
+conditions because their outputs continuously track their data inputs
+for the entire duration that the clock or enable signal is active. In
+synchronous digital circuits, this transparency window allows signals to
+propagate through multiple combinational logic stages and latches within
+a single clock phase, leading to timing violations and unpredictable
+state changes. Edge-triggered flip-flops avoid this problem by sampling
+the input only at a discrete clock transition, isolating sequential
+stages from one another.</p>
+<h2 id="how-level-sensitive-transparency-works">How Level-Sensitive
+Transparency Works</h2>
+<p>A D latch has a data input <span class="math inline">\(D\)</span>, an
+enable or clock input <span class="math inline">\(E\)</span>, and an
+output <span class="math inline">\(Q\)</span>. When <span
+class="math inline">\(E\)</span> is at its active level (typically high,
+<span class="math inline">\(E = 1\)</span>), the latch is
+transparent:</p>
+<p><span class="math display">\[Q(t) = D(t)\]</span></p>
+<p>Any change on <span class="math inline">\(D\)</span> passes directly
+to <span class="math inline">\(Q\)</span> after a short propagation
+delay <span class="math inline">\(t_{pd}\)</span>. When <span
+class="math inline">\(E\)</span> returns to its inactive level (<span
+class="math inline">\(E = 0\)</span>), the latch holds the last value
+present on <span class="math inline">\(D\)</span> before the
+transition.</p>
+<h2 id="the-mechanism-of-race-through">The Mechanism of
+Race-Through</h2>
+<p>Race conditions occur when the output of one latch feeds into the
+input of another latch through combinational logic, and both latches
+share the same active clock phase. Because both latches are transparent
+at the same time, a signal can "race through" the first latch, traverse
+the combinational logic, and reach the second latch before the clock
+pulse ends.</p>
+<p>For a race-through fault to occur, the total delay from the first
+latch's output to the second latch's input must be shorter than the
+active pulse width of the clock <span
+class="math inline">\(t_{pw}\)</span>:</p>
+<p><span class="math display">\[t_{pd,latch} + t_{comb} &lt;
+t_{pw}\]</span></p>
+<p>When this inequality holds, the second latch captures the new data
+from the current clock cycle instead of the intended data from the
+previous cycle. This corrupts the pipeline state and makes the circuit
+sensitive to variations in gate delays, temperature, and supply
+voltage.</p>
+<h2 id="why-edge-triggered-flip-flops-prevent-races">Why Edge-Triggered
+Flip-Flops Prevent Races</h2>
+<p>An edge-triggered D flip-flop samples <span
+class="math inline">\(D\)</span> only on a specific clock edge (rising
+or falling) and updates <span class="math inline">\(Q\)</span> shortly
+afterward. Outside of a narrow setup and hold window around that clock
+edge, changes on <span class="math inline">\(D\)</span> have no effect
+on <span class="math inline">\(Q\)</span>.</p>
+<p>In a chain of edge-triggered flip-flops sharing the same clock, the
+new value at the output of the first flip-flop appears after the
+clock-to-Q delay <span class="math inline">\(t_{cq}\)</span>. By the
+time this new value propagates through the combinational logic, the
+active clock edge has already passed, and the second flip-flop will not
+sample it until the next clock cycle. The timing requirement shifts from
+a pulse-width constraint to a minimum-delay hold constraint:</p>
+<p><span class="math display">\[t_{cq} + t_{comb} &gt;
+t_{hold}\]</span></p>
+<p>Because <span class="math inline">\(t_{cq}\)</span> is typically
+larger than <span class="math inline">\(t_{hold}\)</span>,
+edge-triggered designs are far more robust against race conditions than
+single-phase level-sensitive latch designs.</p>
+<h2 id="mitigating-races-in-latch-based-designs">Mitigating Races in
+Latch-Based Designs</h2>
+<p>When designers use latches for area or power savings, they typically
+avoid race conditions by using two-phase non-overlapping clocks (<span
+class="math inline">\(\phi_1\)</span> and <span
+class="math inline">\(\phi_2\)</span>). In this scheme, adjacent latches
+are driven by alternating clock phases that are never active
+simultaneously, ensuring that no two consecutive latches are transparent
+at the same time.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-do-transparent-d-latches-cause-race-conditions';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

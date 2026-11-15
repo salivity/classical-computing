@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do WAR and WAW Name Dependencies Create False Hazards? - classical-computing</title>
+    <meta name="description" content="Write-after-read and write-after-write name dependencies create false data hazards when two instructions reuse the same register or memory location without actually passing a value between them. In pipelined and out-of-order processors, executing these in">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-war-and-waw-name-dependencies-create-false-hazards">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do WAR and WAW Name Dependencies Create False Hazards? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-war-and-waw-name-dependencies-create-false-hazards" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Write-after-read and write-after-write name dependencies create false data hazards when two instructions reuse the same register or memory location without actually passing a value between them. In pipelined and out-of-order processors, executing these in" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-war-and-waw-name-dependencies-create-false-hazards">How
+Do WAR and WAW Name Dependencies Create False Hazards?</h1>
+<p>Write-after-read and write-after-write name dependencies create false
+data hazards when two instructions reuse the same register or memory
+location without actually passing a value between them. In pipelined and
+out-of-order processors, executing these instructions out of their
+original program order can overwrite data that an earlier instruction
+still needs or leave the wrong final value in the shared location.
+Because the conflict comes from reusing a storage name rather than a
+true data flow, these hazards are called false hazards and can be
+eliminated through register renaming.</p>
+<h2
+id="understanding-name-dependencies-vs-true-data-dependencies">Understanding
+Name Dependencies vs. True Data Dependencies</h2>
+<p>In classical computer architecture, instructions interact through
+registers and memory. A true data dependency, also known as a
+read-after-write (RAW) dependency, occurs when instruction <span
+class="math inline">\(B\)</span> needs a value computed by instruction
+<span class="math inline">\(A\)</span>. Instruction <span
+class="math inline">\(B\)</span> cannot execute until instruction <span
+class="math inline">\(A\)</span> produces its result.</p>
+<p>Name dependencies are fundamentally different. They occur when two
+instructions use the same register or memory address—called a name—even
+though no data is transferred from the first instruction to the second.
+Because there is no actual producer-consumer relationship, the
+dependency is an artifact of limited architectural storage rather than
+program logic.</p>
+<h2
+id="write-after-read-war-dependencies-and-anti-hazards">Write-After-Read
+(WAR) Dependencies and Anti-Hazards</h2>
+<p>A write-after-read (WAR) dependency, also called an anti-dependence,
+occurs when instruction <span class="math inline">\(A\)</span> reads
+from a location and a later instruction <span
+class="math inline">\(B\)</span> writes to that same location. In
+sequential execution, <span class="math inline">\(A\)</span> reads the
+old value before <span class="math inline">\(B\)</span> overwrites
+it.</p>
+<p>In a pipelined or out-of-order processor, instruction <span
+class="math inline">\(B\)</span> might be ready to execute and write its
+result before instruction <span class="math inline">\(A\)</span> has
+finished reading the operand. If <span class="math inline">\(B\)</span>
+writes early, <span class="math inline">\(A\)</span> will read the newly
+written value instead of the original value, causing a WAR hazard and
+producing an incorrect result.</p>
+<p>Consider the following sequence:</p>
+<pre class="text"><code>1: ADD R1, R2, R3   ; R1 = R2 + R3 (reads R2)
+2: SUB R2, R4, R5   ; R2 = R4 - R5 (writes R2)</code></pre>
+<p>Instruction 2 writes to <code>R2</code> after instruction 1 reads
+<code>R2</code>. If instruction 2 completes its writeback stage before
+instruction 1 reads <code>R2</code>, the <code>ADD</code> instruction
+will use the wrong value of <code>R2</code>.</p>
+<h2
+id="write-after-write-waw-dependencies-and-output-hazards">Write-After-Write
+(WAW) Dependencies and Output Hazards</h2>
+<p>A write-after-write (WAW) dependency, also called an output
+dependence, occurs when two instructions write to the same register or
+memory location. In sequential execution, the second write must happen
+last so that subsequent instructions see the newer value.</p>
+<p>If a processor executes instructions out of order or has pipelines of
+different lengths, the second instruction might finish and write its
+result before the first instruction writes its result. When the first
+instruction eventually writes, it overwrites the newer value with an
+older one, creating a WAW hazard.</p>
+<p>Consider this example:</p>
+<pre class="text"><code>1: MUL R1, R2, R3   ; R1 = R2 * R3 (writes R1, long latency)
+2: ADD R1, R4, R5   ; R1 = R4 + R5 (writes R1, short latency)</code></pre>
+<p>Multiplication typically takes more clock cycles than addition. If
+<code>ADD</code> finishes and writes to <code>R1</code> first, and
+<code>MUL</code> writes to <code>R1</code> later, <code>R1</code> will
+hold the product instead of the sum, violating program semantics.</p>
+<h2 id="eliminating-false-hazards-with-register-renaming">Eliminating
+False Hazards with Register Renaming</h2>
+<p>Because WAR and WAW dependencies do not represent true data flow,
+processors can remove them without changing program behavior. The
+standard hardware technique for doing this is register renaming.</p>
+<p>Modern out-of-order processors maintain a pool of physical registers
+that is larger than the set of architectural registers exposed to the
+instruction set. When instructions are decoded, the processor maps each
+architectural destination register to a fresh physical register.</p>
+<p>Applying register renaming to the earlier WAR example gives:</p>
+<pre class="text"><code>1: ADD P1, P2, P3   ; P1 = P2 + P3
+2: SUB P6, P4, P5   ; P6 = P4 - P5</code></pre>
+<p>Here, <code>R2</code> for the <code>ADD</code> instruction remains
+mapped to <code>P2</code>, while the <code>SUB</code> instruction writes
+to a newly allocated physical register <code>P6</code>. Both
+instructions can now execute in parallel or out of order without any
+risk of overwriting <code>P2</code>. The same mechanism resolves WAW
+hazards by giving each write its own distinct physical destination
+register.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-war-and-waw-name-dependencies-create-false-hazards';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why is EUV lithography needed for sub-7nm chips? - classical-computing</title>
+    <meta name="description" content="Extreme ultraviolet lithography is necessary for printing sub-7-nanometer circuit features because conventional deep ultraviolet light has too long a wavelength to resolve tiny transistor patterns cleanly. By switching from 193-nanometer light to 13.5-nan">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-is-euv-lithography-needed-for-sub-7-nm-chips">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why is EUV lithography needed for sub-7nm chips? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-is-euv-lithography-needed-for-sub-7-nm-chips" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Extreme ultraviolet lithography is necessary for printing sub-7-nanometer circuit features because conventional deep ultraviolet light has too long a wavelength to resolve tiny transistor patterns cleanly. By switching from 193-nanometer light to 13.5-nan" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-is-euv-lithography-needed-for-sub-7nm-chips">Why is EUV
+lithography needed for sub-7nm chips?</h1>
+<p>Extreme ultraviolet lithography is necessary for printing
+sub-7-nanometer circuit features because conventional deep ultraviolet
+light has too long a wavelength to resolve tiny transistor patterns
+cleanly. By switching from 193-nanometer light to 13.5-nanometer extreme
+ultraviolet light, chipmakers can print much smaller features in a
+single exposure, avoid the compounding errors and costs of complex
+multi-patterning, and keep classical computing chips scaling in density
+and efficiency.</p>
+<h2 id="the-physics-limit-of-optical-lithography">The Physics Limit of
+Optical Lithography</h2>
+<p>In photolithography, a light source projects a circuit pattern
+through a photomask and a system of lenses onto a silicon wafer coated
+with light-sensitive photoresist. The minimum feature size, or critical
+dimension (<span class="math inline">\(CD\)</span>), that an optical
+system can print is governed by the Rayleigh criterion:</p>
+<p><span class="math display">\[CD = k_1 \frac{\lambda}{NA}\]</span></p>
+<p>In this equation, <span class="math inline">\(\lambda\)</span> is the
+wavelength of the light source, <span class="math inline">\(NA\)</span>
+is the numerical aperture of the projection optics, and <span
+class="math inline">\(k_1\)</span> is a process-dependent factor that
+reflects how aggressively engineers optimize the illumination, mask, and
+resist. Under classical diffraction limits, <span
+class="math inline">\(k_1\)</span> cannot be pushed below <span
+class="math inline">\(0.25\)</span> for a single exposure.</p>
+<p>For decades, the semiconductor industry relied on deep ultraviolet
+(DUV) lithography using argon fluoride (ArF) lasers at <span
+class="math inline">\(\lambda = 193\text{ nm}\)</span>. Even with
+immersion lithography, where purified water fills the gap between the
+final lens and the wafer to raise the effective <span
+class="math inline">\(NA\)</span> to <span
+class="math inline">\(1.35\)</span>, the physical resolution limit of a
+single 193-nanometer exposure sits around <span
+class="math inline">\(36\text{ nm}\)</span> to <span
+class="math inline">\(38\text{ nm}\)</span> half-pitch. That is far too
+coarse for sub-7-nanometer nodes, where metal pitches and gate lengths
+shrink into the teens and single digits of nanometers.</p>
+<h2 id="why-multi-patterning-hits-a-wall">Why Multi-Patterning Hits a
+Wall</h2>
+<p>Before extreme ultraviolet (EUV) lithography became production-ready,
+chipmakers stretched 193-nanometer immersion DUV beyond its
+single-exposure limit using multi-patterning techniques. Methods such as
+Litho-Etch-Litho-Etch (LELE) and Self-Aligned Quadruple Patterning
+(SAQP) split a dense circuit layer into multiple sparser masks, printing
+and etching them sequentially to achieve tighter spacing.</p>
+<p>While multi-patterning enabled early 10-nanometer and 7-nanometer
+processes, it introduces severe drawbacks at smaller geometries:</p>
+<ul>
+<li><strong>Overlay errors:</strong> Each additional exposure must align
+with previous layers to within a couple of nanometers. Misalignment
+causes shorts, open circuits, or degraded transistor performance.</li>
+<li><strong>Exploding cycle times and cost:</strong> Replacing one
+lithography step with three or four exposures, plus extra deposition and
+etch steps, dramatically increases wafer fabrication time, mask count,
+and defect opportunities.</li>
+<li><strong>Design restrictions:</strong> Self-aligned spacer techniques
+work well for regular, repeating lines, but they restrict
+two-dimensional routing flexibility needed for complex logic cells.</li>
+</ul>
+<h2 id="how-135-nanometer-light-solves-the-problem">How 13.5-Nanometer
+Light Solves the Problem</h2>
+<p>EUV lithography tackles the Rayleigh equation directly by slashing
+<span class="math inline">\(\lambda\)</span> from <span
+class="math inline">\(193\text{ nm}\)</span> down to <span
+class="math inline">\(13.5\text{ nm}\)</span>—more than a 14-fold
+reduction. Even though current EUV systems use a lower numerical
+aperture (<span class="math inline">\(NA = 0.33\)</span>, with High-NA
+systems at <span class="math inline">\(NA = 0.55\)</span> entering use),
+the massive drop in wavelength easily outweighs the smaller <span
+class="math inline">\(NA\)</span>, allowing single-exposure printing of
+features that previously required quadruple patterning with DUV.</p>
+<p>Printing with <span class="math inline">\(13.5\text{ nm}\)</span>
+light requires a completely different optical architecture. Because
+almost all materials—including air and glass lenses—absorb EUV light,
+the entire exposure path must operate in a vacuum using specialized
+reflective mirrors coated with alternating layers of molybdenum and
+silicon.</p>
+<h2 id="impact-on-classical-computing-scaling">Impact on Classical
+Computing Scaling</h2>
+<p>For classical computing processors—CPUs, GPUs, and AI
+accelerators—moving to sub-7-nanometer nodes is essential for packing
+more transistors per square millimeter while controlling power
+consumption. EUV lithography restores single-exposure patterning for
+critical metal and via layers, which tightens feature-to-feature
+placement, reduces variability, and improves manufacturing yield.
+Without EUV, continuing transistor scaling below 7 nanometers would be
+economically and physically impractical.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-is-euv-lithography-needed-for-sub-7-nm-chips';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

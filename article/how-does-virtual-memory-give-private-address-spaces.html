@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Virtual Memory Give Private Address Spaces? - classical-computing</title>
+    <meta name="description" content="Virtual memory is a memory management technique used by modern operating systems to give every running process the illusion that it owns a large, private, and contiguous block of memory. In reality, physical RAM is shared among many processes and is often">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-virtual-memory-give-private-address-spaces">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Virtual Memory Give Private Address Spaces? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-virtual-memory-give-private-address-spaces" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Virtual memory is a memory management technique used by modern operating systems to give every running process the illusion that it owns a large, private, and contiguous block of memory. In reality, physical RAM is shared among many processes and is often" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-virtual-memory-give-private-address-spaces">How Does
+Virtual Memory Give Private Address Spaces?</h1>
+<p>Virtual memory is a memory management technique used by modern
+operating systems to give every running process the illusion that it
+owns a large, private, and contiguous block of memory. In reality,
+physical RAM is shared among many processes and is often fragmented into
+non-contiguous regions. By separating the addresses a program uses from
+the actual locations in physical hardware, virtual memory provides
+isolation, simplifies programming, and allows systems to run programs
+larger than physical RAM.</p>
+<h2 id="virtual-addresses-vs-physical-addresses">Virtual Addresses vs.
+Physical Addresses</h2>
+<p>When a program executes, it does not reference physical RAM directly.
+Instead, every memory access uses a virtual address. The operating
+system and hardware cooperate to translate each virtual address into a
+corresponding physical address in RAM.</p>
+<p>Because each process has its own independent virtual address space,
+two different processes can use the exact same virtual address—such as
+<code>0x00400000</code>—without interfering with each other. The
+translation layer maps Process A's virtual address to one physical
+location and Process B's virtual address to a completely different
+physical location.</p>
+<h2 id="paging-and-address-translation">Paging and Address
+Translation</h2>
+<p>To manage memory efficiently, virtual memory divides both virtual and
+physical memory into fixed-size blocks.</p>
+<ul>
+<li><strong>Pages</strong>: Fixed-size blocks of virtual memory,
+commonly <span class="math inline">\(4\text{ KB}\)</span> (<span
+class="math inline">\(4096\)</span> bytes) in size.</li>
+<li><strong>Frames</strong>: Fixed-size blocks of physical RAM of the
+exact same size as pages.</li>
+</ul>
+<p>A virtual address of <span class="math inline">\(n\)</span> bits is
+split into two parts: a Virtual Page Number (VPN) and a page offset. If
+the page size is <span class="math inline">\(2^k\)</span> bytes, the
+lower <span class="math inline">\(k\)</span> bits represent the offset
+within the page, and the upper <span class="math inline">\(n -
+k\)</span> bits represent the VPN.</p>
+<p><span class="math display">\[\text{Virtual Address} = (\text{VPN},
+\text{Offset})\]</span></p>
+<p>During translation, the offset remains unchanged, while the VPN is
+mapped to a Physical Frame Number (PFN).</p>
+<p><span class="math display">\[\text{Physical Address} = (\text{PFN},
+\text{Offset})\]</span></p>
+<p>Because any virtual page can be mapped to any available physical
+frame, a process's memory appears contiguous in its virtual address
+space even when its frames are scattered across physical RAM.</p>
+<h2 id="the-role-of-the-page-table-and-mmu">The Role of the Page Table
+and MMU</h2>
+<p>The mapping between virtual pages and physical frames is stored in a
+data structure called a <strong>page table</strong>. The operating
+system maintains a separate page table for each process. When a context
+switch occurs—meaning the CPU switches from running one process to
+another—the operating system updates a special CPU register (such as
+<code>CR3</code> on x86 architectures) to point to the new process's
+page table.</p>
+<p>The <strong>Memory Management Unit (MMU)</strong> is the hardware
+component responsible for performing the address translation on every
+memory access. If a virtual page is not currently mapped to a physical
+frame, the MMU triggers a <strong>page fault</strong>, allowing the
+operating system to either load the required data from disk into RAM or
+terminate the process if the access is invalid.</p>
+<h2 id="speeding-up-translation-with-the-tlb">Speeding Up Translation
+with the TLB</h2>
+<p>Looking up a page table in main memory for every instruction would be
+too slow. To solve this, the MMU includes a small, fast hardware cache
+called the <strong>Translation Lookaside Buffer (TLB)</strong>.</p>
+<p>The TLB stores recent VPN-to-PFN translations. When the CPU generates
+a virtual address, the MMU checks the TLB first:</p>
+<ul>
+<li><strong>TLB Hit</strong>: The translation is found immediately, and
+physical memory is accessed with minimal delay.</li>
+<li><strong>TLB Miss</strong>: The MMU walks the page table in RAM to
+find the mapping, caches it in the TLB, and then completes the memory
+access.</li>
+</ul>
+<h2 id="process-isolation-and-security">Process Isolation and
+Security</h2>
+<p>Beyond creating the illusion of contiguous memory, virtual memory
+enforces strict isolation between processes. Each page table entry
+contains permission bits that control how a page can be accessed, such
+as read, write, and execute permissions, as well as a user/supervisor
+bit.</p>
+<p>Because a process can only generate virtual addresses, and its page
+table only maps frames belonging to that process (or explicitly shared
+regions), it cannot read or overwrite the memory of another process or
+the operating system kernel. Any attempt to access an unmapped or
+unauthorized address results in a hardware exception, allowing the
+operating system to protect system stability and security.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-virtual-memory-give-private-address-spaces';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

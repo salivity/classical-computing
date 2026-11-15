@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Mutex Locks Differ from Counting Semaphores? - classical-computing</title>
+    <meta name="description" content="Mutex locks and counting semaphores are both synchronization primitives used in classical computing to coordinate concurrent threads and prevent race conditions. While they share the goal of managing access to shared resources, they differ fundamentally i">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-mutex-locks-differ-from-counting-semaphores">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Mutex Locks Differ from Counting Semaphores? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-mutex-locks-differ-from-counting-semaphores" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Mutex locks and counting semaphores are both synchronization primitives used in classical computing to coordinate concurrent threads and prevent race conditions. While they share the goal of managing access to shared resources, they differ fundamentally i" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-mutex-locks-differ-from-counting-semaphores">How Do Mutex
+Locks Differ from Counting Semaphores?</h1>
+<p>Mutex locks and counting semaphores are both synchronization
+primitives used in classical computing to coordinate concurrent threads
+and prevent race conditions. While they share the goal of managing
+access to shared resources, they differ fundamentally in ownership,
+resource capacity, and intended use cases. Understanding these
+differences helps developers choose the right mechanism for thread
+safety and avoid common concurrency bugs such as deadlocks.</p>
+<h2 id="ownership-and-locking-semantics">Ownership and Locking
+Semantics</h2>
+<p>A mutex, short for mutual exclusion, is a locking mechanism with
+strict ownership. When a thread acquires a mutex, that specific thread
+becomes the owner of the lock. Only the owning thread is permitted to
+release (unlock) the mutex. If another thread attempts to unlock a mutex
+it does not own, the operation is invalid and typically results in
+undefined behavior or an error.</p>
+<p>A counting semaphore, by contrast, has no concept of ownership. It is
+a signaling mechanism rather than a lock. Any thread can increment
+(signal or <code>V</code>) a semaphore, and any thread can decrement
+(wait or <code>P</code>) it, regardless of which thread performed the
+previous operation. This makes semaphores well suited for
+producer-consumer patterns where one thread produces a resource and a
+different thread signals its availability.</p>
+<h2 id="binary-state-vs-integer-counter">Binary State vs. Integer
+Counter</h2>
+<p>A mutex operates as a binary state: it is either locked or unlocked.
+It protects a single critical section or shared resource so that at most
+one thread can execute that section at any given time.</p>
+<p>A counting semaphore maintains a non-negative integer counter, <span
+class="math inline">\(N\)</span>, representing the number of available
+units of a resource. When a thread waits on the semaphore, the counter
+is decremented by <span class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[N \leftarrow N - 1\]</span></p>
+<p>If <span class="math inline">\(N\)</span> is already <span
+class="math inline">\(0\)</span>, the thread blocks until another thread
+signals the semaphore, which increments the counter by <span
+class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[N \leftarrow N + 1\]</span></p>
+<p>Because <span class="math inline">\(N\)</span> can be initialized to
+any non-negative integer, a counting semaphore can allow up to <span
+class="math inline">\(N\)</span> concurrent threads to access a pool of
+identical resources simultaneously. A binary semaphore (initialized to
+<span class="math inline">\(1\)</span>) behaves similarly to a mutex in
+terms of capacity, but it still lacks ownership semantics.</p>
+<h2 id="priority-inheritance-and-deadlock-handling">Priority Inheritance
+and Deadlock Handling</h2>
+<p>Because a mutex has a single known owner, operating systems can
+implement priority inheritance protocols on mutexes. If a low-priority
+thread holds a mutex needed by a high-priority thread, the system can
+temporarily elevate the low-priority thread's priority so it finishes
+and releases the lock promptly, mitigating priority inversion.</p>
+<p>Counting semaphores cannot easily support priority inheritance
+because the system does not know which thread will eventually signal the
+semaphore. Additionally, because any thread can signal a semaphore,
+accidental double-signaling can inflate the counter beyond its intended
+maximum, whereas a mutex's strict ownership prevents another thread from
+prematurely unlocking it.</p>
+<h2 id="when-to-use-each-primitive">When to Use Each Primitive</h2>
+<p>Use a mutex when you need to protect a shared data structure or
+critical section so that only one thread modifies it at a time. The
+ownership model enforces that the same thread entering the critical
+section is the one leaving it.</p>
+<p>Use a counting semaphore when you need to control access to a finite
+pool of <span class="math inline">\(N\)</span> identical resources—such
+as database connections, worker threads, or buffer slots—or when one
+thread needs to signal another thread that an event has occurred.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-mutex-locks-differ-from-counting-semaphores';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

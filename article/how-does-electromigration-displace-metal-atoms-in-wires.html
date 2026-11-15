@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Electromigration Displace Metal Atoms in Wires? - classical-computing</title>
+    <meta name="description" content="Electromigration is the gradual movement of metal atoms in a conductor caused by the momentum transfer from flowing electrons. In classical computing, as integrated circuits scale down and interconnect wires become narrower, high current densities acceler">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-electromigration-displace-metal-atoms-in-wires">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Electromigration Displace Metal Atoms in Wires? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-electromigration-displace-metal-atoms-in-wires" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Electromigration is the gradual movement of metal atoms in a conductor caused by the momentum transfer from flowing electrons. In classical computing, as integrated circuits scale down and interconnect wires become narrower, high current densities acceler" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-electromigration-displace-metal-atoms-in-wires">How
+Does Electromigration Displace Metal Atoms in Wires?</h1>
+<p>Electromigration is the gradual movement of metal atoms in a
+conductor caused by the momentum transfer from flowing electrons. In
+classical computing, as integrated circuits scale down and interconnect
+wires become narrower, high current densities accelerate this atomic
+displacement. Over time, the migration of atoms creates voids that break
+electrical connections and hillocks that cause short circuits, leading
+to chip failure.</p>
+<h2 id="the-physics-of-momentum-transfer">The Physics of Momentum
+Transfer</h2>
+<p>When an electric current flows through a metal interconnect, such as
+copper or aluminum, conduction electrons move from the negative terminal
+(cathode) toward the positive terminal (anode). As these electrons
+travel through the crystal lattice of the metal, they collide with
+thermally vibrating metal ions.</p>
+<p>Two competing forces act on the metal ions during this process:</p>
+<ul>
+<li><strong>The Direct Electrostatic Force (<span
+class="math inline">\(F_{\text{direct}}\)</span>):</strong> The electric
+field pulls the positively charged metal ions toward the cathode.</li>
+<li><strong>The Electron Wind Force (<span
+class="math inline">\(F_{\text{wind}}\)</span>):</strong> The stream of
+electrons transfers momentum to the metal ions, pushing them toward the
+anode.</li>
+</ul>
+<p>In most metals used in classical computing, the electron wind force
+is significantly stronger than the direct electrostatic force. The net
+force <span class="math inline">\(F_{\text{net}}\)</span> acting on an
+ion can be expressed as:</p>
+<p><span class="math display">\[F_{\text{net}} = (Z_{\text{el}} +
+Z_{\text{wind}}) e E = Z^* e E\]</span></p>
+<p>Here, <span class="math inline">\(e\)</span> is the elementary
+charge, <span class="math inline">\(E\)</span> is the electric field,
+and <span class="math inline">\(Z^*\)</span> is the effective valence,
+which is typically negative because the electron wind dominates.</p>
+<h2 id="why-narrow-interconnects-are-vulnerable">Why Narrow
+Interconnects Are Vulnerable</h2>
+<p>As transistor sizes shrink, the cross-sectional area <span
+class="math inline">\(A\)</span> of the metal wires connecting them
+decreases. For a given current <span class="math inline">\(I\)</span>,
+the current density <span class="math inline">\(J\)</span> increases
+inversely with the area:</p>
+<p><span class="math display">\[J = \frac{I}{A}\]</span></p>
+<p>When current density reaches high levels—often exceeding <span
+class="math inline">\(10^5\text{ A/cm}^2\)</span> in modern
+processors—the rate of electron-ion collisions rises dramatically.
+Additionally, narrow wires have a higher surface-to-volume ratio. Atoms
+located at grain boundaries, interfaces, and surfaces are less tightly
+bound than those inside the bulk crystal lattice, making them much
+easier to dislodge.</p>
+<h2 id="the-role-of-diffusion-pathways">The Role of Diffusion
+Pathways</h2>
+<p>Metal atoms do not move uniformly through the wire; instead, they
+follow paths of least resistance:</p>
+<ol type="1">
+<li><strong>Grain Boundary Diffusion:</strong> Polycrystalline metals
+consist of many small crystal grains. The boundaries between these
+grains have irregular atomic arrangements and lower activation energies,
+serving as fast highways for atomic movement.</li>
+<li><strong>Interface Diffusion:</strong> In modern copper
+interconnects, atoms often migrate along the interface between the
+copper and the surrounding barrier or capping layers.</li>
+<li><strong>Surface Diffusion:</strong> Atoms on the outer edges of the
+wire can move more freely due to fewer neighboring bonds.</li>
+</ol>
+<h2 id="void-and-hillock-formation">Void and Hillock Formation</h2>
+<p>Because atomic flux is not uniform throughout an interconnect,
+regions of flux divergence appear. Where more atoms leave a region than
+enter it, vacancies accumulate and eventually coalesce into a
+<strong>void</strong>. A growing void reduces the wire's cross-sectional
+area, further increasing the local current density and accelerating
+heating until an open circuit occurs.</p>
+<p>Conversely, where more atoms arrive than leave, material piles up to
+form a <strong>hillock</strong> or whisker. These protrusions can crack
+the surrounding insulating dielectric and touch adjacent wires, creating
+an unintended short circuit.</p>
+<h2 id="predicting-mean-time-to-failure">Predicting Mean Time to
+Failure</h2>
+<p>Engineers estimate the lifespan of interconnects under
+electromigration using Black's equation, which relates the Mean Time to
+Failure (<span class="math inline">\(\text{MTTF}\)</span>) to current
+density and temperature:</p>
+<p><span class="math display">\[\text{MTTF} = A J^{-n}
+\exp\left(\frac{E_a}{k_B T}\right)\]</span></p>
+<p>In this equation, <span class="math inline">\(A\)</span> is a
+constant based on wire geometry and material, <span
+class="math inline">\(n\)</span> is a scaling factor (typically between
+<span class="math inline">\(1\)</span> and <span
+class="math inline">\(2\)</span>), <span
+class="math inline">\(E_a\)</span> is the activation energy for
+diffusion, <span class="math inline">\(k_B\)</span> is the Boltzmann
+constant, and <span class="math inline">\(T\)</span> is the absolute
+temperature. Because temperature appears in the exponent, Joule heating
+from high current densities compounds the problem, exponentially
+shortening the wire's lifetime.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-electromigration-displace-metal-atoms-in-wires';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does IEEE 754 Encode Floating-Point Numbers? - classical-computing</title>
+    <meta name="description" content="The IEEE 754 standard defines how computers represent and manipulate floating-point numbers in binary. It divides a fixed-width bit sequence into three distinct fields: the sign bit, the exponent, and the mantissa, which is also known as the significand.">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-ieee-754-encode-floating-point-numbers">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does IEEE 754 Encode Floating-Point Numbers? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-ieee-754-encode-floating-point-numbers" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The IEEE 754 standard defines how computers represent and manipulate floating-point numbers in binary. It divides a fixed-width bit sequence into three distinct fields: the sign bit, the exponent, and the mantissa, which is also known as the significand." />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-ieee-754-encode-floating-point-numbers">How Does IEEE
+754 Encode Floating-Point Numbers?</h1>
+<p>The IEEE 754 standard defines how computers represent and manipulate
+floating-point numbers in binary. It divides a fixed-width bit sequence
+into three distinct fields: the sign bit, the exponent, and the
+mantissa, which is also known as the significand. By combining these
+three components with a specific bias and an implicit leading bit,
+classical computers can represent a vast range of real numbers, from
+tiny fractions to massive values, as well as special states like
+infinity and Not a Number.</p>
+<h2 id="bit-layout-and-precision-formats">Bit Layout and Precision
+Formats</h2>
+<p>IEEE 754 specifies several binary formats, with single-precision
+(32-bit) and double-precision (64-bit) being the most common in
+classical computing.</p>
+<p>In single-precision (binary32), the 32 bits are allocated as
+follows:</p>
+<ul>
+<li><strong>Sign bit:</strong> 1 bit (bit 31)</li>
+<li><strong>Exponent:</strong> 8 bits (bits 30 to 23)</li>
+<li><strong>Mantissa:</strong> 23 bits (bits 22 to 0)</li>
+</ul>
+<p>In double-precision (binary64), the 64 bits are allocated as
+follows:</p>
+<ul>
+<li><strong>Sign bit:</strong> 1 bit (bit 63)</li>
+<li><strong>Exponent:</strong> 11 bits (bits 62 to 52)</li>
+<li><strong>Mantissa:</strong> 52 bits (bits 51 to 0)</li>
+</ul>
+<h2 id="the-sign-bit">The Sign Bit</h2>
+<p>The sign bit <span class="math inline">\(s\)</span> is the most
+significant bit and determines whether the number is positive or
+negative. A value of <span class="math inline">\(0\)</span> indicates a
+positive number, while a value of <span class="math inline">\(1\)</span>
+indicates a negative number. Mathematically, this is expressed as <span
+class="math inline">\((-1)^s\)</span>. Because the sign is stored
+separately from the magnitude, IEEE 754 supports both <span
+class="math inline">\(+0\)</span> and <span
+class="math inline">\(-0\)</span>.</p>
+<h2 id="the-biased-exponent">The Biased Exponent</h2>
+<p>The exponent field <span class="math inline">\(E\)</span> represents
+the power of <span class="math inline">\(2\)</span> by which the
+mantissa is scaled. Rather than using two's complement to store negative
+exponents, IEEE 754 uses a biased representation. A fixed bias <span
+class="math inline">\(B\)</span> is added to the actual exponent <span
+class="math inline">\(e\)</span> so that the stored value <span
+class="math inline">\(E = e + B\)</span> is always an unsigned
+integer.</p>
+<p>For a field of <span class="math inline">\(k\)</span> bits, the bias
+is calculated as:</p>
+<p><span class="math display">\[B = 2^{k-1} - 1\]</span></p>
+<ul>
+<li>For single-precision (<span class="math inline">\(k = 8\)</span>),
+the bias is <span class="math inline">\(127\)</span>.</li>
+<li>For double-precision (<span class="math inline">\(k = 11\)</span>),
+the bias is <span class="math inline">\(1023\)</span>.</li>
+</ul>
+<p>Using a bias allows floating-point numbers to be compared
+lexicographically as unsigned integers, simplifying hardware comparison
+circuits.</p>
+<h2 id="the-mantissa-and-the-implicit-leading-bit">The Mantissa and the
+Implicit Leading Bit</h2>
+<p>The mantissa field <span class="math inline">\(M\)</span> stores the
+fractional part of the number's binary scientific notation. For
+normalized numbers, binary scientific notation always has a single
+non-zero digit—which in binary must be <span
+class="math inline">\(1\)</span>—before the binary point (e.g., <span
+class="math inline">\(1.xxxx_2 \times 2^e\)</span>).</p>
+<p>Because this leading <span class="math inline">\(1\)</span> is always
+present in normalized numbers, IEEE 754 omits it from storage to gain an
+extra bit of precision. The 23-bit mantissa in single-precision actually
+represents 24 bits of precision, and the 52-bit mantissa in
+double-precision represents 53 bits.</p>
+<p>The value of a normalized floating-point number is computed as:</p>
+<p><span class="math display">\[V = (-1)^s \times (1 + M) \times 2^{E -
+B}\]</span></p>
+<p>Here, <span class="math inline">\(M\)</span> is the fractional value
+of the mantissa bits:</p>
+<p><span class="math display">\[M = \sum_{i=1}^{p} b_{-i}
+2^{-i}\]</span></p>
+<p>where <span class="math inline">\(p\)</span> is the number of
+mantissa bits (<span class="math inline">\(23\)</span> or <span
+class="math inline">\(52\)</span>) and <span
+class="math inline">\(b_{-i}\)</span> is the <span
+class="math inline">\(i\)</span>-th bit of the mantissa from left to
+right.</p>
+<h2 id="special-values-and-subnormal-numbers">Special Values and
+Subnormal Numbers</h2>
+<p>IEEE 754 reserves the minimum and maximum exponent values (<span
+class="math inline">\(E = 0\)</span> and <span class="math inline">\(E =
+2^k - 1\)</span>) to encode special cases:</p>
+<ul>
+<li><strong>Zero:</strong> When <span class="math inline">\(E =
+0\)</span> and <span class="math inline">\(M = 0\)</span>, the value is
+<span class="math inline">\(+0\)</span> or <span
+class="math inline">\(-0\)</span> depending on the sign bit.</li>
+<li><strong>Subnormal Numbers:</strong> When <span
+class="math inline">\(E = 0\)</span> and <span class="math inline">\(M
+\neq 0\)</span>, the implicit leading bit becomes <span
+class="math inline">\(0\)</span> instead of <span
+class="math inline">\(1\)</span>, and the exponent is fixed at <span
+class="math inline">\(1 - B\)</span>. The value is <span
+class="math inline">\((-1)^s \times M \times 2^{1 - B}\)</span>. This
+allows gradual underflow near zero.</li>
+<li><strong>Infinity:</strong> When all exponent bits are <span
+class="math inline">\(1\)</span> (<span class="math inline">\(E = 2^k -
+1\)</span>) and <span class="math inline">\(M = 0\)</span>, the value
+represents <span class="math inline">\(+\infty\)</span> or <span
+class="math inline">\(-\infty\)</span>.</li>
+<li><strong>NaN (Not a Number):</strong> When all exponent bits are
+<span class="math inline">\(1\)</span> and <span class="math inline">\(M
+\neq 0\)</span>, the value represents NaN, which is used for undefined
+results such as <span class="math inline">\(0/0\)</span> or <span
+class="math inline">\(\sqrt{-1}\)</span>.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-ieee-754-encode-floating-point-numbers';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

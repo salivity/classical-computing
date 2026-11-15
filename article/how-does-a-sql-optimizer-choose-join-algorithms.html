@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a SQL Optimizer Choose Join Algorithms? - classical-computing</title>
+    <meta name="description" content="A cost-based SQL query optimizer selects between nested-loop joins, hash joins, and sort-merge joins by estimating the total resource cost of each physical operator for a given query plan. It combines table statistics, available indexes, memory budgets, a">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-sql-optimizer-choose-join-algorithms">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a SQL Optimizer Choose Join Algorithms? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-sql-optimizer-choose-join-algorithms" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A cost-based SQL query optimizer selects between nested-loop joins, hash joins, and sort-merge joins by estimating the total resource cost of each physical operator for a given query plan. It combines table statistics, available indexes, memory budgets, a" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-sql-optimizer-choose-join-algorithms">How Does a SQL
+Optimizer Choose Join Algorithms?</h1>
+<p>A cost-based SQL query optimizer selects between nested-loop joins,
+hash joins, and sort-merge joins by estimating the total resource cost
+of each physical operator for a given query plan. It combines table
+statistics, available indexes, memory budgets, and sort order
+requirements to predict CPU and I/O expenses, then picks the algorithm
+with the lowest estimated total cost.</p>
+<h2 id="the-cost-model-foundation">The Cost Model Foundation</h2>
+<p>Relational databases translate a declarative SQL query into a tree of
+physical operators. For a join between two relations <span
+class="math inline">\(R\)</span> and <span
+class="math inline">\(S\)</span>, the optimizer evaluates a cost
+function typically modeled as:</p>
+<p><span class="math display">\[\text{Cost} = w_{\text{io}} \cdot
+\text{I/O}_{\text{pages}} + w_{\text{cpu}} \cdot
+\text{CPU}_{\text{tuples}}\]</span></p>
+<p>Here, <span class="math inline">\(\text{I/O}_{\text{pages}}\)</span>
+represents the estimated number of disk or buffer-pool page reads, <span
+class="math inline">\(\text{CPU}_{\text{tuples}}\)</span> represents the
+number of tuple comparisons or hash computations, and <span
+class="math inline">\(w_{\text{io}}\)</span> and <span
+class="math inline">\(w_{\text{cpu}}\)</span> are system-calibrated
+weights. To estimate these quantities, the optimizer relies on catalog
+statistics such as row counts (<span class="math inline">\(|R|\)</span>
+and <span class="math inline">\(|S|\)</span>), page counts (<span
+class="math inline">\(P_R\)</span> and <span
+class="math inline">\(P_S\)</span>), histograms, and distinct value
+counts.</p>
+<h2 id="nested-loop-join">Nested-Loop Join</h2>
+<p>A nested-loop join iterates over each tuple in the outer relation
+<span class="math inline">\(R\)</span> and scans the inner relation
+<span class="math inline">\(S\)</span> for matching tuples.</p>
+<ul>
+<li><strong>Block Nested-Loop Join:</strong> When no index exists on the
+join key of <span class="math inline">\(S\)</span>, the optimizer reads
+<span class="math inline">\(R\)</span> in chunks that fit into available
+memory buffers. The I/O cost is roughly <span class="math inline">\(P_R
++ \lceil P_R / B \rceil \cdot P_S\)</span>, where <span
+class="math inline">\(B\)</span> is the number of buffer pages.</li>
+<li><strong>Index Nested-Loop Join:</strong> When <span
+class="math inline">\(S\)</span> has an index (such as a B-tree) on the
+join column, the inner scan is replaced by an index lookup per outer
+tuple. The cost drops to <span class="math inline">\(P_R + |R| \cdot
+c_{\text{index}}\)</span>, where <span
+class="math inline">\(c_{\text{index}}\)</span> is the cost of
+traversing the index.</li>
+</ul>
+<p>Optimizers favor nested-loop joins when the outer relation is very
+small, when a selective index exists on the inner relation, or when the
+query uses non-equijoin predicates (such as <code>&lt;</code> or
+<code>!=</code>) that hash and sort-merge joins cannot directly
+handle.</p>
+<h2 id="hash-join">Hash Join</h2>
+<p>A hash join is designed for equijoins and works in two phases: build
+and probe. The optimizer designates the smaller relation (say <span
+class="math inline">\(R\)</span>) as the build input, constructing an
+in-memory hash table on its join key. It then streams the larger
+relation <span class="math inline">\(S\)</span> (the probe input),
+hashing each tuple's join key to find matches.</p>
+<p>If the build input fits entirely in the allocated memory (<span
+class="math inline">\(P_R \le M\)</span>), the I/O cost is linear:</p>
+<p><span class="math display">\[\text{Cost}_{\text{hash}} \approx P_R +
+P_S\]</span></p>
+<p>If <span class="math inline">\(R\)</span> exceeds available memory,
+the optimizer uses a grace hash join, partitioning both <span
+class="math inline">\(R\)</span> and <span
+class="math inline">\(S\)</span> into <span
+class="math inline">\(k\)</span> buckets on disk and joining each bucket
+pair independently. This increases the I/O cost to approximately <span
+class="math inline">\(3(P_R + P_S)\)</span> due to writing and
+re-reading partitions.</p>
+<p>Optimizers choose hash joins for large, unsorted datasets joined on
+equality predicates, provided there is enough memory to avoid excessive
+disk spilling.</p>
+<h2 id="sort-merge-join">Sort-Merge Join</h2>
+<p>A sort-merge join also targets equijoins and consists of two stages:
+sorting both relations on the join key, followed by a linear merge
+scan.</p>
+<ul>
+<li>If both inputs are already sorted—for example, from an index scan or
+an upstream <code>ORDER BY</code>—the sort phase is skipped, and the I/O
+cost is simply <span class="math inline">\(P_R + P_S\)</span>.</li>
+<li>If either input is unsorted, the optimizer adds external merge-sort
+costs, which scale as <span class="math inline">\(O(P \log_B P)\)</span>
+I/O operations.</li>
+</ul>
+<p>Optimizers prefer sort-merge joins when one or both inputs are
+already ordered on the join key, when memory is too constrained for a
+hash table, or when the query requires the output to be sorted (such as
+for a subsequent <code>ORDER BY</code>, <code>GROUP BY</code>, or
+<code>DISTINCT</code> operation), allowing the sort cost to be amortized
+across multiple operators.</p>
+<h2 id="how-the-optimizer-makes-the-final-decision">How the Optimizer
+Makes the Final Decision</h2>
+<p>The optimizer does not evaluate join algorithms in isolation; it
+considers them as part of a global plan search (often using dynamic
+programming, as in System R). For each join node, it tracks physical
+properties like sort order and estimates cardinality using selectivity
+factors. It then compares the cheapest valid plan for each algorithm,
+balancing immediate I/O and CPU costs against downstream benefits like
+avoiding extra sorts.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-sql-optimizer-choose-join-algorithms';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

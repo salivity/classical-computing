@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Are Memory Pages and Frames Fixed at 4 KB? - classical-computing</title>
+    <meta name="description" content="Physical memory frames and virtual memory pages are divided into fixed-size blocks, commonly 4 kilobytes, to simplify memory management, eliminate external fragmentation, and enable fast hardware address translation. This design strikes a practical balanc">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-are-memory-pages-and-frames-fixed-at-4-kb">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Are Memory Pages and Frames Fixed at 4 KB? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-are-memory-pages-and-frames-fixed-at-4-kb" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Physical memory frames and virtual memory pages are divided into fixed-size blocks, commonly 4 kilobytes, to simplify memory management, eliminate external fragmentation, and enable fast hardware address translation. This design strikes a practical balanc" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-are-memory-pages-and-frames-fixed-at-4-kb">Why Are Memory
+Pages and Frames Fixed at 4 KB?</h1>
+<p>Physical memory frames and virtual memory pages are divided into
+fixed-size blocks, commonly 4 kilobytes, to simplify memory management,
+eliminate external fragmentation, and enable fast hardware address
+translation. This design strikes a practical balance between minimizing
+wasted memory inside allocated blocks and keeping the metadata required
+to track those blocks small enough to manage efficiently.</p>
+<h2 id="eliminating-external-fragmentation">Eliminating External
+Fragmentation</h2>
+<p>When memory is allocated in variable-sized chunks, freeing and
+reallocating blocks of different sizes leaves behind small,
+non-contiguous gaps of free memory. Over time, this external
+fragmentation makes it difficult to find a single contiguous block large
+enough for a new allocation, even when the total amount of free memory
+is sufficient.</p>
+<p>Dividing both physical RAM into frames and virtual address spaces
+into pages of the exact same fixed size solves this problem. Any free
+physical frame can hold any virtual page. The operating system never
+needs to search for a specific-sized hole or compact memory to make room
+for a process, because every block is interchangeable.</p>
+<h2 id="fast-address-translation-with-bitwise-operations">Fast Address
+Translation with Bitwise Operations</h2>
+<p>Fixed-size blocks that are powers of two allow the CPU's Memory
+Management Unit (MMU) to translate virtual addresses into physical
+addresses using simple bit manipulation rather than expensive division
+or multiplication. For a standard 4 KB page size, the size in bytes
+is:</p>
+<p><span class="math display">\[4\text{ KB} = 4096\text{ bytes} =
+2^{12}\text{ bytes}\]</span></p>
+<p>Because <span class="math inline">\(4096 = 2^{12}\)</span>, any byte
+within a page can be addressed using the lowest <span
+class="math inline">\(12\)</span> bits of a virtual address. The MMU
+splits a virtual address into two parts:</p>
+<ul>
+<li><strong>Page Offset:</strong> The lower <span
+class="math inline">\(12\)</span> bits, which identify the exact byte
+within the page and remain unchanged during translation.</li>
+<li><strong>Virtual Page Number (VPN):</strong> The remaining upper
+bits, which the MMU uses to look up the corresponding physical frame
+number in the page table.</li>
+</ul>
+<p>Concatenating the physical frame number with the <span
+class="math inline">\(12\)</span>-bit offset produces the final physical
+address in a single hardware step.</p>
+<h2 id="balancing-internal-fragmentation-and-page-table-size">Balancing
+Internal Fragmentation and Page Table Size</h2>
+<p>Choosing the exact block size involves a trade-off between two
+competing costs:</p>
+<ul>
+<li><strong>Internal Fragmentation:</strong> Memory allocated to a
+process that goes unused because the process does not fill the entire
+last page. On average, a process wastes half a page per contiguous
+allocation, or about <span class="math inline">\(2\text{ KB}\)</span>
+for a <span class="math inline">\(4\text{ KB}\)</span> page size. Larger
+pages increase this waste.</li>
+<li><strong>Page Table Overhead:</strong> The memory required to store
+the mapping between virtual pages and physical frames. Smaller pages
+mean more total pages in a given address space, which increases the size
+of the page tables and puts more pressure on the Translation Lookaside
+Buffer (TLB), the CPU's cache for recent address translations.</li>
+</ul>
+<p>A <span class="math inline">\(4\text{ KB}\)</span> block size sits in
+the sweet spot for general-purpose computing. It keeps internal
+fragmentation low enough for typical workloads while keeping page tables
+manageable.</p>
+<h2 id="alignment-with-storage-and-hardware">Alignment with Storage and
+Hardware</h2>
+<p>Historically, <span class="math inline">\(4\text{ KB}\)</span> also
+aligned well with the sector and block sizes of storage devices and file
+systems. When the operating system swaps a memory page out to disk or
+reads a file into memory, transferring data in <span
+class="math inline">\(4\text{ KB}\)</span> chunks matches the natural
+block size of the underlying storage hardware, reducing I/O overhead.
+Although modern systems also support larger "huge pages" (such as <span
+class="math inline">\(2\text{ MB}\)</span> or <span
+class="math inline">\(1\text{ GB}\)</span>) for memory-intensive
+applications, <span class="math inline">\(4\text{ KB}\)</span> remains
+the foundational default in classical computing architectures.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-are-memory-pages-and-frames-fixed-at-4-kb';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

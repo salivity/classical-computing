@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Does a Multiplexer Do in Classical Computing? - classical-computing</title>
+    <meta name="description" content="A multiplexer is a combinational logic circuit in classical computing that selects one of several input signals and forwards it to a single output line. By using binary select lines, it acts as a digitally controlled switch that shares a single communicat">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-does-a-multiplexer-do-in-classical-computing">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Does a Multiplexer Do in Classical Computing? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-does-a-multiplexer-do-in-classical-computing" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A multiplexer is a combinational logic circuit in classical computing that selects one of several input signals and forwards it to a single output line. By using binary select lines, it acts as a digitally controlled switch that shares a single communicat" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-does-a-multiplexer-do-in-classical-computing">What Does a
+Multiplexer Do in Classical Computing?</h1>
+<p>A multiplexer is a combinational logic circuit in classical computing
+that selects one of several input signals and forwards it to a single
+output line. By using binary select lines, it acts as a digitally
+controlled switch that shares a single communication channel or hardware
+resource among multiple data sources. This capability reduces wiring
+complexity, lowers hardware costs, and enables efficient data routing
+inside processors and digital systems.</p>
+<h2 id="core-function-and-signal-routing">Core Function and Signal
+Routing</h2>
+<p>In digital electronics, a multiplexer—often abbreviated as MUX—takes
+<span class="math inline">\(2^n\)</span> data inputs, <span
+class="math inline">\(n\)</span> select lines, and produces 1 output.
+The binary value applied to the select lines determines which specific
+input line is connected to the output at any given moment.</p>
+<p>For example, a 4-to-1 multiplexer has 4 data inputs (<span
+class="math inline">\(I_0, I_1, I_2, I_3\)</span>) and 2 select lines
+(<span class="math inline">\(S_1, S_0\)</span>). Depending on the binary
+combination of <span class="math inline">\(S_1\)</span> and <span
+class="math inline">\(S_0\)</span>, the output <span
+class="math inline">\(Y\)</span> mirrors the corresponding input:</p>
+<ul>
+<li>When <span class="math inline">\(S_1 S_0 = 00\)</span>, <span
+class="math inline">\(Y = I_0\)</span></li>
+<li>When <span class="math inline">\(S_1 S_0 = 01\)</span>, <span
+class="math inline">\(Y = I_1\)</span></li>
+<li>When <span class="math inline">\(S_1 S_0 = 10\)</span>, <span
+class="math inline">\(Y = I_2\)</span></li>
+<li>When <span class="math inline">\(S_1 S_0 = 11\)</span>, <span
+class="math inline">\(Y = I_3\)</span></li>
+</ul>
+<p>This behavior can be expressed as a Boolean equation:</p>
+<p><span class="math display">\[Y = \overline{S_1}\overline{S_0}I_0 +
+\overline{S_1}S_0I_1 + S_1\overline{S_0}I_2 + S_1S_0I_3\]</span></p>
+<h2 id="role-in-classical-computing-architectures">Role in Classical
+Computing Architectures</h2>
+<p>Multiplexers are fundamental building blocks in central processing
+units (CPUs) and memory systems. Because modern computers process and
+move vast amounts of data, dedicating a separate physical wire for every
+possible signal path is impractical. Multiplexers solve this by allowing
+multiple components to share a common data bus.</p>
+<p>Key applications include:</p>
+<ul>
+<li><strong>Arithmetic Logic Unit (ALU) Selection:</strong> Choosing
+which operand or register value enters the ALU for computation.</li>
+<li><strong>Data Bus Sharing:</strong> Routing data from multiple
+registers, caches, or peripheral devices onto a single shared bus
+without signal collisions.</li>
+<li><strong>Parallel-to-Serial Conversion:</strong> Converting parallel
+data bits into a sequential stream for transmission over a single
+communication line.</li>
+<li><strong>Boolean Function Implementation:</strong> Generating custom
+combinational logic functions by connecting inputs to fixed logic levels
+(<span class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>) and using the select lines as
+variables.</li>
+</ul>
+<h2 id="why-multiplexing-matters">Why Multiplexing Matters</h2>
+<p>Without multiplexers, digital circuits would require exponentially
+more physical interconnections, increasing chip area, power consumption,
+and signal interference. By concentrating multiple input signals onto a
+single output line under precise binary control, multiplexers make
+scalable, high-speed classical computing possible.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-does-a-multiplexer-do-in-classical-computing';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

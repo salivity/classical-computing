@@ -1,0 +1,2402 @@
+[
+  [
+    400,
+    "How Does JTAG Debug Silicon Hardware and Registers?",
+    "JTAG, standardized as IEEE 1149.1, provides a serial interface that lets engineers test printed circuit boards and debug integrated circuits after fabrication. By shifting instructions and data through dedicated on-chip test logic, engineers can observe a",
+    false
+  ],
+  [
+    399,
+    "How Does Coverage-Guided Fuzzing Find Memory Corruption Bugs?",
+    "Coverage-guided fuzz testing automatically discovers memory corruption bugs by generating mutated inputs, executing the target program, and tracking which code paths each input reaches. When an input triggers new code coverage, the fuzzer saves it to a co",
+    false
+  ],
+  [
+    398,
+    "How Does Model Checking Detect Deadlocks in Cache Protocols?",
+    "Model checking proves the absence of deadlocks in cache coherency protocols by translating the hardware design into a mathematical finite-state model and systematically exploring every reachable configuration. In classical computing, multi-core processors",
+    false
+  ],
+  [
+    397,
+    "How do SAT and BDD verify RTL to gate netlist equivalence?",
+    "Formal equivalence checking ensures that a synthesized gate-level netlist implements the exact same logical behavior as the original register-transfer-level (RTL) design. Rather than relying on simulation, which can only test a fraction of possible input",
+    false
+  ],
+  [
+    396,
+    "How Does Static Timing Analysis Verify Chip Timing?",
+    "Static Timing Analysis verifies that every combinational path in a modern processor meets clock constraints by modeling the circuit as a directed acyclic graph and computing worst-case signal delays mathematically rather than simulating input vectors. By",
+    false
+  ],
+  [
+    395,
+    "How Do Hardware Performance Counters Measure CPU Events?",
+    "Hardware performance counters are specialized registers built directly into modern processors that record low-level microarchitectural events as code executes. Profilers like Linux perf program these counters through the kernel to measure cache misses, br",
+    false
+  ],
+  [
+    394,
+    "Why Use SPEC CPU Instead of Synthetic Microbenchmarks?",
+    "Standardized benchmark suites like SPEC CPU are used instead of synthetic microbenchmarks because they measure how a computer architecture performs on realistic, full-scale workloads rather than isolated hardware features. While microbenchmarks can test s",
+    false
+  ],
+  [
+    393,
+    "How Do ACPI Tables Manage Hardware and Sleep States?",
+    "Advanced Configuration and Power Interface tables act as a standardized bridge between system firmware and the operating system in classical computing. Stored in memory during boot, these data structures describe the physical hardware layout, interrupt ro",
+    false
+  ],
+  [
+    392,
+    "How Does the Roofline Model Show Compute vs Memory Bounds?",
+    "The Roofline performance model is a visual tool used in classical computing to evaluate how efficiently a computational kernel utilizes hardware resources. By plotting attainable performance against arithmetic intensity on a log-log scale, it creates a ce",
+    false
+  ],
+  [
+    391,
+    "Why Do ARM and RISC-V Systems Use Device Trees Over ACPI?",
+    "ARM and RISC-V embedded systems rely on flattened Device Trees rather than ACPI because embedded hardware requires a lightweight, static, and easily customizable way to describe non-discoverable components. While ACPI was designed for standardized x86 PCs",
+    false
+  ],
+  [
+    390,
+    "How Does GPT Use 64-Bit LBA and Redundant Headers?",
+    "The GUID Partition Table, or GPT, is a modern disk partitioning standard that replaces the legacy Master Boot Record by using 64-bit logical block addressing and redundant headers. By expanding address space to 64 bits and storing backup partition metadat",
+    false
+  ],
+  [
+    389,
+    "What Hardware Diagnostics Run During Power-On Self-Test?",
+    "The Power-On Self-Test is a critical sequence of hardware diagnostic routines executed by a computer's firmware immediately after power is applied and before any operating system begins to load. Stored in non-volatile memory such as BIOS or UEFI, this pro",
+    false
+  ],
+  [
+    388,
+    "What were the 2TB and 4-partition limits of legacy MBR?",
+    "The legacy Master Boot Record partitioning scheme in classical computing was constrained by a maximum addressable disk size of roughly two terabytes and a limit of four primary partitions per drive. Both restrictions stemmed directly from the fixed 512-by",
+    false
+  ],
+  [
+    387,
+    "How Does the Iron Law of Processor Performance Work?",
+    "The iron law of processor performance is a fundamental equation in computer architecture that expresses the total execution time of a program as the product of three distinct factors: instruction count, cycles per instruction, and clock cycle time. By sep",
+    false
+  ],
+  [
+    386,
+    "How Does GRUB Load the Kernel and Initial Ramdisk?",
+    "A multi-stage bootloader like GRUB bridges the gap between system firmware and the operating system kernel during the boot process. Because early boot environments have strict size and hardware limitations, a single small program cannot understand complex",
+    false
+  ],
+  [
+    385,
+    "How Does Secure Boot Verify Signatures to Block Rootkits?",
+    "Secure Boot is a firmware-level security standard in classical computing that prevents unauthorized code, such as bootkits and kernel-level rootkits, from running during system startup. It achieves this by using asymmetric cryptography to verify the digit",
+    false
+  ],
+  [
+    384,
+    "Where Does a CPU Fetch Its First Instruction on Reset?",
+    "When a classical computer receives a power-good signal and releases the processor from reset, the CPU does not start by reading from RAM or a hard drive. Instead, its internal hardware forces the instruction pointer to a predetermined memory address known",
+    false
+  ],
+  [
+    383,
+    "How Do UART Peripherals Frame Serial Bytes Without a Clock?",
+    "Universal Asynchronous Receiver-Transmitter peripherals transmit and receive serial data over a single wire per direction without a shared clock signal by wrapping each byte in a standardized frame of start, data, parity, and stop bits. Because there is n",
+    false
+  ],
+  [
+    382,
+    "Why Did UEFI Replace Legacy BIOS in Modern Computers?",
+    "The Unified Extensible Firmware Interface replaced legacy 16-bit real-mode BIOS firmware because modern hardware outgrew the architectural limits of the 1980s PC platform. Legacy BIOS was restricted to 16-bit processor mode, 1 megabyte of addressable memo",
+    false
+  ],
+  [
+    381,
+    "How Does the I2C Bus Work With Just Two Open-Drain Lines?",
+    "The Inter-Integrated Circuit (I2C) bus enables multiple master and slave devices to communicate over just two bidirectional wires: Serial Data (SDA) and Serial Clock (SCL). By using open-drain drivers paired with pull-up resistors, devices can share the b",
+    false
+  ],
+  [
+    380,
+    "How Does PWM Vary Duty Cycle to Control Motors and LEDs?",
+    "Pulse-Width Modulation (PWM) is a technique used in classical computing and digital electronics to control analog devices using purely digital signals. By rapidly switching a digital square wave between its high and low states, a microcontroller can vary",
+    false
+  ],
+  [
+    379,
+    "Why Is Execution Time Better Than Clock Speed or IPC?",
+    "Total execution time is the most reliable measure of processor performance in classical computing because it captures the combined effect of every hardware and software factor involved in completing a workload. Relying on clock frequency or instructions p",
+    false
+  ],
+  [
+    378,
+    "How Does a Baseboard Management Controller Work Remotely?",
+    "An out-of-band Baseboard Management Controller is a dedicated microcontroller embedded on an enterprise server motherboard that enables administrators to monitor hardware health and reboot systems remotely, even when the main operating system is unrespons",
+    false
+  ],
+  [
+    377,
+    "How Do ADCs Sample and Quantize Sensor Voltages?",
+    "Analog-to-Digital Converters (ADCs) bridge the physical world and classical computing by transforming continuous analog voltages from sensors into discrete binary numbers. This conversion happens through two primary stages: sampling the signal at regular",
+    false
+  ],
+  [
+    376,
+    "Why Does SPI Achieve Higher Throughput Than I2C?",
+    "The Serial Peripheral Interface achieves higher throughput than the Inter-Integrated Circuit protocol because it uses separate unidirectional data lines for simultaneous full-duplex communication, dedicated chip-select pins that eliminate addressing overh",
+    false
+  ],
+  [
+    375,
+    "How Does Stochastic Computing Multiply with an AND Gate?",
+    "Stochastic computing is an alternative computing paradigm that represents numbers as probabilities within random bitstreams rather than using traditional binary positional notation. By encoding values as the frequency of ones in a sequence of bits, comple",
+    false
+  ],
+  [
+    374,
+    "What Distinguishes Hard From Soft Real-Time Systems?",
+    "In classical computing, the primary distinction between a hard real-time system and a soft real-time system lies in the consequences of missing a timing deadline. While both types of systems must produce logically correct results within specific time cons",
+    false
+  ],
+  [
+    373,
+    "Why Does EDF Scheduling Achieve 100% CPU Utilization?",
+    "Earliest Deadline First (EDF) is a dynamic-priority scheduling algorithm used in real-time operating systems to guarantee that tasks meet their timing constraints. Unlike fixed-priority algorithms that hit a lower theoretical ceiling, EDF can utilize up t",
+    false
+  ],
+  [
+    372,
+    "How Does a Microcontroller Integrate Components on One Chip?",
+    "A microcontroller integrates a central processing unit (CPU) core, static random-access memory (SRAM), flash memory, and peripheral controllers onto a single silicon die using system-on-chip (SoC) semiconductor fabrication. By sharing a unified internal b",
+    false
+  ],
+  [
+    371,
+    "How Does Neuromorphic Computing Mimic Biological Brains?",
+    "Neuromorphic computing mimics biological brains by replacing the rigid, globally synchronized clock of classical computers with asynchronous, event-driven spiking neural networks. Instead of continuously fetching data from separate memory and processing u",
+    false
+  ],
+  [
+    370,
+    "How Does a Hardware Watchdog Timer Reset Embedded Systems?",
+    "A hardware watchdog timer is an independent electronic counter inside a microcontroller or external integrated circuit that monitors software execution and forces a system reset if the program stops responding. Under normal operation, the running software",
+    false
+  ],
+  [
+    369,
+    "Why Are Carbon Nanotube Transistors Studied Over Silicon?",
+    "Carbon nanotube field-effect transistors are investigated as replacements for silicon channels in classical computing because single-walled carbon nanotubes offer exceptional carrier mobility, superior electrostatic control at nanometer scales, and near-b",
+    false
+  ],
+  [
+    368,
+    "How Does Superconducting RSFQ Logic Achieve 100+ GHz Speeds?",
+    "Superconducting Rapid Single Flux Quantum (RSFQ) logic achieves clock speeds exceeding hundreds of gigahertz with minimal power dissipation by encoding digital bits as picosecond-wide magnetic flux pulses rather than static voltage levels. Because these p",
+    false
+  ],
+  [
+    367,
+    "How Does MRAM Use Electron Spin to Store Non-Volatile Bits?",
+    "Spintronic devices such as Magnetoresistive RAM store classical binary data by exploiting the intrinsic spin of electrons rather than relying on electric charge stored in capacitors. By aligning the magnetic orientation of ferromagnetic layers inside a ma",
+    false
+  ],
+  [
+    366,
+    "How Does Rate-Monotonic Scheduling Assign Priorities?",
+    "Rate-Monotonic Scheduling is a classic real-time scheduling algorithm that assigns fixed priorities to periodic tasks based on their execution periods. Tasks with shorter periods receive higher priorities, ensuring that more frequent operations get immedi",
+    false
+  ],
+  [
+    365,
+    "How Do Photonic Chips Perform Linear Algebra With Light?",
+    "Photonic computing uses integrated optical circuits to perform matrix-vector multiplication at the speed of light. By routing laser light through microscopic silicon waveguides and Mach-Zehnder interferometers, classical photonic processors execute linear",
+    false
+  ],
+  [
+    364,
+    "Why Are Analog Computers Returning for Edge AI and ODEs?",
+    "Continuous-variable analog computers are experiencing a resurgence because modern digital processors face severe energy and memory-bandwidth bottlenecks when running artificial intelligence at the edge or solving complex differential equations. By using p",
+    false
+  ],
+  [
+    363,
+    "How does synthetic DNA store exabytes of data per gram?",
+    "Synthetic DNA stores archival binary data by translating digital ones and zeros into sequences of the four nucleotide bases: adenine, cytosine, guanine, and thymine. Because each molecule is only nanometers wide and can be packed in three dimensions rathe",
+    false
+  ],
+  [
+    362,
+    "How Do Memristor Crossbars Compute Matrix-Vector Products?",
+    "Memristor crossbars perform analog matrix-vector multiplication in a single step by exploiting fundamental electrical laws rather than executing sequential digital instructions. By arranging programmable resistive devices at the intersections of a grid, t",
+    false
+  ],
+  [
+    361,
+    "Why Does Quantum Tunneling Limit Silicon Transistor Scaling?",
+    "Quantum mechanical tunneling across ultra-thin silicon dioxide gate insulators creates a fundamental physical barrier to shrinking classical silicon transistors. As transistor dimensions are scaled down to increase computing speed and density, the insulat",
+    false
+  ],
+  [
+    360,
+    "How Does Processing-in-Memory Embed Logic in DRAM?",
+    "Processing-in-Memory architecture addresses the memory bus bottleneck in classical computing by placing computational logic directly inside or adjacent to DRAM arrays. Instead of transferring massive datasets back and forth between main memory and the pro",
+    false
+  ],
+  [
+    359,
+    "How Does DVFS Reduce Cubic Power Consumption?",
+    "Dynamic Voltage and Frequency Scaling, or DVFS, is a power management technique used in modern processors to reduce energy consumption during periods of low workload. By simultaneously lowering both the clock frequency and the supply voltage when full per",
+    false
+  ],
+  [
+    358,
+    "How Do Cryogenic CMOS Circuits Control Quantum Processors?",
+    "Cryogenic CMOS integrated circuits bring classical control and readout electronics directly inside dilution refrigerators to sit alongside quantum processors. By operating silicon transistors at temperatures around 4 Kelvin or lower, these chips eliminate",
+    false
+  ],
+  [
+    357,
+    "How Does VQE Use Classical Optimizers for Quantum Circuits?",
+    "Hybrid variational quantum algorithms like the Variational Quantum Eigensolver combine quantum processors with classical computers to solve complex optimization problems. In this feedback loop, a quantum computer prepares a trial quantum state using a par",
+    false
+  ],
+  [
+    356,
+    "Why Are FPGAs and ASICs Needed for Quantum Error Correction?",
+    "High-speed classical computing hardware, specifically Field-Programmable Gate Arrays (FPGAs) and Application-Specific Integrated Circuits (ASICs), is essential for real-time syndrome decoding in quantum error correction because quantum states decohere wit",
+    false
+  ],
+  [
+    355,
+    "Why Is Grover's Algorithm Only a Quadratic Speedup?",
+    "Grover's quantum search algorithm finds a marked item in an unstructured database of size N in roughly the square root of N steps, whereas a classical computer requires on the order of N steps. This quadratic speedup is not a limitation of Grover's specif",
+    false
+  ],
+  [
+    354,
+    "How does a classical bit differ from a qubit superposition?",
+    "A deterministic or probabilistic classical bit is fundamentally limited to representing definite states or classical mixtures of probabilities, whereas a qubit in a coherent superposition exists in a linear combination of basis states governed by complex",
+    false
+  ],
+  [
+    353,
+    "What Separates BPP from BQP in Complexity Theory?",
+    "Bounded-error probabilistic polynomial time, known as BPP, and bounded-error quantum polynomial time, known as BQP, are two fundamental complexity classes that capture what can be efficiently computed using randomness and quantum mechanics, respectively.",
+    false
+  ],
+  [
+    352,
+    "How Do Lattice-Based Post-Quantum Algorithms Run Efficiently?",
+    "Lattice-based post-quantum cryptographic algorithms are designed to run efficiently on existing classical hardware by replacing general unstructured lattices with algebraically structured lattices, using fast polynomial multiplication via the Number Theor",
+    false
+  ],
+  [
+    351,
+    "Why Does an n-Qubit State Vector Need 2^n Amplitudes?",
+    "Simulating an n-qubit quantum state vector on classical hardware requires storing 2^n complex amplitudes because quantum mechanics describes a system of n qubits as a superposition over all possible classical bitstrings of length n simultaneously. Unlike",
+    false
+  ],
+  [
+    350,
+    "How Do Tensor Networks Simulate Quantum Circuits?",
+    "Tensor network contraction algorithms enable classical supercomputers to simulate shallow or noisy quantum circuits by representing quantum states and gates as interconnected multidimensional arrays rather than a single exponentially large state vector. I",
+    false
+  ],
+  [
+    349,
+    "Why Does Shor's Algorithm Break RSA and ECC But Not AES?",
+    "Shor's quantum factoring algorithm threatens public-key cryptosystems like RSA and elliptic curve cryptography because it efficiently solves the underlying mathematical problems of integer factorization and discrete logarithms. In contrast, symmetric encr",
+    false
+  ],
+  [
+    348,
+    "How Does Kahan Summation Minimize Rounding Errors?",
+    "The Kahan compensated summation algorithm reduces accumulated rounding errors when adding long sequences of floating-point numbers by tracking and reintroducing the lost low-order bits at each step. Standard floating-point addition discards small digits w",
+    false
+  ],
+  [
+    347,
+    "Why Does Dark Silicon Limit Modern Chips?",
+    "Dark silicon is the phenomenon where a significant portion of a modern processor's transistors must remain powered off or underclocked at any given time. This limitation arises because transistor density has continued to grow while the energy efficiency o",
+    false
+  ],
+  [
+    346,
+    "What Caused the Breakdown of Dennard Scaling Around 2005?",
+    "Dennard scaling broke down around 2005 because transistors became so small that electrical current began leaking through them even when they were turned off, preventing engineers from lowering operating voltages any further. Without lower voltage to offse",
+    false
+  ],
+  [
+    345,
+    "How Does Electromigration Displace Metal Atoms in Wires?",
+    "Electromigration is the gradual movement of metal atoms in a conductor caused by the momentum transfer from flowing electrons. In classical computing, as integrated circuits scale down and interconnect wires become narrower, high current densities acceler",
+    false
+  ],
+  [
+    344,
+    "How Do Compressed Sparse Row Matrices Save Memory?",
+    "Compressed Sparse Row (CSR) representations reduce memory usage and accelerate linear algebra operations in classical computing by storing only the non-zero elements of a matrix alongside compact index arrays. Instead of allocating space for every entry i",
+    false
+  ],
+  [
+    343,
+    "Why Is MOSFET Subthreshold Swing Limited to 60 mV/decade?",
+    "The Boltzmann tyranny refers to a fundamental thermodynamic limit on how sharply a conventional metal-oxide-semiconductor field-effect transistor can switch between its off and on states at room temperature. Because charge carriers in a semiconductor foll",
+    false
+  ],
+  [
+    342,
+    "Why Do CRCs Detect Burst Errors in Networks and Storage?",
+    "Cyclic Redundancy Checks are widely used in classical computing to detect accidental data corruption in network frames and storage sectors. They are particularly effective at catching burst errors, which are contiguous sequences of corrupted bits caused b",
+    false
+  ],
+  [
+    341,
+    "How can circuits compute below the Landauer limit?",
+    "Classical computers can theoretically operate below the Landauer thermal dissipation limit by combining logically reversible gates with physically adiabatic switching. Standard digital circuits lose energy both when they erase information and when they ch",
+    false
+  ],
+  [
+    340,
+    "What Does Landauer's Principle State About Erasing One Bit?",
+    "Landauer's principle establishes a fundamental physical limit in classical computing by stating that erasing one bit of information inevitably dissipates a minimum amount of thermodynamic heat into the environment. This minimum energy cost is proportional",
+    false
+  ],
+  [
+    339,
+    "Why Do AND and OR Logic Gates Lose Information Entropy?",
+    "Standard irreversible logic gates like AND and OR inherently lose information entropy because they map multiple distinct input states to a single output state, making it impossible to reconstruct the original inputs from the output alone. In classical com",
+    false
+  ],
+  [
+    338,
+    "How Do Toffoli and Fredkin Gates Stay Reversible?",
+    "Reversible logic gates such as the Toffoli and Fredkin gates preserve a one-to-one mapping between input states and output states by ensuring that no information is erased during computation. Unlike standard classical gates that combine multiple inputs in",
+    false
+  ],
+  [
+    337,
+    "How Does Partial Pivoting Prevent Tiny Pivots in LU?",
+    "Gaussian elimination with partial pivoting prevents division by tiny numbers during LU decomposition by reordering the rows of a matrix before each elimination step. At every stage, the algorithm scans the current column from the diagonal downward, finds",
+    false
+  ],
+  [
+    336,
+    "Why Is BLAS Tuned for CPU Caches and Vector Registers?",
+    "Basic Linear Algebra Subprograms, commonly known as BLAS, are tuned for processor cache sizes and vector registers because modern classical processors can execute arithmetic operations much faster than they can fetch data from main memory. Without careful",
+    false
+  ],
+  [
+    335,
+    "Why Is Arithmetic Coding Better Than Huffman Coding?",
+    "Arithmetic coding surpasses Huffman coding by representing an entire message as a single fractional number within a subinterval of zero to one, rather than assigning a separate integer-length codeword to each symbol. This approach eliminates the rounding",
+    false
+  ],
+  [
+    334,
+    "How Does Huffman Coding Build an Optimal Prefix-Free Tree?",
+    "Huffman coding constructs an optimal prefix-free variable-length binary tree by using a greedy bottom-up algorithm driven by symbol frequencies. Starting with each symbol as a leaf node weighted by its frequency or probability, the algorithm repeatedly me",
+    false
+  ],
+  [
+    333,
+    "How Does the Mersenne Twister Generate Pseudorandom Numbers?",
+    "Pseudorandom number generators like the Mersenne Twister produce deterministic sequences of numbers that appear statistically random by using mathematical recurrences and large internal states. Starting from an initial seed value, these algorithms repeate",
+    false
+  ],
+  [
+    332,
+    "What Does a Matrix Condition Number Reveal About Sensitivity?",
+    "The condition number of a matrix measures how much the solution of a linear system can change in response to small perturbations in the input data. In classical computing, where numbers are stored with finite precision, it directly bounds the amplificatio",
+    false
+  ],
+  [
+    331,
+    "How Do Runge-Kutta Methods Approximate ODE Solutions?",
+    "Runge-Kutta methods are a family of iterative numerical integration algorithms used in classical computing to approximate solutions to ordinary differential equations. By evaluating the derivative function at multiple intermediate points within each discr",
+    false
+  ],
+  [
+    330,
+    "How Do Reed-Solomon Codes Protect Data From Corruption?",
+    "Reed-Solomon erasure codes are a class of non-binary cyclic error-correcting codes that protect digital information against multi-symbol corruption and data loss. By treating blocks of bits as symbols over a finite field and adding carefully constructed p",
+    false
+  ],
+  [
+    329,
+    "How Does the Cooley-Tukey FFT Reduce DFT Complexity?",
+    "The Cooley-Tukey Fast Fourier Transform (FFT) reduces the computational complexity of the Discrete Fourier Transform (DFT) from quadratic time to linearithmic time by using a divide-and-conquer strategy. Instead of computing all frequency components direc",
+    false
+  ],
+  [
+    328,
+    "Why Do JPEG and MP3 Use the Discrete Cosine Transform?",
+    "Lossy compression algorithms like JPEG and MP3 rely on the Discrete Cosine Transform (DCT) to convert raw spatial or time-domain data into frequency components. This transformation concentrates most of the signal energy into a small number of low-frequenc",
+    false
+  ],
+  [
+    327,
+    "How Do Hamming Codes Correct and Detect Bit Errors?",
+    "Hamming codes are a family of linear error-correcting codes that use overlapping parity bits to locate and fix single-bit errors in binary data. By placing parity bits at positions that are powers of two, each data bit is covered by a unique combination o",
+    false
+  ],
+  [
+    326,
+    "How Does Catastrophic Cancellation Destroy Digits?",
+    "Catastrophic cancellation occurs in classical computing when two nearly equal floating-point numbers are subtracted, causing a severe loss of significant digits and a sharp increase in relative error. Because floating-point numbers store only a fixed numb",
+    false
+  ],
+  [
+    325,
+    "How Do LZ77 and LZW Achieve Lossless Data Compression?",
+    "LZ77 and Lempel-Ziv-Welch are dictionary-based lossless data compression algorithms that reduce file size by replacing repeated sequences of characters with shorter references to earlier occurrences. Instead of assigning shorter bit codes to individual sy",
+    false
+  ],
+  [
+    324,
+    "Why Can't 0.1 Be Represented Exactly in Binary?",
+    "Base-10 fractions like 0.1 cannot be represented exactly as finite binary floating-point numbers because the prime factors of the two number bases do not align. In classical computing, numbers are stored in base 2 using only powers of 2, whereas decimal f",
+    false
+  ],
+  [
+    323,
+    "How Does a Single Parity Bit Detect Odd Bit Flips?",
+    "A single parity bit is a simple error-detection mechanism used in classical computing to verify the integrity of binary data during storage or transmission. By appending one extra bit to a data word, a system can ensure that the total number of ones in th",
+    false
+  ],
+  [
+    322,
+    "How Does RSA Rely on Prime Factorization Hardness?",
+    "The RSA cryptosystem secures digital communications by exploiting the asymmetry between multiplying two large prime numbers and factoring their product back into its original primes. While multiplication is computationally trivial for classical computers,",
+    false
+  ],
+  [
+    321,
+    "How Does Rowhammer Flip Bits in Adjacent DRAM Rows?",
+    "Rowhammer is a hardware vulnerability in dynamic random-access memory (DRAM) where repeatedly activating a single memory row causes electrical interference that flips bits in physically adjacent rows. By rapidly opening and closing an aggressor row within",
+    false
+  ],
+  [
+    320,
+    "How Did Meltdown and Spectre Exploit Speculative Execution?",
+    "Meltdown and Spectre are hardware vulnerabilities disclosed in 2018 that broke the fundamental memory isolation guarantees of modern processors. Rather than exploiting software bugs, both attacks abused performance optimizations—specifically out-of-order",
+    false
+  ],
+  [
+    319,
+    "How Do Trusted Execution Environments Encrypt Memory?",
+    "Trusted Execution Environments are hardware-isolated regions of a processor that protect application code and data inside encrypted memory enclaves, even when the operating system kernel or hypervisor is compromised. By shifting the root of trust from pri",
+    false
+  ],
+  [
+    318,
+    "What Anomalies Distinguish SQL Isolation Levels?",
+    "Database isolation levels define how concurrent transactions interact and which data inconsistencies are permitted. In classical relational computing, four standard isolation levels—Read Uncommitted, Read Committed, Repeatable Read, and Serializable—are d",
+    false
+  ],
+  [
+    317,
+    "What Does the Shannon-Hartley Theorem State?",
+    "The Shannon-Hartley theorem defines the theoretical upper bound on the rate at which data can be transmitted over a noisy communication channel without error. In classical computing and information theory, it establishes how channel bandwidth and signal-t",
+    false
+  ],
+  [
+    316,
+    "How Did Claude Shannon Define Information Entropy?",
+    "Claude Shannon defined information entropy in his 1948 paper A Mathematical Theory of Communication as a measure of the average uncertainty or information content produced by a stochastic data source. By quantifying how unpredictable a source's symbols ar",
+    false
+  ],
+  [
+    315,
+    "How Do Batch Schedulers Like Slurm Allocate Compute Nodes?",
+    "Batch job schedulers like Slurm manage shared high-performance computing clusters by matching incoming user requests to available hardware resources while maintaining equitable access over time. They achieve this through a combination of resource-aware no",
+    false
+  ],
+  [
+    314,
+    "How Does a TPM Store Keys and Measure Boot Integrity?",
+    "A Trusted Platform Module is a dedicated hardware security chip that protects cryptographic keys and verifies system integrity during startup. By isolating sensitive operations from the main processor and recording cryptographic measurements of each boot",
+    false
+  ],
+  [
+    313,
+    "What Makes SHA-256 Pre-Image and Collision Resistant?",
+    "Cryptographic hash functions like SHA-256 rely on a combination of mathematical non-linearity, bit-level diffusion, and a massive output space to resist attacks on classical computers. These properties ensure that finding an input for a given hash or find",
+    false
+  ],
+  [
+    312,
+    "Why Do Row Stores Suit OLTP and Columnar Suit OLAP?",
+    "Row-oriented storage engines and columnar stores organize data on disk and in memory in fundamentally different ways, which directly determines their performance under different workloads. Row-oriented databases store all attributes of a single record con",
+    false
+  ],
+  [
+    311,
+    "Why Does ECC Use Shorter Keys Than RSA?",
+    "Elliptic Curve Cryptography (ECC) achieves the same level of security as RSA with much shorter keys because the mathematical problem behind ECC is significantly harder for classical computers to solve. While the best known classical attacks against RSA ru",
+    false
+  ],
+  [
+    310,
+    "How Do AES-NI Instructions Speed Up and Secure Encryption?",
+    "Dedicated AES-NI hardware instructions accelerate encryption by executing complex cryptographic rounds in a single CPU operation while preventing cache-timing side-channel attacks by eliminating data-dependent memory lookups. By moving the Advanced Encryp",
+    false
+  ],
+  [
+    309,
+    "How Does AES Perform Symmetric Block Encryption?",
+    "The Advanced Encryption Standard (AES) is a symmetric block cipher that encrypts fixed-size blocks of data using a substitution-permutation network. It operates on a 128-bit data block arranged as a 4 by 4 byte matrix called the state, transforming plaint",
+    false
+  ],
+  [
+    308,
+    "How Does Diffie-Hellman Key Exchange Work?",
+    "The Diffie-Hellman key exchange is a cryptographic protocol that allows two parties to establish a shared secret key over an insecure communication channel without having met beforehand. By relying on mathematical operations that are easy to perform in on",
+    false
+  ],
+  [
+    307,
+    "How Do LSM-Trees Convert Random Writes to Sequential Appends?",
+    "Log-Structured Merge-trees, commonly known as LSM-trees, are data structures designed to optimize write-heavy workloads in classical computing databases. Instead of updating records in place on disk, which forces slow random I/O operations, an LSM-tree bu",
+    false
+  ],
+  [
+    306,
+    "How Did Edgar Codd's Relational Model Decouple Data?",
+    "Edgar Codd's relational model, introduced in 1970, transformed database management by separating how data is logically structured and queried from how it is physically stored on disk. Before this shift, applications were tightly coupled to low-level stora",
+    false
+  ],
+  [
+    305,
+    "How Does Write-Ahead Logging Ensure Durability?",
+    "Write-Ahead Logging is a fundamental database technique that guarantees durability and atomicity without requiring dirty data pages to be written to disk on every commit. By recording changes sequentially in an append-only log before modifying the actual",
+    false
+  ],
+  [
+    304,
+    "How Does a SQL Optimizer Choose Join Algorithms?",
+    "A cost-based SQL query optimizer selects between nested-loop joins, hash joins, and sort-merge joins by estimating the total resource cost of each physical operator for a given query plan. It combines table statistics, available indexes, memory budgets, a",
+    false
+  ],
+  [
+    303,
+    "How Does Strict 2PL Prevent Dirty Reads and Lost Updates?",
+    "Strict Two-Phase Locking is a concurrency control protocol used in classical database management systems to ensure serializability and recoverability among concurrent transactions. By requiring transactions to acquire all necessary locks before releasing",
+    false
+  ],
+  [
+    302,
+    "How Do Database Sharding and Replication Scale Throughput?",
+    "Database sharding and primary-replica replication are two foundational distributed systems techniques used in classical computing to overcome the hardware limits of a single server. Sharding partitions a dataset horizontally across multiple independent no",
+    false
+  ],
+  [
+    301,
+    "How Does ARP Map IPv4 Addresses to MAC Addresses?",
+    "The Address Resolution Protocol (ARP) is a fundamental communication protocol used in classical computing networks to translate 32-bit IPv4 logical addresses into 48-bit physical Media Access Control (MAC) addresses. Because local area networks (LANs) del",
+    false
+  ],
+  [
+    300,
+    "How Do CSMA/CD and Full-Duplex Manage Ethernet Framing?",
+    "Ethernet networks rely on structured data frames to deliver information reliably across local area networks. Depending on whether devices share a single communication medium or connect through dedicated switch ports, Ethernet manages these frames using ei",
+    false
+  ],
+  [
+    299,
+    "How Does Multiversion Concurrency Control Avoid Blocking?",
+    "Multiversion Concurrency Control, commonly known as MVCC, is a database concurrency method that allows read transactions and write transactions to execute simultaneously without blocking each other. Instead of overwriting data in place and forcing readers",
+    false
+  ],
+  [
+    298,
+    "Why Was IPv6 Introduced to Replace IPv4 and NAT?",
+    "The 128-bit IPv6 address space was introduced to solve the exhaustion of 32-bit IPv4 addresses and to eliminate the architectural limitations of Network Address Translation in classical computing. While IPv4 could theoretically support around 4.3 billion",
+    false
+  ],
+  [
+    297,
+    "What Do ACID Properties Guarantee in Databases?",
+    "In classical computing, Atomicity, Consistency, Isolation, and Durability—collectively known as ACID—are four foundational properties that guarantee reliable processing of concurrent database transactions. Together, they ensure that data remains accurate,",
+    false
+  ],
+  [
+    296,
+    "How Do TCP CUBIC and BBR Probe Bandwidth Safely?",
+    "TCP congestion control algorithms like CUBIC and BBR discover available network bandwidth by gradually increasing their sending rate while monitoring network feedback such as packet loss, round-trip time, and delivery rate. By bounding the amount of unack",
+    false
+  ],
+  [
+    295,
+    "How Do the OSI and TCP/IP Models Compare?",
+    "The OSI reference model and the TCP/IP protocol suite are two foundational frameworks used to describe how data travels across classical computer networks. While the Open Systems Interconnection (OSI) model divides network communication into seven distinc",
+    false
+  ],
+  [
+    294,
+    "How Do Epoll and Kqueue Solve the C10k Problem?",
+    "Epoll on Linux and kqueue on BSD-based systems solve the C10k problem by replacing inefficient linear polling with scalable, event-driven I/O multiplexing. Instead of scanning thousands of idle sockets on every iteration or spawning a thread per connectio",
+    false
+  ],
+  [
+    293,
+    "Why Is UDP Preferred for Streaming, Gaming, and DNS?",
+    "The User Datagram Protocol, commonly known as UDP, is a connectionless transport layer protocol that prioritizes speed and low overhead over guaranteed delivery. Unlike the Transmission Control Protocol, UDP sends data packets called datagrams without est",
+    false
+  ],
+  [
+    292,
+    "How Does Two-Phase Commit Coordinate Transactions?",
+    "The Two-Phase Commit protocol is a classical distributed algorithm that ensures all participating database nodes either commit or abort a transaction together. By splitting the commitment process into a voting phase and a decision phase, a central coordin",
+    false
+  ],
+  [
+    291,
+    "How Does BGP Exchange Autonomous System Routing Tables?",
+    "The Border Gateway Protocol is the core routing protocol that connects independent networks, known as autonomous systems, across the global internet. By establishing reliable transport sessions between border routers, BGP exchanges reachability informatio",
+    false
+  ],
+  [
+    290,
+    "How Does TCP Guarantee Reliable Ordered Byte Streams?",
+    "The Transmission Control Protocol (TCP) provides applications with a reliable, ordered, and error-checked stream of bytes over an unreliable Internet Protocol (IP) network. Because IP packets can be lost, duplicated, delayed, or delivered out of order, TC",
+    false
+  ],
+  [
+    289,
+    "How Does Direct Liquid Cooling Manage Exascale Rack Heat?",
+    "Direct liquid cooling manages extreme rack thermal densities in modern exascale classical computing by circulating dielectric or treated water-based coolants directly to high-power processors, accelerators, and memory modules. By replacing air as the prim",
+    false
+  ],
+  [
+    288,
+    "How Does MapReduce Parallelize Batch Processing?",
+    "The MapReduce programming model parallelizes batch processing across commodity server clusters by splitting massive datasets into independent chunks, distributing computation to the nodes where the data resides, and coordinating intermediate results throu",
+    false
+  ],
+  [
+    287,
+    "How Does DNS Resolve Domain Names into IP Addresses?",
+    "The Domain Name System translates human-readable domain names into numerical IP addresses that computers use to locate each other on a network. This process relies on a distributed hierarchy of servers rather than a single central database. When a user en",
+    false
+  ],
+  [
+    286,
+    "How Does Consistent Hashing Minimize Key Redistribution?",
+    "Consistent hashing minimizes key redistribution in distributed storage systems by mapping both storage nodes and data keys onto the same circular hash space. Unlike traditional modulo hashing, where adding or removing a single node forces almost every key",
+    false
+  ],
+  [
+    285,
+    "How Do Intel VT-x and AMD-V Eliminate Binary Translation?",
+    "Hardware virtualization extensions such as Intel VT-x and AMD-V eliminate the need for binary translation by introducing CPU-level privilege modes designed specifically for running guest operating systems. Before these extensions existed, x86 hypervisors",
+    false
+  ],
+  [
+    284,
+    "Why Does Byzantine Fault Tolerance Need 3f + 1 Nodes?",
+    "Byzantine fault tolerance requires at least 3f + 1 nodes to tolerate up to f malicious or arbitrary failures because a distributed system must both make progress without waiting for faulty nodes and ensure that any two honest quorums overlap in enough hon",
+    false
+  ],
+  [
+    283,
+    "Why Are Checkpoints Mandatory on Exascale Systems?",
+    "Periodic checkpoint-restart snapshots are mandatory on exascale systems because the sheer number of hardware components makes system failures a routine event rather than a rare exception. When a supercomputer combines tens of thousands of processors, memo",
+    false
+  ],
+  [
+    282,
+    "How Do Paxos and Raft Achieve Consensus Despite Crashes?",
+    "Paxos and Raft are distributed consensus algorithms that enable a cluster of classical computers to agree on a shared sequence of operations even when some nodes crash or messages are delayed. Both algorithms implement a replicated state machine, where ev",
+    false
+  ],
+  [
+    281,
+    "Why Do Containers Have Lower Overhead Than VMs?",
+    "Operating-system-level containers have lower startup and memory overhead than virtual machines because they share the host operating system kernel instead of booting a separate guest OS. By using kernel features such as namespaces and control groups (cgro",
+    false
+  ],
+  [
+    280,
+    "How Do Type-1 and Type-2 Hypervisors Differ?",
+    "Type-1 and Type-2 hypervisors both enable multiple virtual machines to run on a single physical computer, but they differ fundamentally in where they sit in the software stack and how they access hardware. A Type-1 bare-metal hypervisor runs directly on t",
+    false
+  ],
+  [
+    279,
+    "Why Does HPCG Better Reflect Memory-Bound Workloads?",
+    "The High-Performance Conjugate Gradients (HPCG) benchmark is designed to evaluate supercomputers using computational and data-access patterns that closely resemble real-world scientific and engineering applications. Unlike traditional benchmarks that emph",
+    false
+  ],
+  [
+    278,
+    "How Do Lamport Clocks and Vector Clocks Order Events?",
+    "Distributed systems lack a single global physical clock, making it impossible to rely on wall-clock timestamps to determine the exact order of operations across different machines. Leslie Lamport's logical clocks and vector clocks solve this problem by us",
+    false
+  ],
+  [
+    277,
+    "How Do TPU Systolic Arrays Reuse Matrix Weights?",
+    "Systolic arrays in Tensor Processing Units reuse matrix multiplication weights by preloading them into local registers inside a two-dimensional grid of processing elements and keeping them stationary during computation. Instead of repeatedly fetching weig",
+    false
+  ],
+  [
+    276,
+    "Why Do Supercomputers Use Dragonfly or Torus Networks?",
+    "Supercomputers rely on high-radix Dragonfly and multidimensional Torus network topologies instead of standard Ethernet trees because they must move massive amounts of data between tens of thousands of processors with minimal latency and maximum bisection",
+    false
+  ],
+  [
+    275,
+    "What Does the CAP Theorem Prove in Distributed Computing?",
+    "The CAP theorem proves that in an asynchronous distributed classical computing system, it is impossible to simultaneously guarantee consistency, availability, and partition tolerance. When a network partition occurs, a distributed data store must choose b",
+    false
+  ],
+  [
+    274,
+    "How Do Lustre and GPFS Stripe Large Scientific Datasets?",
+    "Parallel file systems such as Lustre and GPFS enable high-performance computing clusters to read and write massive scientific datasets simultaneously across hundreds of storage servers. By dividing large files into fixed-size blocks and distributing those",
+    false
+  ],
+  [
+    273,
+    "How Does OpenMP Parallelize Loops With Compiler Directives?",
+    "OpenMP is an application programming interface that enables shared-memory parallel programming in C, C++, and Fortran using compiler directives. By inserting simple pragma statements before loop constructs, developers instruct the compiler to automaticall",
+    false
+  ],
+  [
+    272,
+    "How Does LINPACK Measure Supercomputer Performance?",
+    "The LINPACK benchmark evaluates supercomputers by measuring how fast they solve a dense system of linear equations using double-precision floating-point arithmetic. Since 1993, the Top500 project has used the High-Performance LINPACK (HPL) implementation",
+    false
+  ],
+  [
+    271,
+    "How Does RDMA Over InfiniBand Bypass the Kernel?",
+    "Remote Direct Memory Access over InfiniBand minimizes network latency by allowing a network adapter to read and write directly to application memory without involving the operating system kernel. In traditional networking, every packet must pass through k",
+    false
+  ],
+  [
+    270,
+    "What Is the Difference Between SMP UMA and NUMA?",
+    "Symmetric Multiprocessing with Uniform Memory Access and Non-Uniform Memory Access are two foundational shared-memory architectures used in multi-processor classical computing. While both allow multiple processors to share a single physical address space,",
+    false
+  ],
+  [
+    269,
+    "How Do Hardware Video Codecs Save Power on SoCs?",
+    "Dedicated hardware video codecs on system-on-chips achieve vastly lower power consumption than software decoding by replacing general-purpose instruction execution with fixed-function silicon tailored to video compression algorithms. Instead of fetching,",
+    false
+  ],
+  [
+    268,
+    "Why do DSPs use MAC units and circular buffers?",
+    "Digital signal processors include specialized multiply-accumulate units and circular addressing buffers to execute real-time signal processing algorithms with deterministic timing and high throughput. Unlike general-purpose processors optimized for branch",
+    false
+  ],
+  [
+    267,
+    "How Does MPI Coordinate Distributed Memory?",
+    "The Message Passing Interface, commonly known as MPI, is a standardized communication protocol used to coordinate parallel computations across distributed memory systems such as supercomputers. Because each compute node in a cluster has its own private me",
+    false
+  ],
+  [
+    266,
+    "How Do Verilog and VHDL Model Concurrent Hardware Timing?",
+    "Hardware description languages such as Verilog and VHDL model concurrent hardware timing by treating a digital circuit as a network of independent, simultaneously operating processes rather than a single sequence of instructions. Instead of executing one",
+    false
+  ],
+  [
+    265,
+    "How Does Work-Stealing Scheduling Balance Multi-Core Tasks?",
+    "Work-stealing scheduling is a decentralized load-balancing strategy used in parallel computing to distribute dynamic workloads across multiple processor cores. Instead of relying on a single central queue that can become a bottleneck, each processor core",
+    false
+  ],
+  [
+    264,
+    "How Does Gustafson's Law Scale Parallel Speedup?",
+    "Gustafson's law explains how parallel computing achieves near-linear speedup when the problem size grows alongside the number of processors. Rather than treating a workload as fixed, it models how practitioners actually use larger systems to solve bigger",
+    false
+  ],
+  [
+    263,
+    "FPGA vs ASIC: NRE Cost and Energy Efficiency Trade-Offs?",
+    "Field-Programmable Gate Arrays (FPGAs) and Application-Specific Integrated Circuits (ASICs) represent two distinct approaches to implementing custom digital hardware in classical computing. Choosing between them requires balancing steep upfront non-recurr",
+    false
+  ],
+  [
+    262,
+    "How Does False Sharing Degrade Multicore Performance?",
+    "False sharing occurs in multicore processors when threads running on different cores modify logically independent variables that happen to reside on the same CPU cache line. Even though the threads do not share data at the program level, the hardware cach",
+    false
+  ],
+  [
+    261,
+    "Why Is High-Bandwidth Memory Stacked on Silicon Interposers?",
+    "High-Bandwidth Memory is stacked vertically on silicon interposers to overcome the memory wall in data-intensive accelerators such as GPUs and AI processors. By combining 3D-stacked DRAM dies with a 2.5D silicon interposer, hardware architects achieve mas",
+    false
+  ],
+  [
+    260,
+    "How Do FPGAs Implement Custom Digital Logic?",
+    "Field-Programmable Gate Arrays implement custom digital logic by combining arrays of configurable logic blocks with a programmable interconnect fabric. Instead of fabricating fixed silicon gates for a specific circuit, an FPGA uses small memory-based look",
+    false
+  ],
+  [
+    259,
+    "How Do Memory Allocators Manage Free Lists and Fragmentation?",
+    "Dynamic memory allocators manage heap memory by tracking unallocated blocks using data structures known as free lists and applying placement, splitting, and coalescing strategies to minimize external fragmentation. External fragmentation occurs when free",
+    false
+  ],
+  [
+    258,
+    "How Does GPU SIMT Differ from CPU SIMD Vectorization?",
+    "Single Instruction, Multiple Threads (SIMT) on GPUs and Single Instruction, Multiple Data (SIMD) on CPUs both accelerate data-parallel workloads by executing the same operation across multiple data elements simultaneously. While they share this foundation",
+    false
+  ],
+  [
+    257,
+    "Why Do Stop-the-World GC Pauses Disrupt Low-Latency Apps?",
+    "Stop-the-world garbage collection pauses disrupt latency-sensitive applications because they halt all application threads simultaneously to reclaim unused memory. During this pause, the program cannot process incoming requests, respond to user input, or m",
+    false
+  ],
+  [
+    256,
+    "How Does Amdahl's Law Cap Parallel Speedup?",
+    "Amdahl's law demonstrates that the sequential portion of a program strictly limits the maximum speedup achievable through parallel processing, regardless of how many processors are added. Even when a large percentage of a task can run concurrently, the re",
+    false
+  ],
+  [
+    255,
+    "How Do GPUs Hide High Memory Access Latency?",
+    "Graphics Processing Units (GPUs) achieve high computational throughput not by minimizing memory access latency, but by hiding it. While traditional CPUs dedicate large amounts of chip area to caches and branch predictors to make individual threads run as",
+    false
+  ],
+  [
+    254,
+    "Why Do Weak Memory Models Need Memory Fences?",
+    "Weak hardware memory consistency models require explicit memory fences or barriers because modern processors reorder memory operations and buffer writes to maximize performance. While these optimizations preserve single-threaded program behavior, they all",
+    false
+  ],
+  [
+    253,
+    "Why Does GPU Branch Divergence Reduce Throughput?",
+    "Branch divergence occurs in graphics processing units when threads within the same execution group take different paths at a conditional statement. Because modern GPUs execute threads in lockstep using a single instruction stream per group, divergent path",
+    false
+  ],
+  [
+    252,
+    "How Does the ABA Problem Arise in Compare-and-Swap?",
+    "The ABA problem is a concurrency anomaly that occurs in lock-free algorithms using compare-and-swap operations when a shared memory location changes from value A to value B and then back to value A between a thread's read and its atomic update. Because co",
+    false
+  ],
+  [
+    251,
+    "How Does SSA Simplify Dataflow Analysis and Optimization?",
+    "Static Single Assignment form, commonly known as SSA, is an intermediate representation used in modern compilers where every variable is assigned a value exactly once. By renaming variables at each assignment and introducing special merge functions at con",
+    false
+  ],
+  [
+    250,
+    "How Does Imperative Programming Mutate Program State?",
+    "Imperative programming models computation as an ordered sequence of explicit instructions that directly change a program's state over time. In classical computing, this paradigm mirrors the underlying hardware architecture, where a processor fetches instr",
+    false
+  ],
+  [
+    249,
+    "How Does Flynn's Taxonomy Classify Computer Architectures?",
+    "Flynn's taxonomy is a classification system for computer architectures introduced by Michael J. Flynn in 1966. It categorizes classical computing systems based on the number of concurrent instruction streams and data streams they can process simultaneousl",
+    false
+  ],
+  [
+    248,
+    "How Does Simultaneous Multithreading Share Execution Units?",
+    "Simultaneous Multithreading (SMT) allows a single physical processor core to execute instructions from two or more independent hardware threads during the same clock cycle. By duplicating architectural state such as general-purpose registers and program c",
+    false
+  ],
+  [
+    247,
+    "How Do Virtual Method Tables Implement Dynamic Dispatch?",
+    "Virtual method tables, commonly called vtables, are lookup tables used by object-oriented programming languages to resolve method calls at runtime rather than compile time. By storing function pointers for each class and embedding a hidden pointer to the",
+    false
+  ],
+  [
+    246,
+    "How Do Generational Garbage Collectors Use Infant Mortality?",
+    "Generational garbage collectors improve memory management performance by dividing the heap into distinct age-based regions and collecting younger objects much more frequently than older ones. This design directly exploits the infant mortality hypothesis,",
+    false
+  ],
+  [
+    245,
+    "How Do SIMD Extensions Like AVX-512 Process Multiple Data?",
+    "SIMD vector extensions like AVX-512 process multiple data elements simultaneously by packing several values into a single wide register and executing one instruction across all of them in parallel. Instead of fetching, decoding, and executing a separate i",
+    false
+  ],
+  [
+    244,
+    "How Do Loop Optimizations Improve Pipelines and Cache?",
+    "Loop unrolling, loop tiling, and loop fusion are compiler transformations that restructure iterative code to better match modern processor hardware. By reducing control-flow overhead, exposing instruction-level parallelism, and keeping active data in fast",
+    false
+  ],
+  [
+    243,
+    "How Does Mark-and-Sweep Garbage Collection Work?",
+    "Mark-and-sweep is a foundational tracing garbage collection algorithm used in classical computing to automatically reclaim memory occupied by objects that a program can no longer reach. It operates in two distinct phases: first, it traverses the object gr",
+    false
+  ],
+  [
+    242,
+    "How Does an Abstract Syntax Tree Represent Code Structure?",
+    "An Abstract Syntax Tree (AST) is a tree-based data structure used by compilers and interpreters to represent the hierarchical grammatical structure of source code. By stripping away superficial syntactic details such as punctuation and whitespace, an AST",
+    false
+  ],
+  [
+    241,
+    "How Does Graph Coloring Model Register Allocation?",
+    "Compilers translate high-level programs that use an unlimited number of virtual variables into machine code that must run on a processor with a small, fixed number of physical registers. To bridge this gap, compilers model register allocation as a graph c",
+    false
+  ],
+  [
+    240,
+    "Why Does Reference Counting Fail on Cyclic Data Structures?",
+    "Simple reference counting fails to reclaim cyclic data structures because objects in a reference cycle keep each other's reference counts above zero even when no external variables point to them. This article explains how reference counting tracks memory,",
+    false
+  ],
+  [
+    239,
+    "How Does the Call Stack Manage Subroutine Calls?",
+    "The call stack is a Last-In, First-Out memory structure that tracks active subroutines in a program. Whenever a function is called, the system pushes a new activation record onto the stack to store its return address, local variables, and saved registers.",
+    false
+  ],
+  [
+    238,
+    "How Does Link-Time Optimization Inline Functions?",
+    "Link-time optimization is a compiler technique that optimizes a program across multiple source files during the linking stage. In traditional compilation, each source file is compiled independently into machine code, which prevents the compiler from seein",
+    false
+  ],
+  [
+    237,
+    "What Are the Trade-Offs of AOT, Bytecode, and JIT?",
+    "Choosing how a program is translated into machine instructions involves balancing startup speed, peak runtime performance, memory overhead, and portability. Ahead-of-time native compilation, bytecode interpretation, and just-in-time compilation represent",
+    false
+  ],
+  [
+    236,
+    "Why Does Pure Functional Programming Simplify Concurrency?",
+    "Pure functional programming avoids side effects and mutable state because doing so eliminates the primary sources of bugs in concurrent classical computing, such as race conditions, deadlocks, and unpredictable execution order. When functions depend only",
+    false
+  ],
+  [
+    235,
+    "How Does Tail-Call Optimization Save Stack Space?",
+    "Tail-call optimization allows recursive functions to execute in constant stack space because the compiler or runtime reuses the current function's stack frame instead of allocating a new one. When a function call is the very last operation a function perf",
+    false
+  ],
+  [
+    234,
+    "How Does the Floyd-Warshall Algorithm Find Shortest Paths?",
+    "The Floyd-Warshall algorithm is a classical dynamic programming method used to find the shortest paths between all pairs of vertices in a weighted, directed graph. It works by systematically considering every vertex as a potential intermediate stop along",
+    false
+  ],
+  [
+    233,
+    "What Is the Difference Between LL and LR Parsing?",
+    "Top-down LL parsing and bottom-up LR shift-reduce parsing are two fundamental techniques used in classical computing to analyze the syntactic structure of source code and formal languages. While both methods read input tokens from left to right, they cons",
+    false
+  ],
+  [
+    232,
+    "How Does a Lexical Analyzer Use Regex to Group Characters?",
+    "A lexical analyzer, also known as a lexer or scanner, is the first phase of a compiler or interpreter that converts a raw stream of source code characters into meaningful units called tokens. It accomplishes this by using regular expressions to define the",
+    false
+  ],
+  [
+    231,
+    "Why Do Compilers Use Intermediate Representation?",
+    "Modern compilers lower source code into a target-independent intermediate representation to separate language-specific analysis from hardware-specific code generation. This design reduces engineering effort, enables reusable optimizations, and allows a si",
+    false
+  ],
+  [
+    230,
+    "How Do Tries Enable Search Times Proportional to Key Length?",
+    "Tries, also known as prefix trees, are tree-based data structures that store strings or sequences by breaking them down into individual characters along paths from a root node. Unlike binary search trees or hash tables that compare entire keys or compute",
+    false
+  ],
+  [
+    229,
+    "What Checks Happen in Semantic Analysis and Type Checking?",
+    "Before a compiler generates machine code or intermediate representation, it must verify that a syntactically valid program actually makes sense. Semantic analysis and type checking form the bridge between parsing and code generation, catching logical erro",
+    false
+  ],
+  [
+    228,
+    "How Do AVL and Red-Black Trees Enforce Logarithmic Height?",
+    "Self-balancing binary search trees prevent the worst-case linear degradation of standard binary search trees by maintaining strict structural invariants. Both AVL trees and Red-Black trees guarantee logarithmic height relative to the number of stored node",
+    false
+  ],
+  [
+    227,
+    "How Does a Bloom Filter Test Set Membership?",
+    "A Bloom filter is a space-efficient probabilistic data structure used in classical computing to test whether an element is a member of a set. It combines a fixed-size bit array with multiple independent hash functions to achieve fast insertions and lookup",
+    false
+  ],
+  [
+    226,
+    "Why Are Arrays O(1) Access but O(n) Insert and Delete?",
+    "Contiguous arrays are fundamental data structures in classical computing because they store elements in adjacent memory locations. This physical layout allows the processor to calculate the exact memory address of any element instantly, resulting in const",
+    false
+  ],
+  [
+    225,
+    "How Do Linked Lists Trade Cache and Memory for O(1) Inserts?",
+    "Singly and doubly linked lists achieve constant-time node insertion at a known position by replacing contiguous array storage with heap-allocated nodes connected by pointers. This design eliminates the element shifting required by dynamic arrays, but it i",
+    false
+  ],
+  [
+    224,
+    "How Does A* Search Use an Admissible Heuristic?",
+    "The A search algorithm finds the shortest path between a start node and a goal node in a weighted graph by combining exact path costs with an estimated remaining distance. It uses an admissible heuristic function to ensure that its estimates never overest",
+    false
+  ],
+  [
+    223,
+    "How Does a Binary Heap Support O(1) Min and O(log n) Extract?",
+    "A binary heap is a complete binary tree data structure that satisfies the heap-order property, allowing a priority queue to inspect its smallest element in constant time and remove it in logarithmic time. By storing the tree in a contiguous array and main",
+    false
+  ],
+  [
+    222,
+    "Why Does a Binary Search Tree Degenerate on Sorted Input?",
+    "An unbalanced binary search tree degenerates into a linear linked list when fed sorted inputs because every new key is either strictly greater than or strictly less than all previously inserted keys. Without a mechanism to rebalance the structure, each in",
+    false
+  ],
+  [
+    221,
+    "Separate Chaining vs Linear Probing: Cache Differences?",
+    "Separate chaining and open addressing with linear probing handle hash collisions in fundamentally different ways, leading to significant differences in CPU cache performance. While separate chaining relies on linked lists or secondary structures that scat",
+    false
+  ],
+  [
+    220,
+    "Why Do B+ Trees Use Linked Leaf Nodes for Range Queries?",
+    "B+ trees store all data records in linked leaf nodes to minimize disk I/O operations and maximize cache locality during sequential range queries. By separating routing keys in internal nodes from actual data in the leaves, a B+ tree achieves a higher bran",
+    false
+  ],
+  [
+    219,
+    "How Do Hash Tables Achieve O(1) Expected Lookup Time?",
+    "Hash tables achieve constant expected lookup time by mapping keys directly to array indices using a deterministic hash function, allowing immediate access to stored values without searching through every element. When two different keys map to the same in",
+    false
+  ],
+  [
+    218,
+    "How Does the Ford-Fulkerson Method Compute Maximum Flow?",
+    "The Ford-Fulkerson method computes the maximum flow from a source to a sink in a flow network by repeatedly finding augmenting paths in a residual graph and pushing additional flow along them until no more augmenting paths exist. By maintaining backward r",
+    false
+  ],
+  [
+    217,
+    "When Is a Problem Suited for Dynamic Programming?",
+    "Dynamic programming is a powerful algorithmic technique in classical computing, but it only works effectively when a problem exhibits two specific structural properties: optimal substructure and overlapping subproblems. Together, these properties determin",
+    false
+  ],
+  [
+    216,
+    "Memoization vs Tabulation: What Are the Trade-Offs?",
+    "Dynamic programming solves complex problems by breaking them into overlapping subproblems and storing their results to avoid redundant computation. In classical computing, this technique is implemented in two primary ways: top-down recursive memoization a",
+    false
+  ],
+  [
+    215,
+    "How do Kruskal's and Prim's MST algorithms differ?",
+    "Kruskal's algorithm and Prim's algorithm both find a minimum spanning tree for a connected, undirected, weighted graph, yet they construct the tree through fundamentally different strategies. Kruskal's approach sorts all edges globally by weight and adds",
+    false
+  ],
+  [
+    214,
+    "Why Is Topological Sorting Only Possible on DAGs?",
+    "Topological sorting is a fundamental graph algorithm that arranges the vertices of a graph into a linear sequence based on their dependencies. In classical computing, this ordering is only possible on directed acyclic graphs, commonly known as DAGs, becau",
+    false
+  ],
+  [
+    213,
+    "How Does Quickselect Find the kth Smallest Element?",
+    "Quickselect is a selection algorithm that finds the kth smallest element in an unsorted array in linear average time. Derived from the Quicksort sorting algorithm, it avoids sorting the entire array by partitioning elements around a pivot and recursively",
+    false
+  ],
+  [
+    212,
+    "How Do Counting Sort and Radix Sort Beat O(n log n)?",
+    "Classical comparison-based sorting algorithms cannot run faster than linearithmic time in the worst case because each comparison only yields a single bit of information about the relative order of two elements. Counting Sort and Radix Sort bypass this fun",
+    false
+  ],
+  [
+    211,
+    "How Do BFS and DFS Differ in Traversal and Memory?",
+    "Breadth-First Search and Depth-First Search are two fundamental graph and tree traversal algorithms in classical computing. While both systematically visit all reachable vertices from a given starting node, they differ fundamentally in the order in which",
+    false
+  ],
+  [
+    210,
+    "How Does External Merge Sort Sort Massive Datasets?",
+    "External merge sort is a classical sorting algorithm designed to order datasets that are too large to fit into a computer's main memory (RAM) at once. Instead of loading the entire dataset into RAM, it divides the data into smaller, manageable chunks that",
+    false
+  ],
+  [
+    209,
+    "How Does Bellman-Ford Detect Negative-Weight Cycles?",
+    "The Bellman-Ford algorithm finds the shortest paths from a single source vertex to all other vertices in a weighted, directed graph. Unlike Dijkstra's algorithm, Bellman-Ford handles edges with negative weights and can identify negative-weight cycles. It",
+    false
+  ],
+  [
+    208,
+    "Why Does Dijkstra's Algorithm Fail With Negative Weights?",
+    "Dijkstra's shortest-path algorithm fails on graphs with negative edge weights because it relies on a greedy assumption that once a vertex is visited, its shortest path has been permanently found. When negative weights are present, a longer path in terms o",
+    false
+  ],
+  [
+    207,
+    "Why Are Pointer-Chasing BSTs Slower Than Flat Arrays?",
+    "In modern classical computing, pointer-chasing binary search trees often perform worse than flat array searches despite having the same theoretical time complexity. This performance gap stems from how modern CPUs access memory through hierarchical caches",
+    false
+  ],
+  [
+    206,
+    "How Does Binary Search Reduce Lookup Time?",
+    "Binary search reduces lookup time in a sorted array to logarithmic complexity by repeatedly dividing the search interval in half. Instead of checking every element one by one, the algorithm compares the target value to the middle element of the current ra",
+    false
+  ],
+  [
+    205,
+    "How Does Heapsort Use an Implicit Binary Heap to Sort?",
+    "Heapsort is a comparison-based sorting algorithm that organizes an input array into an implicit binary heap to sort elements in place. By treating the flat array as a complete binary tree using simple index arithmetic, the algorithm avoids allocating extr",
+    false
+  ],
+  [
+    204,
+    "Why Is Comparison Sorting Bound by O(n log n)?",
+    "The O(n log n) lower bound is a fundamental limit for comparison-based sorting algorithms in classical computing because of how much information each comparison can reveal. Any algorithm that determines the sorted order of elements solely by comparing pai",
+    false
+  ],
+  [
+    203,
+    "Why Does Timsort Exploit Sorted Runs in Real Data?",
+    "Timsort was designed to exploit naturally occurring sorted runs in real-world datasets because most practical data is already partially ordered rather than purely random. By identifying and merging these existing sequences, Timsort achieves faster executi",
+    false
+  ],
+  [
+    202,
+    "Why Does Savitch's Theorem Square Space Complexity?",
+    "Savitch's theorem proves that any problem solvable by a non-deterministic Turing machine using a given amount of memory can also be solved by a deterministic Turing machine using at most the square of that memory. It achieves this by modeling the non-dete",
+    false
+  ],
+  [
+    201,
+    "Why Is Mergesort Always O(n log n) and Stable?",
+    "Mergesort is a classic divide-and-conquer sorting algorithm that guarantees worst-case logarithmic-linear time complexity while preserving the relative order of equal elements. Unlike algorithms whose performance depends on input distribution, Mergesort a",
+    false
+  ],
+  [
+    200,
+    "What Distinguishes BPP from P in Complexity Theory?",
+    "In classical complexity theory, P and BPP represent two fundamental classes of decision problems that can be solved efficiently. While P captures problems solvable by deterministic algorithms in polynomial time, BPP extends this model to allow randomized",
+    false
+  ],
+  [
+    199,
+    "How Does Quicksort Achieve Fast Average-Case Performance?",
+    "Quicksort is one of the most widely used sorting algorithms in classical computing because it consistently delivers fast average-case performance while operating directly within the original array. Although its worst-case time complexity is quadratic, car",
+    false
+  ],
+  [
+    198,
+    "How Do Polynomial-Time Reductions Prove NP-Hardness?",
+    "Polynomial-time many-one reductions, also known as Karp reductions, are the primary tool in classical complexity theory for proving that a new combinatorial problem is NP-hard. By showing that a known NP-hard problem can be efficiently transformed into th",
+    false
+  ],
+  [
+    197,
+    "How Did the Cook-Levin Theorem Prove SAT Is NP-Complete?",
+    "The Cook-Levin theorem, proved independently by Stephen Cook in 1971 and Leonid Levin in 1973, established that the Boolean satisfiability problem, known as SAT, is NP-complete. Before this result, computer scientists knew many problems belonged to the cl",
+    false
+  ],
+  [
+    196,
+    "Why Is the Post Correspondence Problem Undecidable?",
+    "The Post Correspondence Problem is a foundational example of an undecidable problem in classical computing because it demonstrates that even a simple string-matching puzzle can capture the full power of a Turing machine. Introduced by Emil Post in 1946, t",
+    false
+  ],
+  [
+    195,
+    "How Does Round-Robin Scheduling Balance Time Slices?",
+    "Round-robin scheduling is a preemptive CPU scheduling algorithm that assigns each ready process a fixed time slice, called a quantum, in cyclic order. Choosing the right quantum is a core design trade-off in operating systems because it directly governs h",
+    false
+  ],
+  [
+    194,
+    "How Does ASLR Defend Against Buffer Overflow Exploits?",
+    "Address Space Layout Randomization (ASLR) is a memory-protection technique used by modern operating systems to make buffer overflow exploits much harder to execute reliably. By randomizing the memory locations of key program components—such as the stack,",
+    false
+  ],
+  [
+    193,
+    "How Does Big-O Notation Measure Worst-Case Complexity?",
+    "Big-O asymptotic notation provides a standardized mathematical framework for describing how an algorithm's resource requirements grow as its input size increases. In classical computing, it is primarily used to characterize the worst-case upper bound on b",
+    false
+  ],
+  [
+    192,
+    "How Did Turing Machines Inspire Stored-Program Computers?",
+    "The Universal Turing Machine (UTM), introduced by Alan Turing in 1936, provided the theoretical blueprint for modern programmable hardware by showing that a single machine could perform any computation if given the right instructions. Before this insight,",
+    false
+  ],
+  [
+    191,
+    "How Does the Chomsky Hierarchy Classify Formal Grammars?",
+    "The Chomsky hierarchy is a containment hierarchy of formal grammars introduced by linguist Noam Chomsky in 1956. It classifies formal languages and the grammars that generate them into four nested levels: Type-0, Type-1, Type-2, and Type-3. Each level is",
+    false
+  ],
+  [
+    190,
+    "Why Is NP Defined by Polynomial-Time Verifiable Certificates?",
+    "Problems in the complexity class NP are defined by having polynomial-time verifiable certificates because this characterization captures the exact power of nondeterministic polynomial-time computation using a standard deterministic machine. Instead of ima",
+    false
+  ],
+  [
+    189,
+    "What Defines Complexity Class P in Classical Computing?",
+    "Complexity class P is the set of all decision problems that can be solved by a deterministic Turing machine in polynomial time relative to the size of the input. In classical computing and computational complexity theory, P serves as the standard mathemat",
+    false
+  ],
+  [
+    188,
+    "Do Extra Tapes or Non-Determinism Expand Decidability?",
+    "Adding multiple tapes or non-determinism to a Turing machine does not expand the class of decidable problems because a standard single-tape deterministic Turing machine can simulate both models. While these enhancements can make algorithms faster or easie",
+    false
+  ],
+  [
+    187,
+    "What Does Rice's Theorem State About Program Undecidability?",
+    "Rice's theorem states that in classical computing, any non-trivial semantic property of a program's behavior is undecidable. This means no general algorithm can examine an arbitrary program and reliably determine whether the function it computes has that",
+    false
+  ],
+  [
+    186,
+    "How Do Linear Bounded Automata Model Bounded Memory?",
+    "Linear bounded automata model computation with memory proportional to input length by restricting a Turing machine's tape to the exact cells occupied by the input string. Unlike standard Turing machines that can expand onto an infinite tape, a linear boun",
+    false
+  ],
+  [
+    185,
+    "How Does a Stack Turn a Finite Automaton into a PDA?",
+    "Adding an unbounded stack to a finite automaton gives it unlimited auxiliary memory, transforming it into a pushdown automaton capable of recognizing context-free languages. While a finite automaton can only track a fixed number of states, a pushdown auto",
+    false
+  ],
+  [
+    184,
+    "What Does the Church-Turing Thesis Assert About Computing?",
+    "The Church-Turing thesis asserts that any function computable by an intuitive, step-by-step algorithm can be computed by a Turing machine. In classical computing, this thesis establishes that seemingly different formal models of computation—specifically A",
+    false
+  ],
+  [
+    183,
+    "How Did Turing Prove the Halting Problem Is Undecidable?",
+    "Alan Turing proved in 1936 that no general algorithm can determine whether an arbitrary computer program will eventually stop or run forever. He reached this conclusion by combining a proof by contradiction with a diagonalization argument inspired by Geor",
+    false
+  ],
+  [
+    182,
+    "How Does a Single-Tape Turing Machine Model Computation?",
+    "A single-tape Turing machine models general algorithmic computation by combining an infinite linear tape, a movable read-write head, and a finite set of state transitions. At each step, the machine reads the symbol under its head, consults its current int",
+    false
+  ],
+  [
+    181,
+    "Why Can't Finite State Machines Match Balanced Parentheses?",
+    "The pumping lemma for regular languages proves that finite state machines cannot match balanced parentheses because they lack unbounded memory. By assuming a finite state machine can recognize balanced parentheses, the pumping lemma forces a contradiction",
+    false
+  ],
+  [
+    180,
+    "Why Are NFAs and DFAs Equivalent in Computing?",
+    "Non-deterministic finite automata and deterministic finite automata recognize the exact same class of languages, known as regular languages. Although non-determinism appears to give a machine extra computational power by allowing multiple transitions or g",
+    false
+  ],
+  [
+    179,
+    "Why Does Write Amplification Occur on Flash Storage?",
+    "Write amplification occurs on flash storage because the smallest unit that can be written is much smaller than the smallest unit that can be erased. When an operating system performs small random file updates, the storage controller cannot overwrite the e",
+    false
+  ],
+  [
+    178,
+    "How Does a DFA Recognize Regular Languages Without Memory?",
+    "A deterministic finite automaton recognizes regular languages without external memory by encoding all necessary information about the input processed so far directly into its finite set of internal states. Instead of storing past symbols on a tape or stac",
+    false
+  ],
+  [
+    177,
+    "How do ext4 and XFS extents reduce metadata overhead?",
+    "Extent-based file systems like ext4 and XFS reduce metadata overhead by replacing individual block-by-block pointers with compact descriptors called extents. Instead of storing a separate address for every single data block in a large contiguous file, an",
+    false
+  ],
+  [
+    176,
+    "How Does the Page Cache Accelerate File I/O?",
+    "The page cache is a region of main memory managed by the operating system kernel that stores copies of recently accessed file data from secondary storage. By serving repeated read requests directly from RAM and batching write operations in the background,",
+    false
+  ],
+  [
+    175,
+    "How Do ZFS and Btrfs Ensure Atomic Snapshots?",
+    "Copy-on-write file systems such as ZFS and Btrfs guarantee atomic state transitions and instant snapshots by never overwriting live data in place. Instead of modifying existing disk blocks, they write updated data and metadata to newly allocated blocks, p",
+    false
+  ],
+  [
+    174,
+    "How Does a Virtual File System Mount Diverse Storage Formats?",
+    "The Virtual File System is an abstraction layer inside an operating system kernel that provides a uniform interface for applications and system calls to interact with different file systems. By separating the generic file operations from the specific deta",
+    false
+  ],
+  [
+    173,
+    "Hard Link vs Symbolic Link: How Do They Differ?",
+    "In classical Unix-like file systems, hard links and symbolic links are two distinct mechanisms for referencing files. A hard link creates an additional directory entry that points directly to the underlying inode of a file, whereas a symbolic link is a se",
+    false
+  ],
+  [
+    172,
+    "How Does Metadata Journaling Prevent File System Corruption?",
+    "Metadata journaling protects file systems from structural corruption during unexpected power losses by recording intended structural changes in a dedicated log before applying them to the main storage area. When a system crashes mid-operation, the file sy",
+    false
+  ],
+  [
+    171,
+    "How Does an Inode Store Metadata and Block Pointers?",
+    "An inode, short for index node, is a fundamental data structure in Unix and Unix-like file systems that stores all the attributes and disk location pointers for a file or directory, completely separate from its human-readable filename. By decoupling a fil",
+    false
+  ],
+  [
+    170,
+    "Why Use B-Trees Over Binary Trees for Disk Indexing?",
+    "B-trees and B+ trees are favored over binary trees for indexing on-disk file system directories because they minimize expensive disk I/O operations. By packing many keys into a single node that matches the size of a disk block, these multi-way trees achie",
+    false
+  ],
+  [
+    169,
+    "Why did FAT suffer from fragmentation and scalability limits?",
+    "The File Allocation Table file system, commonly known as FAT, was designed for early personal computers with small floppy disks and simple storage needs. Because it relied on a centralized linked-list table and fixed cluster addressing, it struggled as di",
+    false
+  ],
+  [
+    168,
+    "How Does the No-Execute Bit Prevent Stack Code Execution?",
+    "The No-Execute bit and the Write-XOR-Execute security policy protect classical computers by separating memory regions used for storing data from memory regions used for running instructions. By marking data stacks as non-executable in the system's page ta",
+    false
+  ],
+  [
+    167,
+    "What Causes System Thrashing When Memory Is Exceeded?",
+    "System thrashing occurs when the combined working sets of active processes exceed available physical memory, forcing the operating system to spend most of its time swapping pages between RAM and secondary storage rather than executing instructions. This a",
+    false
+  ],
+  [
+    166,
+    "How Did x86 Segmentation Differ from Flat Paging?",
+    "In earlier x86 protected mode architectures, memory segmentation and flat paging represented two fundamentally different ways of organizing, protecting, and translating memory addresses. Segmentation divided memory into variable-sized logical regions defi",
+    false
+  ],
+  [
+    165,
+    "How Do Mutex Locks Differ from Counting Semaphores?",
+    "Mutex locks and counting semaphores are both synchronization primitives used in classical computing to coordinate concurrent threads and prevent race conditions. While they share the goal of managing access to shared resources, they differ fundamentally i",
+    false
+  ],
+  [
+    164,
+    "Why Do Database Servers Use Huge Pages for TLB Pressure?",
+    "Database servers often configure huge pages because their large in-memory buffer pools require thousands of virtual-to-physical address translations, which quickly overwhelm the CPU's Translation Lookaside Buffer. By increasing the size of each memory pag",
+    false
+  ],
+  [
+    163,
+    "How Does the Linux CFS Use a Red-Black Tree for vruntime?",
+    "The Linux Completely Fair Scheduler uses a self-balancing red-black tree to organize runnable tasks by their virtual runtime, ensuring that every process receives a fair share of processor time. By keeping tasks sorted in this tree structure, the schedule",
+    false
+  ],
+  [
+    162,
+    "How Do Pipes, Shared Memory, and Message Queues Work?",
+    "In classical computing, operating systems isolate processes in separate virtual address spaces to ensure stability and security. Because processes cannot directly access each other's memory by default, they rely on inter-process communication (IPC) mechan",
+    false
+  ],
+  [
+    161,
+    "Why Are Memory Pages and Frames Fixed at 4 KB?",
+    "Physical memory frames and virtual memory pages are divided into fixed-size blocks, commonly 4 kilobytes, to simplify memory management, eliminate external fragmentation, and enable fast hardware address translation. This design strikes a practical balanc",
+    false
+  ],
+  [
+    160,
+    "How Does the Clock Algorithm Approximate LRU?",
+    "The Clock page replacement algorithm, also known as the second-chance algorithm, is a widely used operating system memory management technique that approximates Least Recently Used eviction without the high overhead of maintaining a strict recency list. B",
+    false
+  ],
+  [
+    159,
+    "How Does Virtual Memory Give Private Address Spaces?",
+    "Virtual memory is a memory management technique used by modern operating systems to give every running process the illusion that it owns a large, private, and contiguous block of memory. In reality, physical RAM is shared among many processes and is often",
+    false
+  ],
+  [
+    158,
+    "How Does an MMU Handle a Page Fault?",
+    "When a program accesses a virtual memory address whose page is not currently loaded in physical RAM, the Memory Management Unit detects the missing mapping and triggers a page fault exception. Rather than resolving the missing data on its own, the MMU hal",
+    false
+  ],
+  [
+    157,
+    "How Do Atomic Primitives Enable Lock-Free Synchronization?",
+    "Atomic hardware primitives such as compare-and-swap and load-link/store-conditional allow multiple processor cores to update shared memory safely without acquiring mutual exclusion locks. By executing a read-modify-write sequence as a single indivisible h",
+    false
+  ],
+  [
+    156,
+    "Why Do 64-Bit Systems Use Multi-Level Page Tables?",
+    "64-bit architectures use multi-level hierarchical page tables instead of flat page tables because a flat table for a 64-bit virtual address space would require an impossibly large amount of physical memory just to store the table itself. By organizing pag",
+    false
+  ],
+  [
+    155,
+    "Why Are Spinlocks Preferred for Short Critical Sections?",
+    "Spinlocks are preferred over sleeping locks for very short critical sections on multiprocessor systems because busy-waiting avoids the high overhead of context switching. When a thread cannot acquire a sleeping lock, the operating system suspends it and s",
+    false
+  ],
+  [
+    154,
+    "Why Do Kernel Threads Share Address Space Unlike Processes?",
+    "Kernel-level threads share a single virtual address space because they are designed as lightweight execution units within a single program, enabling fast communication and low-overhead context switches. Processes remain isolated in separate virtual addres",
+    false
+  ],
+  [
+    153,
+    "How Do Set-Associative Caches Balance Energy and Misses?",
+    "An n-way set-associative cache balances lookup energy against conflict miss rates by partitioning cache lines into sets of n candidate ways. Increasing associativity reduces conflict misses because multiple memory addresses that map to the same set can co",
+    false
+  ],
+  [
+    152,
+    "How Does Priority Inheritance Resolve Priority Inversion?",
+    "Priority inheritance is a scheduling protocol used in real-time operating systems to prevent unbounded priority inversion, a condition where a high-priority task is indirectly delayed by a lower-priority task. It works by temporarily raising the priority",
+    false
+  ],
+  [
+    151,
+    "What Are the Four Coffman Conditions for Deadlock?",
+    "In classical computing, a resource deadlock occurs when a set of processes becomes permanently blocked because each process holds a resource and waits for another resource held by a different process in the set. Formulated by Edward G. Coffman Jr. in 1971",
+    false
+  ],
+  [
+    150,
+    "Why Are SerDes Transceivers Essential for Serial Data?",
+    "SerDes transceivers are essential in classical computing because they bridge the gap between wide, slower parallel buses inside a chip and narrow, ultra-fast serial links between chips. By serializing many parallel data bits into a single high-speed strea",
+    false
+  ],
+  [
+    149,
+    "How Does USB Organize Tiered-Star Topologies?",
+    "The Universal Serial Bus (USB) protocol connects external peripherals to a host computer using a host-scheduled tiered-star topology. In this architecture, a single host controller manages all bus traffic, while hubs branch the connection into multiple ti",
+    false
+  ],
+  [
+    148,
+    "How Does the Fork and Exec Model Spawn Child Processes?",
+    "In Unix-like operating systems, the fork-and-exec model is the standard mechanism for creating and running new programs. Rather than launching a new program in a single step, the operating system splits the task into two distinct system calls: fork, which",
+    false
+  ],
+  [
+    147,
+    "How Does a Timer Interrupt Return CPU Control to the OS?",
+    "A timer interrupt is a hardware signal sent to the central processing unit at regular intervals, forcing it to pause the currently running program and transfer execution to the operating system kernel. This mechanism prevents any single process from monop",
+    false
+  ],
+  [
+    146,
+    "How Does a Process Control Block Store Process State?",
+    "A Process Control Block (PCB) is a kernel data structure that an operating system maintains for every active process in classical computing. It serves as the central repository for everything the kernel needs to pause, resume, isolate, and manage a progra",
+    false
+  ],
+  [
+    145,
+    "How Do Syscalls Transition From User to Kernel Mode?",
+    "A software trap or dedicated syscall instruction transitions execution from user mode to kernel mode by triggering a controlled hardware mechanism that raises the processor privilege level, saves the current user execution state, and jumps to a predefined",
+    false
+  ],
+  [
+    144,
+    "How Does Copy-on-Write Enable Fast Process Creation?",
+    "Copy-on-write is a memory management technique that allows an operating system to create new processes rapidly by sharing existing physical memory pages between parent and child processes instead of copying them immediately. Both processes read from the s",
+    false
+  ],
+  [
+    143,
+    "What Causes Priority Inversion in Classical Computing?",
+    "Priority inversion occurs when a high-priority task is forced to wait because a low-priority task holds a shared resource lock that the high-priority task needs. Even though the scheduler prefers the high-priority task, it cannot run until the low-priorit",
+    false
+  ],
+  [
+    142,
+    "Why Does Preemptive Multitasking Stop Runaway Loops?",
+    "Preemptive multitasking is essential in classical computing because it gives the operating system the authority to interrupt a running program and reassign the processor to other tasks. Without this mechanism, a single program stuck in an infinite or runa",
+    false
+  ],
+  [
+    141,
+    "How Do Address, Data, and Control Buses Coordinate Transfers?",
+    "In classical computing, the address bus, data bus, and control bus work together as a unified communication system to move information between the CPU, memory, and input or output devices on a motherboard. The address bus specifies the exact location of t",
+    false
+  ],
+  [
+    140,
+    "How Does an IOMMU Translate DMA and Isolate Devices?",
+    "An Input-Output Memory Management Unit (IOMMU) is a hardware component that sits between peripheral devices and main system memory, translating device-visible addresses into physical memory addresses. By intercepting Direct Memory Access (DMA) requests, i",
+    false
+  ],
+  [
+    139,
+    "What Happens in Registers and Stack During a Context Switch?",
+    "A CPU context switch between two processes is the mechanism an operating system uses to pause one running process and resume another on the same processor core. At the hardware level, this requires saving the current execution state—specifically the CPU r",
+    false
+  ],
+  [
+    138,
+    "How Do Synchronous and Asynchronous Buses Differ in Speed?",
+    "Synchronous buses and asynchronous handshaking buses take fundamentally different approaches to coordinating data transfers between a CPU and peripherals of varying speeds. A synchronous bus relies on a shared global clock signal to dictate when data is p",
+    false
+  ],
+  [
+    137,
+    "How Do CPU Privilege Rings Isolate User and Kernel Space?",
+    "Hardware privilege rings enforce isolation between user space and kernel space by assigning a numerical privilege level to the currently executing code and restricting access to sensitive instructions and memory regions based on that level. Most modern op",
+    false
+  ],
+  [
+    136,
+    "Monolithic Kernels vs Microkernels: What Are the Trade-Offs?",
+    "Monolithic kernels and microkernels represent two fundamental approaches to operating system design, each balancing raw execution speed against fault isolation and modularity. A monolithic kernel runs all core operating system services—such as process sch",
+    false
+  ],
+  [
+    135,
+    "How Does an OS Kernel Manage Hardware Access?",
+    "An operating system kernel acts as the central authority that coordinates how multiple applications share limited hardware resources in classical computing. Because modern systems run many programs concurrently, the kernel must prevent applications from i",
+    false
+  ],
+  [
+    134,
+    "How Does CXL Enable Cache-Coherent Memory Pooling?",
+    "Compute Express Link (CXL) is an open industry-standard interconnect built on top of the PCI Express (PCIe) physical layer that enables high-bandwidth, low-latency, cache-coherent communication between CPUs and accelerators such as GPUs, FPGAs, and smart",
+    false
+  ],
+  [
+    133,
+    "How Did EEPROM Evolve Into Modern NAND Flash?",
+    "Electrically erasable programmable read-only memory laid the foundation for modern non-volatile storage by proving that solid-state memory could be erased and rewritten without physical removal or ultraviolet light. Over several decades, engineers overcam",
+    false
+  ],
+  [
+    132,
+    "What Role Does Bus Arbitration Play in Shared Buses?",
+    "Bus arbitration is the control mechanism that resolves conflicts when multiple bus masters request simultaneous access to a shared communication bus in a classical computer system. Because a shared bus consists of common address, data, and control lines t",
+    false
+  ],
+  [
+    131,
+    "How Do Intel UPI and AMD Infinity Fabric Link Processor Dies?",
+    "Modern high-performance processors rely on multiple silicon dies rather than a single monolithic chip to scale core counts and improve manufacturing yields. Intel Ultra Path Interconnect and AMD Infinity Fabric are the specialized interconnect architectur",
+    false
+  ],
+  [
+    130,
+    "How Does PCIe Avoid Clock Skew With Differential Signaling?",
+    "PCI Express (PCIe) replaces traditional parallel buses with high-speed serial point-to-point links to eliminate clock skew and signal integrity bottlenecks. By combining low-voltage differential signaling, embedded clock recovery, and packetized data tran",
+    false
+  ],
+  [
+    129,
+    "Why Did Parallel Buses Give Way to Serial Interconnects?",
+    "Parallel front-side buses were once the standard way to connect processors to memory and peripheral controllers, but they hit fundamental physical limits as clock speeds increased. Modern classical computing replaced them with high-speed point-to-point se",
+    false
+  ],
+  [
+    128,
+    "How Does 6T SRAM Enable Fast Cache Access in CPUs?",
+    "Static Random-Access Memory (SRAM) uses a six-transistor (6T) bistable latching circuit to store each bit of data without requiring periodic refresh cycles. By pairing two cross-coupled CMOS inverters with two access transistors, a 6T SRAM cell maintains",
+    false
+  ],
+  [
+    127,
+    "How Do Hardware Interrupt Controllers Prioritize Events?",
+    "Hardware interrupt controllers manage asynchronous signals from peripheral devices so that a CPU can pause its current execution, handle urgent tasks, and resume without losing state. They sit between external devices and the processor core, collecting in",
+    false
+  ],
+  [
+    126,
+    "How Does a TLB Cache Virtual-to-Physical Translations?",
+    "A Translation Lookaside Buffer, or TLB, is a small, high-speed hardware cache inside a processor's memory management unit that stores recent virtual-to-physical memory address translations. When a program accesses memory, the processor checks the TLB firs",
+    false
+  ],
+  [
+    125,
+    "Why Does Polling Use More CPU Cycles Than Interrupts?",
+    "Polling consumes excessive processor cycles because it forces the central processing unit to repeatedly check the status of an input or output device in a tight loop, even when no data is ready. In contrast, interrupt-driven I/O allows the processor to ex",
+    false
+  ],
+  [
+    124,
+    "How Do RAID 0, 1, 5, and 6 Balance Speed and Fault Tolerance?",
+    "Redundant Array of Independent Disks (RAID) levels 0, 1, 5, and 6 represent distinct engineering trade-offs between input/output performance, usable storage capacity, and resilience against drive failures. By combining data striping, mirroring, and mathem",
+    false
+  ],
+  [
+    123,
+    "How Does DDR SDRAM Transfer Data on Both Clock Edges?",
+    "Double Data Rate synchronous dynamic random-access memory (DDR SDRAM) doubles data transfer rates compared to single data rate memory by transmitting data on both the rising and falling edges of the clock signal. Rather than speeding up the internal memor",
+    false
+  ],
+  [
+    122,
+    "What Is Memory-Mapped vs Port-Mapped I/O?",
+    "In classical computing, processors communicate with peripheral devices using two primary addressing architectures: memory-mapped I/O and isolated port-mapped I/O. Memory-mapped I/O places device registers into the same address space as main system memory,",
+    false
+  ],
+  [
+    121,
+    "How Does Direct Memory Access Bypass the CPU?",
+    "Direct Memory Access (DMA) is a hardware mechanism that lets peripheral devices read from and write to system memory (RAM) independently of the central processing unit. By offloading bulk data movement to a dedicated DMA controller, a computer avoids spen",
+    false
+  ],
+  [
+    120,
+    "How Does TRIM Inform an SSD of Unused Data Blocks?",
+    "The TRIM command is a communication mechanism between an operating system's file system and a solid-state drive that identifies which data blocks are no longer in use. By sending this information to the drive's controller, the operating system prevents th",
+    false
+  ],
+  [
+    119,
+    "Why Do SSDs Need Garbage Collection Before Overwriting?",
+    "NAND flash solid-state drives cannot overwrite existing data in place due to the physical and electrical properties of floating-gate and charge-trap transistors. Instead, drives must write new data to empty pages, mark old pages as invalid, and rely on ga",
+    false
+  ],
+  [
+    118,
+    "How Did NVMe Overcome SATA Bottlenecks Using PCIe Lanes?",
+    "The Non-Volatile Memory Express protocol overcame Serial ATA bottlenecks by connecting solid-state drives directly to the central processing unit through high-speed Peripheral Component Interconnect Express lanes. Unlike older storage interfaces designed",
+    false
+  ],
+  [
+    117,
+    "How Do Magnetic Hard Disk Drives Read and Write Data?",
+    "Magnetic hard disk drives store and retrieve digital information by magnetizing microscopic regions on spinning platters and detecting those magnetic fields with specialized read and write heads. In classical computing, these drives rely on electromagneti",
+    false
+  ],
+  [
+    116,
+    "Why Do Seek Time and Latency Limit HDD Random IOPS?",
+    "Hard disk drives store data on spinning magnetic platters accessed by a moving mechanical read/write head. Because random input and output operations target non-contiguous sectors scattered across the disk, the drive must physically reposition the actuato",
+    false
+  ],
+  [
+    115,
+    "Why Do MLC and QLC NAND Flash Trade Endurance for Density?",
+    "Multi-level cell and quad-level cell NAND flash memory achieve higher storage density by packing multiple bits into a single memory cell, but this comes at the direct cost of reduced write endurance. Storing more bits per cell requires dividing a fixed vo",
+    false
+  ],
+  [
+    114,
+    "How Do Flash Controller Wear-Leveling Algorithms Work?",
+    "Wear-leveling algorithms inside flash controllers distribute program and erase cycles evenly across NAND flash memory blocks so that no single block wears out prematurely. Because flash memory cells degrade physically each time they are erased and reprogr",
+    false
+  ],
+  [
+    113,
+    "What Causes Cosmic Rays to Flip Bits in High-Density DRAM?",
+    "Cosmic-ray-induced soft errors in high-density dynamic random-access memory occur when high-energy particles from space interact with Earth's atmosphere and strike silicon memory cells, depositing enough electrical charge to invert a stored binary state.",
+    false
+  ],
+  [
+    112,
+    "How Do Row Buffer Hits and Misses Affect DRAM tRCD Latency?",
+    "Row buffer hits and misses directly determine whether a memory access incurs the row address strobe to column address strobe delay, known as tRCD, in dynamic random-access memory. A row buffer hit bypasses this delay entirely because the target row is alr",
+    false
+  ],
+  [
+    111,
+    "Why Does DRAM Need Periodic Memory Refresh Cycles?",
+    "Dynamic Random-Access Memory (DRAM) relies on tiny capacitors to store binary data as electrical charge, but these capacitors naturally lose their charge over time due to leakage currents. Without periodic refresh cycles that read and rewrite the stored d",
+    false
+  ],
+  [
+    110,
+    "How Does SECDED ECC Memory Protect Server Reliability?",
+    "Single-error-correcting and double-error-detecting error-correcting code memory protects servers by identifying and fixing single-bit memory errors on the fly while flagging two-bit errors before corrupted data can cause crashes or silent data corruption.",
+    false
+  ],
+  [
+    109,
+    "Why Does DRAM Use Only One Transistor and One Capacitor?",
+    "Dynamic Random-Access Memory, or DRAM, stores each bit of data using just one transistor and one capacitor because this minimalist design maximizes memory density and lowers manufacturing cost per bit. By representing a binary 1 or 0 as the presence or ab",
+    false
+  ],
+  [
+    108,
+    "Why Do Direct-Mapped Caches Miss on Cache-Sized Strides?",
+    "Direct-mapped caches experience frequent conflict misses when memory access strides match the cache size because every accessed address maps to the exact same cache line. Even though the rest of the cache remains empty, each new memory access evicts the p",
+    false
+  ],
+  [
+    107,
+    "How Does the MESI Cache Coherency Protocol Work?",
+    "The MESI cache coherency protocol is a widely used invalidation-based protocol that keeps data consistent across private caches in multicore classical processors. By assigning one of four states—Modified, Exclusive, Shared, or Invalid—to every cache line,",
+    false
+  ],
+  [
+    106,
+    "Write-Through vs Write-Back Cache: What Are the Trade-Offs?",
+    "Write-through and write-back are the two primary cache write policies used in classical computer architectures to manage how modified data is propagated from a cache to lower levels of the memory hierarchy. Choosing between them involves a fundamental tra",
+    false
+  ],
+  [
+    105,
+    "How Do Superscalar Processors Handle Multiple Instructions?",
+    "Superscalar processors achieve instruction-level parallelism by fetching, decoding, and dispatching multiple instructions within a single clock cycle. Instead of executing one instruction at a time like a basic scalar pipeline, a superscalar design duplic",
+    false
+  ],
+  [
+    104,
+    "How Does a Reorder Buffer Retire Instructions in Order?",
+    "The reorder buffer is a hardware structure inside modern out-of-order processors that ensures instructions commit their results in strict program order, even when they execute out of order. By tracking every in-flight instruction in a circular queue and h",
+    false
+  ],
+  [
+    103,
+    "How Does Direct-Mapped Cache Use Modulo Indexing?",
+    "A direct-mapped cache assigns each main memory block to exactly one specific cache line using modulo arithmetic. By dividing the memory block address by the total number of cache lines and taking the remainder, the hardware determines the exact index wher",
+    false
+  ],
+  [
+    102,
+    "How Does LRU Cache Replacement Decide Which Line to Evict?",
+    "The Least Recently Used replacement policy decides which cache line to evict upon a cache miss by selecting the line that has gone the longest time without being accessed. When a cache is full and new data must be loaded, the policy assumes that data used",
+    false
+  ],
+  [
+    101,
+    "How Does a Return Stack Buffer Predict Return Targets?",
+    "A return stack buffer is a small, fast hardware structure inside modern processors that predicts the target address of subroutine return instructions. Because a single function can be called from many different places in a program, standard branch target",
+    false
+  ],
+  [
+    100,
+    "Why Flush Speculative State on Branch Misprediction?",
+    "When a modern processor encounters a conditional branch, it often predicts the outcome and executes instructions along the predicted path before knowing whether the guess is right. If the prediction turns out to be wrong, all speculative execution state f",
+    false
+  ],
+  [
+    99,
+    "How Do Structural Hazards Occur in a CPU Pipeline?",
+    "A structural hazard occurs in a pipelined processor when two or more instructions in different pipeline stages require the same hardware functional unit during the same clock cycle. Because a single physical resource cannot simultaneously serve two indepe",
+    false
+  ],
+  [
+    98,
+    "Why Does the CPU-DRAM Speed Gap Require Caches?",
+    "The widening performance gap between fast processor clock rates and slow dynamic random-access memory (DRAM) access latencies creates a bottleneck known as the memory wall. Without an intermediate storage layer, modern CPUs would spend most of their cycle",
+    false
+  ],
+  [
+    97,
+    "Why Are L1 Caches Split While L2 and L3 Are Unified?",
+    "Modern processors use a split Level 1 cache with separate instruction and data caches while keeping Level 2 and Level 3 caches unified to balance execution speed against capacity efficiency. At the core pipeline boundary, instructions and data are accesse",
+    false
+  ],
+  [
+    96,
+    "How Do Tournament and TAGE Predictors Correlate History?",
+    "Tournament and TAGE branch predictors bridge global program execution patterns and individual branch behavior by combining multiple prediction mechanisms that index into different history lengths. While a Tournament predictor dynamically arbitrates betwee",
+    false
+  ],
+  [
+    95,
+    "How Do Temporal and Spatial Locality Justify Memory Caching?",
+    "Temporal locality and spatial locality are two fundamental patterns in how computer programs access memory, and together they explain why caching recently accessed memory blocks dramatically improves system performance. Because processors execute instruct",
+    false
+  ],
+  [
+    94,
+    "How Does Operand Forwarding Resolve Pipeline Data Hazards?",
+    "Operand forwarding, also known as bypassing, is a hardware technique used in pipelined processors to resolve read-after-write data hazards without stalling the pipeline. Instead of waiting for a producing instruction to write its result back to the regist",
+    false
+  ],
+  [
+    93,
+    "How Does Tomasulo's Algorithm Enable Out-of-Order Execution?",
+    "Robert Tomasulo's algorithm is a hardware scheduling technique developed in 1967 for the IBM System/360 Model 91 floating-point unit. It enables dynamic out-of-order execution by decoupling instruction issue from execution, using reservation stations to b",
+    false
+  ],
+  [
+    92,
+    "How Does a 2-Bit Saturating Counter Improve Loop Prediction?",
+    "A two-bit saturating counter improves dynamic branch prediction inside loops by requiring two consecutive mispredictions before changing its prediction direction. Unlike a one-bit predictor that flips immediately on a single unexpected branch outcome, a t",
+    false
+  ],
+  [
+    91,
+    "How do load-store architectures restrict memory access?",
+    "Load-store architectures enforce a strict separation between data processing and memory access at the instruction set and hardware levels. In classical computing, this design ensures that arithmetic, logic, and control-flow instructions operate exclusivel",
+    false
+  ],
+  [
+    90,
+    "What Is the Purpose of a Branch Target Buffer?",
+    "A branch target buffer is a specialized cache inside a modern processor that stores the destination addresses of previously taken branch instructions. Its primary purpose is to eliminate the delay caused by waiting for a branch instruction to be decoded a",
+    false
+  ],
+  [
+    89,
+    "How Do Read-After-Write Data Hazards Arise in Computing?",
+    "Read-after-write data hazards occur in pipelined processors when a subsequent instruction attempts to read a register or memory location before a preceding instruction has finished writing its result. Because modern CPUs overlap the execution of multiple",
+    false
+  ],
+  [
+    88,
+    "How Does Instruction Pipelining Increase CPU Throughput?",
+    "Dividing instruction execution into fetch, decode, execute, memory, and writeback stages increases throughput through a technique called instruction pipelining. Instead of waiting for one instruction to finish all its steps before starting the next, a pro",
+    false
+  ],
+  [
+    87,
+    "Why Did Static Branch Prediction Fail in Superscalar CPUs?",
+    "Simple static branch prediction strategies failed to keep wide superscalar pipelines full because their fixed, compile-time guesses could not adapt to the dynamic, data-dependent behavior of real-world programs. As processors grew wider and pipelines grew",
+    false
+  ],
+  [
+    86,
+    "How Does Register Renaming Eliminate False Hazards?",
+    "Register renaming is a hardware technique used in modern out-of-order processors to remove artificial data dependencies between instructions. By dynamically mapping a small set of programmer-visible architectural registers to a much larger pool of interna",
+    false
+  ],
+  [
+    85,
+    "How Are Precise Exceptions Maintained in Out-of-Order CPUs?",
+    "Modern processors execute instructions out of program order to maximize performance, yet they must still present the illusion of sequential execution when an error or interrupt occurs. Maintaining precise exceptions means ensuring that when an instruction",
+    false
+  ],
+  [
+    84,
+    "Why Does a Load-Use Hazard Still Require a Pipeline Stall?",
+    "A load-use hazard occurs when an instruction immediately following a memory load depends on the loaded value. Even in a classical pipelined processor equipped with full data forwarding paths, this specific hazard cannot be resolved by forwarding alone and",
+    false
+  ],
+  [
+    83,
+    "How Do CPU Status Flags Control Conditional Branching?",
+    "Status flags are single-bit indicators stored in a processor's status register that record the outcome of arithmetic and logical operations. By checking the state of the zero, carry, overflow, and negative flags, conditional branch instructions determine",
+    false
+  ],
+  [
+    82,
+    "Why Did Deep Superpipelined CPUs Hit Diminishing Returns?",
+    "Deep superpipelined processor designs initially drove massive gains in clock speed, but they eventually hit severe diminishing returns due to physical and architectural limits. As pipelines grew deeper, the fixed time required by pipeline latches and cloc",
+    false
+  ],
+  [
+    81,
+    "Why Do Compressed Instructions Reduce I-Cache Misses?",
+    "Compressed instruction extensions reduce instruction cache misses in embedded classical computing by shrinking the memory footprint of executable code. When instructions are encoded in 16 bits instead of 32 bits, more operations fit inside each cache line",
+    false
+  ],
+  [
+    80,
+    "How Did Early Accumulators Minimize Register Complexity?",
+    "Early accumulator-based architectures minimized hardware register complexity by routing nearly all arithmetic and logic operations through a single central register known as the accumulator. By making this register an implicit operand in most machine inst",
+    false
+  ],
+  [
+    79,
+    "Why Was Microcode ROM Introduced in Classical Computing?",
+    "Microcode ROM was introduced in classical computing to simplify the design of central processing units by replacing complex hardwired control logic with a structured, programmable table of control signals. As instruction sets grew larger and more intricat",
+    false
+  ],
+  [
+    78,
+    "Why Do Pipeline Bubbles Reduce Effective IPC?",
+    "Pipeline bubbles reduce the effective instructions-per-cycle metric because they represent wasted clock cycles in which no useful instruction completes execution. In an ideal pipelined processor, one instruction finishes every clock cycle, yielding an ins",
+    false
+  ],
+  [
+    77,
+    "How Do WAR and WAW Name Dependencies Create False Hazards?",
+    "Write-after-read and write-after-write name dependencies create false data hazards when two instructions reuse the same register or memory location without actually passing a value between them. In pipelined and out-of-order processors, executing these in",
+    false
+  ],
+  [
+    76,
+    "How Do Control Hazards Disrupt Instruction Fetching?",
+    "Control hazards occur in pipelined processors when the CPU encounters a conditional branch instruction and does not yet know which instruction to fetch next. Because modern processors overlap the execution of multiple instructions, the instruction fetch s",
+    false
+  ],
+  [
+    75,
+    "Why Did EPIC Struggle With Unpredictable Memory Latencies?",
+    "Explicitly Parallel Instruction Computing, or EPIC, was designed to shift the burden of finding instruction-level parallelism from hardware to the compiler. While this static scheduling approach worked well for predictable, regular workloads, it struggled",
+    false
+  ],
+  [
+    74,
+    "How Does a JK Flip-Flop Eliminate the SR Latch Invalid State?",
+    "A JK flip-flop eliminates the invalid indeterminate state of a basic SR latch by feeding its complementary outputs back into the input logic gates. When both inputs are active simultaneously, this feedback mechanism forces the circuit to toggle its curren",
+    false
+  ],
+  [
+    73,
+    "How Does Harvard Architecture Eliminate Bus Contention?",
+    "The Harvard architecture eliminates instruction-data bus contention by physically separating instruction memory from data memory and giving each its own dedicated bus system. Unlike the Von Neumann architecture, where instructions and data share a single",
+    false
+  ],
+  [
+    72,
+    "How Do VLIW Processors Use Static Compiler Scheduling?",
+    "Very Long Instruction Word (VLIW) processors achieve instruction-level parallelism by shifting the responsibility of dependency analysis and instruction scheduling from runtime hardware to the compile-time software toolchain. Unlike superscalar architectu",
+    false
+  ],
+  [
+    71,
+    "Why Is RISC-V Gaining Adoption for Custom Silicon?",
+    "The open-standard RISC-V modular instruction set architecture is rapidly gaining traction in classical computing because it eliminates licensing fees, removes vendor lock-in, and allows engineers to tailor processor designs to specific workloads. Unlike p",
+    false
+  ],
+  [
+    70,
+    "Why Do x86 Processors Use Internal RISC Micro-Operations?",
+    "Modern x86 processors translate variable-length complex instructions into internal RISC-like micro-operations to combine backward compatibility with high-performance execution. While the x86 instruction set architecture requires CPUs to support decades of",
+    false
+  ],
+  [
+    69,
+    "How Did ARM Achieve Dominance in Mobile Computing?",
+    "The ARM architecture achieved dominance in mobile and energy-constrained computing through a combination of power-efficient Reduced Instruction Set Computer design, a flexible intellectual property licensing model, and early strategic partnerships in embe",
+    false
+  ],
+  [
+    68,
+    "How Does the von Neumann Architecture Unify Code and Data?",
+    "The von Neumann architecture unifies program instructions and data by storing both in the same addressable read-write memory using identical binary representations. Proposed by John von Neumann in 1945, this stored-program concept allows a classical compu",
+    false
+  ],
+  [
+    67,
+    "How Do Classical Addressing Modes Calculate Memory Addresses?",
+    "Classical computer architectures use addressing modes to determine where an instruction finds its operands. Immediate, direct, indirect, and indexed addressing each compute the effective address differently, trading off instruction size, memory accesses,",
+    false
+  ],
+  [
+    66,
+    "What Role Does the Program Counter Play in Execution?",
+    "The program counter register is a fundamental component of a classical central processing unit that tracks the memory address of the next instruction to be executed. By automatically advancing through memory addresses and updating when control flow change",
+    false
+  ],
+  [
+    65,
+    "How Does Clock Skew Cause Timing Violations on a Silicon Die?",
+    "Clock skew occurs when a shared clock signal arrives at different flip-flops on a silicon die at slightly different times due to physical wire delays and manufacturing variations. When two distant flip-flops communicate across a combinational logic path,",
+    false
+  ],
+  [
+    64,
+    "How Does an ISA Bridge Software and Microarchitecture?",
+    "An Instruction Set Architecture, or ISA, acts as the formal contract between software and the underlying processor hardware in classical computing. It defines the exact set of instructions, data types, registers, and memory models that a processor guarant",
+    false
+  ],
+  [
+    63,
+    "How Does Metastability Occur in Flip-Flops?",
+    "Metastability in classical computing occurs when a digital flip-flop samples an asynchronous external signal that changes too close to a clock edge, violating the device's setup or hold timing requirements. Instead of settling cleanly into a valid logic 0",
+    false
+  ],
+  [
+    62,
+    "Why Do Modern CPUs Use Split L1 Caches and Unified RAM?",
+    "Modern processors use a modified Harvard architecture with split Level 1 (L1) caches and unified main memory to balance execution speed, hardware efficiency, and software flexibility. By separating instructions and data at the fastest cache level while ke",
+    false
+  ],
+  [
+    61,
+    "How Do Stack Machines Evaluate Expressions Without Registers?",
+    "Stack machine architectures evaluate expressions by using a last-in, first-out operand stack instead of explicit general-purpose register names. Instructions implicitly take their inputs from the top of the stack and push their results back onto it, which",
+    false
+  ],
+  [
+    60,
+    "Why did CISC use compact code and multi-cycle instructions?",
+    "Complex Instruction Set Computer (CISC) architecture prioritized compact code density and multi-cycle instructions in classical computing primarily to overcome severe hardware limitations, most notably expensive, slow, and scarce main memory. By packing m",
+    false
+  ],
+  [
+    59,
+    "How Does RISC Streamline Instruction Decoding?",
+    "Reduced Instruction Set Computer architecture simplifies processor design by using fixed-length instructions that make hardware decoding fast and predictable. Instead of analyzing variable-length byte streams, a RISC decoder knows the exact size and bit l",
+    false
+  ],
+  [
+    58,
+    "Why Must Inputs Be Stable During Setup and Hold Times?",
+    "In classical digital computing, synchronous circuits rely on flip-flops and registers to store binary state at precise moments dictated by a clock signal. For a flip-flop to reliably capture and store an input value, the data signal must remain stable for",
+    false
+  ],
+  [
+    57,
+    "What Causes the von Neumann Bottleneck in Computing?",
+    "The von Neumann bottleneck is a fundamental performance limitation in classical computers caused by the shared communication pathway between the central processing unit and main memory. Because both program instructions and data must travel across this sa",
+    false
+  ],
+  [
+    56,
+    "Why Do Transparent D Latches Cause Race Conditions?",
+    "Level-sensitive transparent D latches are susceptible to race conditions because their outputs continuously track their data inputs for the entire duration that the clock or enable signal is active. In synchronous digital circuits, this transparency windo",
+    false
+  ],
+  [
+    55,
+    "How Does a Demultiplexer Route a Single Input Signal?",
+    "A demultiplexer, often abbreviated as DEMUX, is a combinational logic circuit in classical computing that takes a single data input line and routes it to one of several possible output channels. By using a set of binary select lines, the circuit determine",
+    false
+  ],
+  [
+    54,
+    "What Distinguishes a Moore Machine from a Mealy Machine?",
+    "Moore and Mealy finite state machines are two fundamental models of sequential logic in classical computing, distinguished primarily by how they generate their outputs. While a Moore machine determines its output solely from its current internal state, a",
+    false
+  ],
+  [
+    53,
+    "How Do Parallel-In Serial-Out Shift Registers Work?",
+    "Parallel-in serial-out shift registers are fundamental digital logic circuits used in classical computing to convert multi-bit data from an internal parallel bus into a single-bit serial communication stream. By capturing all bits of a data word simultane",
+    false
+  ],
+  [
+    52,
+    "How Does a Barrel Shifter Work in One Clock Cycle?",
+    "A barrel shifter is a combinational digital circuit that shifts or rotates a binary data word by any specified number of bit positions within a single clock cycle. Unlike sequential shift registers that require one clock cycle per bit shifted, a barrel sh",
+    false
+  ],
+  [
+    51,
+    "Why Use T Flip-Flops for Frequency Dividers and Counters?",
+    "T flip-flops are widely used to build binary frequency dividers and ripple counters because their toggle behavior naturally halves an incoming clock frequency. When wired in a cascade, each stage divides the previous stage's frequency by two, creating a s",
+    false
+  ],
+  [
+    50,
+    "Why is EUV lithography needed for sub-7nm chips?",
+    "Extreme ultraviolet lithography is necessary for printing sub-7-nanometer circuit features because conventional deep ultraviolet light has too long a wavelength to resolve tiny transistor patterns cleanly. By switching from 193-nanometer light to 13.5-nan",
+    false
+  ],
+  [
+    49,
+    "How Does Carry Propagation Delay Slow Ripple-Carry Adders?",
+    "Carry propagation delay creates a performance bottleneck in ripple-carry adders because each bit position must wait for the carry signal from the previous bit before it can compute its final sum and pass its own carry forward. In an n-bit ripple-carry add",
+    false
+  ],
+  [
+    48,
+    "Why Are Binary Decoders Essential for Memory Arrays?",
+    "Binary decoders are essential in classical computing because they translate compact binary addresses into individual activation signals for specific word lines inside a memory array. Without a decoder, a processor would need a separate physical wire for e",
+    false
+  ],
+  [
+    47,
+    "How Does an ALU Combine Arithmetic and Logic Operations?",
+    "An arithmetic logic unit (ALU) is the core digital circuit inside a processor that performs both mathematical calculations and bitwise logical operations on binary numbers. Rather than building completely separate, isolated hardware for every individual i",
+    false
+  ],
+  [
+    46,
+    "How Does a Master-Slave D Flip-Flop Work on a Clock Edge?",
+    "A master-slave D flip-flop isolates input changes from output transitions by cascading two level-sensitive D latches that are controlled by complementary clock signals. Because only one latch is transparent at any given moment, the input data is captured",
+    false
+  ],
+  [
+    45,
+    "How Do Cross-Coupled Gates Store State in an SR Latch?",
+    "An SR latch stores a single bit of data using two cross-coupled logic gates, either NOR or NAND, connected in a feedback loop. Because the output of each gate feeds directly into the input of the other, the circuit settles into one of two stable states, r",
+    false
+  ],
+  [
+    44,
+    "How Does UTF-8 Stay Compatible With ASCII?",
+    "UTF-8 maintains backward compatibility with ASCII by using a variable-width encoding scheme where every standard ASCII character is represented by the exact same single byte as in ASCII, while non-ASCII characters from global writing systems are encoded u",
+    false
+  ],
+  [
+    43,
+    "Why Did CMOS Replace NMOS in Computing?",
+    "Complementary metal-oxide-semiconductor technology replaced NMOS logic as the dominant fabrication process in classical computing primarily because it dramatically reduces static power consumption, improves noise immunity, and scales more effectively to h",
+    false
+  ],
+  [
+    42,
+    "Why Does Multi-Bit Addition Require a Full Adder?",
+    "Chaining multiple bits together for binary addition in classical computing requires a full adder because each bit position beyond the least significant bit must account for three inputs: the two corresponding bits from the numbers being added and a carry-",
+    false
+  ],
+  [
+    41,
+    "How Do Priority Encoders Resolve Simultaneous Inputs?",
+    "Priority encoders resolve simultaneous active inputs by assigning a fixed hierarchy to every input line and outputting the binary code of only the highest-priority active request. When multiple hardware devices assert their request lines at the exact same",
+    false
+  ],
+  [
+    40,
+    "What Defines Noise Margin in Digital Logic Circuits?",
+    "Noise margin in classical computing is the quantitative buffer between the output voltage levels of a driving logic gate and the input voltage thresholds of a receiving logic gate. It defines how much electrical noise a digital signal can tolerate without",
+    false
+  ],
+  [
+    39,
+    "Why were one's complement and sign-magnitude flawed?",
+    "Early classical computers experimented with sign-magnitude and one's complement representations to store negative integers in binary, but both approaches introduced significant hardware and mathematical inefficiencies. These systems suffered from having t",
+    false
+  ],
+  [
+    38,
+    "How Do Carry-Lookahead Adders Accelerate Binary Addition?",
+    "Carry-lookahead adders accelerate binary addition by computing carry bits in parallel rather than waiting for them to ripple sequentially from one bit position to the next. By introducing two intermediate signals—generate and propagate—these circuits dete",
+    false
+  ],
+  [
+    37,
+    "What Does a Multiplexer Do in Classical Computing?",
+    "A multiplexer is a combinational logic circuit in classical computing that selects one of several input signals and forwards it to a single output line. By using binary select lines, it acts as a digitally controlled switch that shares a single communicat",
+    false
+  ],
+  [
+    36,
+    "How Do Resistance and Capacitance Limit Chip Signal Speed?",
+    "In classical computing, the speed at which electrical signals travel between transistors is heavily constrained by the physical properties of the metal interconnect layers. As integrated circuits shrink, the combined effects of wire resistance and parasit",
+    false
+  ],
+  [
+    35,
+    "What Structural Advantages Do FinFETs Have Over Planar?",
+    "FinFET three-dimensional transistors replaced traditional planar transistors in advanced semiconductor manufacturing because their vertical fin structure gives the gate superior electrostatic control over the conducting channel. By wrapping the gate aroun",
+    false
+  ],
+  [
+    34,
+    "How Do Doping Profiles Create Silicon Depletion Regions?",
+    "P-type and n-type doping profiles create depletion regions in silicon by introducing contrasting concentrations of mobile charge carriers that diffuse across a junction until an internal electric field halts further movement. This carrier-free zone acts a",
+    false
+  ],
+  [
+    33,
+    "How Does Subthreshold Leakage Cause Static Power?",
+    "Subthreshold leakage current is a major source of static power dissipation in nanometer-scale classical computing chips. As transistor dimensions shrink below tens of nanometers, transistors no longer turn off completely when their gate voltage is below t",
+    false
+  ],
+  [
+    32,
+    "How Does Fixed-Point Arithmetic Ensure Precision?",
+    "Fixed-point arithmetic provides a deterministic and hardware-efficient method for representing fractional numbers on low-power processors that lack dedicated floating-point units. By fixing the position of the radix point within a standard integer registe",
+    false
+  ],
+  [
+    31,
+    "How Do GAA Nanosheets Improve Electrostatic Control?",
+    "Gate-all-around nanosheet transistors improve electrostatic control at extreme process nodes by wrapping the gate material completely around horizontally stacked silicon channels. This four-sided gate architecture eliminates the un-gated bottom leakage pa",
+    false
+  ],
+  [
+    30,
+    "Why Do Programmers Use Hexadecimal for Memory Addresses?",
+    "Systems programmers rely on hexadecimal notation because it provides a compact, human-readable representation of binary data. While computers store and process information in base-2, raw binary strings are too long and error-prone for humans to read easil",
+    false
+  ],
+  [
+    29,
+    "How Does a Half Adder Use XOR and AND Gates?",
+    "A half adder is a fundamental digital logic circuit that adds two single binary digits, or bits, and produces two outputs: a sum bit and a carry bit. By combining an XOR gate and an AND gate in parallel, the half adder handles all four possible combinatio",
+    false
+  ],
+  [
+    28,
+    "Why Is Threshold Voltage Scaling Hard for Dynamic Power?",
+    "Threshold voltage scaling presents a major challenge in classical computing because lowering the threshold voltage to reduce dynamic power consumption causes an exponential increase in static leakage current. While reducing the supply voltage is one of th",
+    false
+  ],
+  [
+    27,
+    "How Do MOSFETs Work as Voltage-Controlled Switches?",
+    "Metal-oxide-semiconductor field-effect transistors, commonly known as MOSFETs, serve as the fundamental building blocks of modern classical computing by acting as microscopic, electrically operated switches. By applying a voltage to a control terminal cal",
+    false
+  ],
+  [
+    26,
+    "What Role Did Seven-Bit ASCII Play in Early Computing?",
+    "Seven-bit ASCII established a common standard for representing text characters in early classical computing, allowing different machines, terminals, and software systems to exchange readable data reliably. Before its adoption, manufacturers used incompati",
+    false
+  ],
+  [
+    25,
+    "Why Do Subnormal Numbers Exist in Floating-Point Math?",
+    "Subnormal numbers exist in floating-point representations to fill the gap between zero and the smallest normal positive or negative number. Without them, any calculation that produces a value smaller than the minimum normal magnitude would abruptly drop t",
+    false
+  ],
+  [
+    24,
+    "How Do Big-Endian and Little-Endian Byte Orders Differ?",
+    "Big-endian and little-endian byte ordering are two opposite ways of arranging the individual bytes of a multi-byte word in computer memory. Big-endian places the most significant byte at the lowest memory address, while little-endian places the least sign",
+    false
+  ],
+  [
+    23,
+    "Why Do Computers Use Binary Instead of Decimal?",
+    "Modern electronic computers use the base-2 binary numeral system instead of the base-10 decimal system because binary is far more reliable, simpler to build in hardware, and easier to process with electronic switches. While humans naturally count in tens,",
+    false
+  ],
+  [
+    22,
+    "How Does IEEE 754 Encode Floating-Point Numbers?",
+    "The IEEE 754 standard defines how computers represent and manipulate floating-point numbers in binary. It divides a fixed-width bit sequence into three distinct fields: the sign bit, the exponent, and the mantissa, which is also known as the significand.",
+    false
+  ],
+  [
+    21,
+    "How Do Karnaugh Maps Simplify Boolean Logic?",
+    "Karnaugh maps, often called K-maps, are a visual method used in digital logic design to simplify Boolean algebra expressions without relying on tedious algebraic manipulation. By organizing truth table values into a specialized grid, designers can spot pa",
+    false
+  ],
+  [
+    20,
+    "How Did the Point-Contact Transistor Boost Reliability?",
+    "The invention of the point-contact transistor at Bell Labs in 1947 marked a turning point in classical computing by replacing fragile vacuum tubes with a solid-state alternative. This breakthrough eliminated the primary causes of hardware failure in early",
+    false
+  ],
+  [
+    19,
+    "How Does Propagation Delay Limit Max Clock Frequency?",
+    "In classical digital computing, propagation delay is the finite time it takes for a logic gate's output to respond to a change in its inputs. When multiple logic gates are cascaded together between storage elements like flip-flops, their individual delays",
+    false
+  ],
+  [
+    18,
+    "Why Is Quine-McCluskey Preferred Over Manual Mapping?",
+    "The Quine-McCluskey algorithm is preferred over manual mapping methods like Karnaugh maps when optimizing multi-variable Boolean functions because it is a systematic, tabular procedure that scales reliably to more than four variables and can be easily aut",
+    false
+  ],
+  [
+    17,
+    "How Do De Morgan's Laws Convert Between SOP and POS Forms?",
+    "De Morgan's laws provide a systematic algebraic method for transforming Boolean expressions between sum-of-products and product-of-sums forms in digital logic design. By applying complementation and swapping logical operations, hardware engineers can conv",
+    false
+  ],
+  [
+    16,
+    "Why Are AND, OR, and NOT Gates Functionally Complete?",
+    "In classical computing, a set of logic gates is functionally complete if it can be used to express every possible Boolean function. The combination of AND, OR, and NOT gates forms a functionally complete set because any truth table, regardless of its numb",
+    false
+  ],
+  [
+    15,
+    "How Does Two's Complement Simplify Binary Subtraction?",
+    "Two's complement representation simplifies signed integer subtraction in classical computing by allowing arithmetic hardware to perform both addition and subtraction using the exact same adder circuitry. Instead of requiring separate hardware units for su",
+    false
+  ],
+  [
+    14,
+    "Why Is Ada Lovelace's Algorithm the First Computer Program?",
+    "Ada Lovelace's algorithm for calculating Bernoulli numbers, published in 1843 as part of her notes on Charles Babbage's Analytical Engine, is widely regarded as the first software program in classical computing. Unlike earlier mathematical tables or mecha",
+    false
+  ],
+  [
+    13,
+    "How Did Turing's 1936 Paper Define Computing Limits?",
+    "In 1936, Alan Turing published a landmark paper titled \"On Computable Numbers, with an Application to the Entscheidungsproblem\" that established the theoretical foundation of modern computer science. By inventing an abstract mathematical device now known",
+    false
+  ],
+  [
+    12,
+    "Why Use Truth Tables for Small Boolean Expressions?",
+    "Truth tables are used to exhaustively verify small Boolean expressions because they list every possible combination of input values and the resulting output. In classical computing, a Boolean variable can only be true or false, which means a small express",
+    false
+  ],
+  [
+    11,
+    "How Does the NOR Gate Enable Logical Universality?",
+    "The NOR gate is a fundamental digital logic component that outputs true only when all of its inputs are false. Because any Boolean function can be constructed exclusively from combinations of NOR gates, it is classified as a functionally complete or unive",
+    false
+  ],
+  [
+    10,
+    "How Did Zuse's Z3 Pioneer Binary Floating-Point Computing?",
+    "Konrad Zuse's Z3, completed in 1941, was the world's first working programmable, fully automatic digital computer. Built using electromechanical telephone relays, the machine demonstrated that complex numerical calculations could be automated using binary",
+    false
+  ],
+  [
+    9,
+    "How Did Shannon Link Boolean Algebra to Switching Circuits?",
+    "In 1937, Claude Shannon wrote a master's thesis at MIT that transformed electrical engineering and laid the foundation for digital computing. By showing that the on-and-off states of electrical relays and switches could be represented using the two-valued",
+    false
+  ],
+  [
+    8,
+    "How Do XOR Gates Enable Parity Checking and Binary Addition?",
+    "Exclusive OR (XOR) gates are fundamental building blocks in classical digital logic, serving as the primary mechanism for both error detection through parity checking and arithmetic computation through binary addition. By outputting a high signal only whe",
+    false
+  ],
+  [
+    7,
+    "How did the integrated circuit accelerate miniaturization?",
+    "The development of the monolithic integrated circuit by Jack Kilby and Robert Noyce in the late 1950s transformed classical computing by replacing bulky, hand-wired assemblies of discrete components with a single unified piece of semiconductor material. B",
+    false
+  ],
+  [
+    6,
+    "How did the ABC shape binary digital logic?",
+    "The Atanasoff-Berry Computer, built between 1937 and 1942 by John Vincent Atanasoff and Clifford Berry at Iowa State College, was a pioneering special-purpose electronic device designed to solve systems of linear algebraic equations. It introduced several",
+    false
+  ],
+  [
+    5,
+    "How Do XNOR Gates Work as Bit-Level Equality Comparators?",
+    "An XNOR gate, or exclusive-NOR gate, is a fundamental digital logic gate that outputs a high signal only when both of its inputs are identical. Because of this behavior, a single XNOR gate naturally acts as a one-bit equality comparator in classical compu",
+    false
+  ],
+  [
+    4,
+    "Why Was ENIAC Significant for Electronic Computing?",
+    "The Electronic Numerical Integrator and Computer, completed in 1945, marked a turning point in computing history by proving that large-scale calculations could be performed electronically rather than mechanically. By replacing slow electromechanical relay",
+    false
+  ],
+  [
+    3,
+    "How Did Babbage's Analytical Engine Shape Computing?",
+    "Charles Babbage's Analytical Engine, conceived in 1837, established the core architectural principles of classical computing nearly a century before electronic computers existed. By separating data storage from processing, introducing programmable punched",
+    false
+  ],
+  [
+    2,
+    "How Did the EDVAC Draft Shape Stored-Program Architecture?",
+    "John von Neumann's 1945 First Draft of a Report on the EDVAC established the conceptual blueprint for the stored-program computer, a design that unified data and instructions in a single addressable memory. By moving away from the physical rewiring and pl",
+    false
+  ],
+  [
+    1,
+    "Why Is the NAND Gate Considered a Universal Logic Gate?",
+    "A NAND gate is considered a universal logic gate because any combinational logic circuit in classical computing can be constructed using only NAND gates. By combining NAND gates in specific arrangements, engineers can replicate the behavior of all other f",
+    false
+  ]
+]

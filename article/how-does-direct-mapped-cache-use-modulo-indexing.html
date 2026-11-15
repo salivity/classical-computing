@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Direct-Mapped Cache Use Modulo Indexing? - classical-computing</title>
+    <meta name="description" content="A direct-mapped cache assigns each main memory block to exactly one specific cache line using modulo arithmetic. By dividing the memory block address by the total number of cache lines and taking the remainder, the hardware determines the exact index wher">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-direct-mapped-cache-use-modulo-indexing">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Direct-Mapped Cache Use Modulo Indexing? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-direct-mapped-cache-use-modulo-indexing" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A direct-mapped cache assigns each main memory block to exactly one specific cache line using modulo arithmetic. By dividing the memory block address by the total number of cache lines and taking the remainder, the hardware determines the exact index wher" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-direct-mapped-cache-use-modulo-indexing">How Does
+Direct-Mapped Cache Use Modulo Indexing?</h1>
+<p>A direct-mapped cache assigns each main memory block to exactly one
+specific cache line using modulo arithmetic. By dividing the memory
+block address by the total number of cache lines and taking the
+remainder, the hardware determines the exact index where the block must
+be stored. This approach simplifies cache lookup and hardware design,
+though it can lead to conflict misses when multiple active blocks map to
+the same index.</p>
+<h2 id="memory-address-structure">Memory Address Structure</h2>
+<p>In classical computing, a physical memory address is divided into
+three distinct fields to support cache operations: the tag, the index,
+and the block offset.</p>
+<p><span class="math display">\[\text{Memory Address} = [\text{Tag} \mid
+\text{Index} \mid \text{Block Offset}]\]</span></p>
+<p>The block offset specifies the exact byte or word within a cache
+line. If each cache line holds <span class="math inline">\(B =
+2^b\)</span> bytes, the lowest <span class="math inline">\(b\)</span>
+bits of the address form the block offset. Removing these offset bits
+leaves the block address, which identifies the specific block in main
+memory:</p>
+<p><span class="math display">\[\text{Block Address} = \left\lfloor
+\frac{\text{Memory Address}}{B} \right\rfloor\]</span></p>
+<h2 id="modulo-index-arithmetic">Modulo Index Arithmetic</h2>
+<p>A direct-mapped cache contains <span class="math inline">\(N\)</span>
+cache lines, where <span class="math inline">\(N\)</span> is typically a
+power of two (<span class="math inline">\(N = 2^k\)</span>). To
+determine which cache line holds a given memory block, the cache
+controller computes the remainder of the block address divided by <span
+class="math inline">\(N\)</span>:</p>
+<p><span class="math display">\[\text{Cache Index} = \text{Block
+Address} \bmod N\]</span></p>
+<p>Because <span class="math inline">\(N = 2^k\)</span>, this modulo
+operation does not require an expensive division circuit in hardware.
+Instead, taking the remainder modulo <span
+class="math inline">\(2^k\)</span> is mathematically identical to
+extracting the lowest <span class="math inline">\(k\)</span> bits of the
+block address. The remaining upper bits of the block address become the
+tag:</p>
+<p><span class="math display">\[\text{Tag} = \left\lfloor
+\frac{\text{Block Address}}{N} \right\rfloor\]</span></p>
+<h2 id="hardware-lookup-and-tag-comparison">Hardware Lookup and Tag
+Comparison</h2>
+<p>When the processor requests data at a memory address, the cache
+controller uses the extracted index bits to directly access one of the
+<span class="math inline">\(N\)</span> cache lines. It then compares the
+tag stored in that cache line against the tag bits from the requested
+memory address.</p>
+<p>If the valid bit of the cache line is set to <span
+class="math inline">\(1\)</span> and the tags match, a cache hit occurs,
+and the requested byte or word is selected using the block offset. If
+the valid bit is <span class="math inline">\(0\)</span> or the tags do
+not match, a cache miss occurs. The cache controller fetches the
+required block from main memory and writes it into the cache line at
+that same index, overwriting any previous data stored there.</p>
+<h2 id="advantages-and-conflict-misses">Advantages and Conflict
+Misses</h2>
+<p>The primary advantage of modulo indexing in a direct-mapped cache is
+speed and simplicity. Because each memory block has only one possible
+location, the hardware needs only a single comparator to check the tag,
+minimizing both access latency and power consumption.</p>
+<p>However, this rigid mapping creates a vulnerability to conflict
+misses. If a program repeatedly accesses two different memory blocks
+whose addresses are separated by a multiple of <span
+class="math inline">\(N \times B\)</span> bytes, both blocks produce the
+same cache index:</p>
+<p><span class="math display">\[\text{Block}_1 \bmod N = \text{Block}_2
+\bmod N\]</span></p>
+<p>As a result, the two blocks continually evict each other from the
+cache, even if other cache lines remain completely empty.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-direct-mapped-cache-use-modulo-indexing';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

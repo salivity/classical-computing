@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Are AND, OR, and NOT Gates Functionally Complete? - classical-computing</title>
+    <meta name="description" content="In classical computing, a set of logic gates is functionally complete if it can be used to express every possible Boolean function. The combination of AND, OR, and NOT gates forms a functionally complete set because any truth table, regardless of its numb">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-are-and-or-and-not-gates-functionally-complete">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Are AND, OR, and NOT Gates Functionally Complete? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-are-and-or-and-not-gates-functionally-complete" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In classical computing, a set of logic gates is functionally complete if it can be used to express every possible Boolean function. The combination of AND, OR, and NOT gates forms a functionally complete set because any truth table, regardless of its numb" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-are-and-or-and-not-gates-functionally-complete">Why Are AND,
+OR, and NOT Gates Functionally Complete?</h1>
+<p>In classical computing, a set of logic gates is functionally complete
+if it can be used to express every possible Boolean function. The
+combination of AND, OR, and NOT gates forms a functionally complete set
+because any truth table, regardless of its number of inputs, can be
+systematically translated into a logical expression using only these
+three operations. This foundational property allows complex digital
+circuits, from simple adders to modern microprocessors, to be
+constructed from a minimal set of basic building blocks.</p>
+<h2 id="understanding-functional-completeness">Understanding Functional
+Completeness</h2>
+<p>A Boolean function maps <span class="math inline">\(n\)</span> binary
+inputs, each taking a value of <span class="math inline">\(0\)</span>
+(false) or <span class="math inline">\(1\)</span> (true), to a single
+binary output. For <span class="math inline">\(n\)</span> inputs, there
+are <span class="math inline">\(2^n\)</span> possible input
+combinations, and consequently <span
+class="math inline">\(2^{2^n}\)</span> possible Boolean functions. A set
+of logic gates is said to be functionally complete (or universal) if
+every one of these <span class="math inline">\(2^{2^n}\)</span>
+functions can be represented as a finite composition of gates from that
+set.</p>
+<p>The three fundamental operations are defined as follows for inputs
+<span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>:</p>
+<ul>
+<li><strong>NOT (Negation):</strong> Represented as <span
+class="math inline">\(\neg A\)</span> or <span
+class="math inline">\(\overline{A}\)</span>, it outputs <span
+class="math inline">\(1\)</span> if <span class="math inline">\(A =
+0\)</span>, and <span class="math inline">\(0\)</span> if <span
+class="math inline">\(A = 1\)</span>.</li>
+<li><strong>AND (Conjunction):</strong> Represented as <span
+class="math inline">\(A \land B\)</span> or <span
+class="math inline">\(A \cdot B\)</span>, it outputs <span
+class="math inline">\(1\)</span> if and only if both <span
+class="math inline">\(A = 1\)</span> and <span class="math inline">\(B =
+1\)</span>.</li>
+<li><strong>OR (Disjunction):</strong> Represented as <span
+class="math inline">\(A \lor B\)</span> or <span class="math inline">\(A
++ B\)</span>, it outputs <span class="math inline">\(1\)</span> if at
+least one of <span class="math inline">\(A\)</span> or <span
+class="math inline">\(B\)</span> is <span
+class="math inline">\(1\)</span>.</li>
+</ul>
+<h2 id="proof-by-disjunctive-normal-form">Proof by Disjunctive Normal
+Form</h2>
+<p>To prove that <span class="math inline">\(\{\text{AND}, \text{OR},
+\text{NOT}\}\)</span> is functionally complete, we can show that any
+arbitrary truth table can be converted into an equivalent Boolean
+expression using Disjunctive Normal Form (DNF), also known as a sum of
+products.</p>
+<p>Consider an arbitrary Boolean function <span
+class="math inline">\(f(x_1, x_2, \dots, x_n)\)</span>. To construct its
+DNF expression:</p>
+<ol type="1">
+<li>Identify every row in the truth table where the output <span
+class="math inline">\(f\)</span> is <span
+class="math inline">\(1\)</span>.</li>
+<li>For each such row, create a <strong>minterm</strong>—an AND
+expression of all <span class="math inline">\(n\)</span> variables. If a
+variable <span class="math inline">\(x_i\)</span> is <span
+class="math inline">\(1\)</span> in that row, use <span
+class="math inline">\(x_i\)</span> directly; if <span
+class="math inline">\(x_i\)</span> is <span
+class="math inline">\(0\)</span>, use its negation <span
+class="math inline">\(\neg x_i\)</span>.</li>
+<li>Combine all the resulting minterms using OR operations.</li>
+</ol>
+<p>Each minterm evaluates to <span class="math inline">\(1\)</span> for
+its specific input combination and <span
+class="math inline">\(0\)</span> for all other combinations. When these
+minterms are joined by OR gates, the overall expression evaluates to
+<span class="math inline">\(1\)</span> if and only if the inputs match
+one of the rows where <span class="math inline">\(f = 1\)</span>. If a
+function outputs <span class="math inline">\(0\)</span> for every
+possible input, it can still be represented using these gates as <span
+class="math inline">\(x_1 \land \neg x_1\)</span>.</p>
+<p>Because every possible truth table can be represented in this way,
+and DNF uses only AND, OR, and NOT operations, the set <span
+class="math inline">\(\{\text{AND}, \text{OR}, \text{NOT}\}\)</span> is
+guaranteed to be functionally complete.</p>
+<h2 id="redundancy-and-minimal-complete-sets">Redundancy and Minimal
+Complete Sets</h2>
+<p>While <span class="math inline">\(\{\text{AND}, \text{OR},
+\text{NOT}\}\)</span> is functionally complete, it is not minimal. Using
+De Morgan's laws, either AND or OR can be eliminated without losing
+completeness:</p>
+<p><span class="math display">\[A \lor B = \neg(\neg A \land \neg
+B)\]</span></p>
+<p><span class="math display">\[A \land B = \neg(\neg A \lor \neg
+B)\]</span></p>
+<p>This means that <span class="math inline">\(\{\text{AND},
+\text{NOT}\}\)</span> and <span class="math inline">\(\{\text{OR},
+\text{NOT}\}\)</span> are each functionally complete on their own.
+Furthermore, single gates like NAND (<span class="math inline">\(\neg(A
+\land B)\)</span>) and NOR (<span class="math inline">\(\neg(A \lor
+B)\)</span>) are individually functionally complete because they can be
+used to construct NOT, AND, and OR gates. Nevertheless, <span
+class="math inline">\(\{\text{AND}, \text{OR}, \text{NOT}\}\)</span>
+remains the standard conceptual basis for Boolean algebra and digital
+logic design due to its intuitive mapping to human reasoning and truth
+tables.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-are-and-or-and-not-gates-functionally-complete';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

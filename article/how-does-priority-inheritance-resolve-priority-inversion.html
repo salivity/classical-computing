@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Priority Inheritance Resolve Priority Inversion? - classical-computing</title>
+    <meta name="description" content="Priority inheritance is a scheduling protocol used in real-time operating systems to prevent unbounded priority inversion, a condition where a high-priority task is indirectly delayed by a lower-priority task. It works by temporarily raising the priority">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-priority-inheritance-resolve-priority-inversion">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Priority Inheritance Resolve Priority Inversion? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-priority-inheritance-resolve-priority-inversion" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Priority inheritance is a scheduling protocol used in real-time operating systems to prevent unbounded priority inversion, a condition where a high-priority task is indirectly delayed by a lower-priority task. It works by temporarily raising the priority" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-priority-inheritance-resolve-priority-inversion">How
+Does Priority Inheritance Resolve Priority Inversion?</h1>
+<p>Priority inheritance is a scheduling protocol used in real-time
+operating systems to prevent unbounded priority inversion, a condition
+where a high-priority task is indirectly delayed by a lower-priority
+task. It works by temporarily raising the priority of a low-priority
+task that holds a shared resource to match the priority of the
+highest-priority task waiting for that resource. Once the resource is
+released, the task returns to its original priority, allowing the system
+to maintain predictable timing and meet real-time deadlines.</p>
+<h2 id="understanding-priority-inversion">Understanding Priority
+Inversion</h2>
+<p>In a preemptive, priority-based real-time operating system (RTOS),
+the scheduler always runs the highest-priority task that is ready to
+execute. Consider three tasks with priorities <span
+class="math inline">\(P_H &gt; P_M &gt; P_L\)</span>, where <span
+class="math inline">\(T_H\)</span> is high priority, <span
+class="math inline">\(T_M\)</span> is medium priority, and <span
+class="math inline">\(T_L\)</span> is low priority.</p>
+<p>Priority inversion occurs when <span
+class="math inline">\(T_L\)</span> acquires a shared resource, such as a
+mutex or semaphore, and is then preempted by <span
+class="math inline">\(T_H\)</span>, which also needs that same resource.
+Because the resource is locked, <span class="math inline">\(T_H\)</span>
+must block and wait for <span class="math inline">\(T_L\)</span> to
+release it. Normally, <span class="math inline">\(T_L\)</span> would
+finish its critical section quickly and release the resource. However,
+if <span class="math inline">\(T_M\)</span> becomes ready to run while
+<span class="math inline">\(T_L\)</span> holds the lock, <span
+class="math inline">\(T_M\)</span> preempts <span
+class="math inline">\(T_L\)</span> because <span
+class="math inline">\(P_M &gt; P_L\)</span>. As a result, <span
+class="math inline">\(T_H\)</span> is forced to wait not only for <span
+class="math inline">\(T_L\)</span>, but also for <span
+class="math inline">\(T_M\)</span> (and any other medium-priority
+tasks), leading to an unbounded delay.</p>
+<h2 id="how-the-priority-inheritance-protocol-works">How the Priority
+Inheritance Protocol Works</h2>
+<p>The Priority Inheritance Protocol (PIP) resolves this issue by
+dynamically adjusting task priorities when resource contention
+occurs:</p>
+<ol type="1">
+<li><strong>Resource Acquisition:</strong> <span
+class="math inline">\(T_L\)</span> acquires the mutex and enters its
+critical section at its base priority <span
+class="math inline">\(P_L\)</span>.</li>
+<li><strong>Contention and Blocking:</strong> <span
+class="math inline">\(T_H\)</span> preempts <span
+class="math inline">\(T_L\)</span> and attempts to acquire the same
+mutex. Since the mutex is already held, <span
+class="math inline">\(T_H\)</span> blocks.</li>
+<li><strong>Priority Elevation:</strong> The RTOS kernel detects that
+<span class="math inline">\(T_H\)</span> is blocked on a resource owned
+by <span class="math inline">\(T_L\)</span>. It temporarily elevates
+<span class="math inline">\(T_L\)</span>'s priority to <span
+class="math inline">\(P_H\)</span>, so <span
+class="math inline">\(T_L\)</span> now executes at <span
+class="math inline">\(\max(P_L, P_H) = P_H\)</span>.</li>
+<li><strong>Preemption Prevention:</strong> Because <span
+class="math inline">\(T_L\)</span> now runs at priority <span
+class="math inline">\(P_H\)</span>, <span
+class="math inline">\(T_M\)</span> can no longer preempt <span
+class="math inline">\(T_L\)</span>. <span
+class="math inline">\(T_L\)</span> completes its critical section
+without interference from medium-priority tasks.</li>
+<li><strong>Priority Restoration:</strong> When <span
+class="math inline">\(T_L\)</span> releases the mutex, the kernel
+restores <span class="math inline">\(T_L\)</span>'s priority back to
+<span class="math inline">\(P_L\)</span>. <span
+class="math inline">\(T_H\)</span> immediately acquires the mutex and
+resumes execution.</li>
+</ol>
+<p>If multiple high-priority tasks block on the same resource, the
+holder inherits the highest priority among all waiting tasks.</p>
+<h2 id="transitive-priority-inheritance">Transitive Priority
+Inheritance</h2>
+<p>Priority inheritance also handles chains of blocked tasks. Suppose
+<span class="math inline">\(T_L\)</span> holds resource <span
+class="math inline">\(R_1\)</span>, <span
+class="math inline">\(T_M\)</span> holds resource <span
+class="math inline">\(R_2\)</span> and blocks waiting for <span
+class="math inline">\(R_1\)</span>, and <span
+class="math inline">\(T_H\)</span> blocks waiting for <span
+class="math inline">\(R_2\)</span>. Through transitive priority
+inheritance, <span class="math inline">\(T_M\)</span> inherits <span
+class="math inline">\(P_H\)</span> from <span
+class="math inline">\(T_H\)</span>, and <span
+class="math inline">\(T_L\)</span> in turn inherits <span
+class="math inline">\(P_H\)</span> from <span
+class="math inline">\(T_M\)</span>. This ensures that the entire
+dependency chain progresses at the highest required priority until the
+resources are released.</p>
+<h2 id="limitations-of-priority-inheritance">Limitations of Priority
+Inheritance</h2>
+<p>While priority inheritance eliminates unbounded priority inversion,
+it has two notable limitations:</p>
+<ul>
+<li><strong>Deadlocks:</strong> Priority inheritance does not prevent
+deadlocks. If two tasks acquire two mutexes in opposite orders, they can
+still deadlock regardless of priority adjustments.</li>
+<li><strong>Chained Blocking:</strong> A high-priority task may still
+experience bounded blocking if it needs multiple resources held by
+different low-priority tasks, as it must wait for each critical section
+to finish sequentially.</li>
+</ul>
+<p>To address these limitations, some real-time systems use the Priority
+Ceiling Protocol (PCP), which assigns a priority ceiling to each
+resource and prevents both deadlocks and chained blocking.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-priority-inheritance-resolve-priority-inversion';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

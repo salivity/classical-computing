@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Memory Allocators Manage Free Lists and Fragmentation? - classical-computing</title>
+    <meta name="description" content="Dynamic memory allocators manage heap memory by tracking unallocated blocks using data structures known as free lists and applying placement, splitting, and coalescing strategies to minimize external fragmentation. External fragmentation occurs when free">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-memory-allocators-manage-free-lists-and-fragmentation">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Memory Allocators Manage Free Lists and Fragmentation? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-memory-allocators-manage-free-lists-and-fragmentation" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Dynamic memory allocators manage heap memory by tracking unallocated blocks using data structures known as free lists and applying placement, splitting, and coalescing strategies to minimize external fragmentation. External fragmentation occurs when free" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1
+id="how-do-memory-allocators-manage-free-lists-and-fragmentation">How Do
+Memory Allocators Manage Free Lists and Fragmentation?</h1>
+<p>Dynamic memory allocators manage heap memory by tracking unallocated
+blocks using data structures known as free lists and applying placement,
+splitting, and coalescing strategies to minimize external fragmentation.
+External fragmentation occurs when free memory is broken into many
+small, non-contiguous blocks, preventing a large allocation request from
+succeeding even when the total free memory is sufficient. Classical
+allocators balance allocation speed, metadata overhead, and memory
+utilization through specialized free list organizations and
+block-merging techniques.</p>
+<h2 id="free-list-architectures">Free List Architectures</h2>
+<p>A free list is a data structure that records the location and size of
+every unallocated block on the heap. Allocators typically embed this
+metadata directly within the free blocks themselves, avoiding the need
+for separate auxiliary memory.</p>
+<h3 id="implicit-free-lists">Implicit Free Lists</h3>
+<p>In an implicit free list, the allocator stores a header—and often a
+footer—in every block, whether allocated or free. The header contains
+the block's total size and an allocation bit indicating whether the
+block is in use. Because there are no explicit pointers connecting free
+blocks, the allocator must traverse the entire heap sequentially from
+the beginning to find a suitable free block. While simple and
+space-efficient for small heaps, implicit lists have a linear search
+time of <span class="math inline">\(O(N)\)</span>, where <span
+class="math inline">\(N\)</span> is the total number of blocks on the
+heap.</p>
+<h3 id="explicit-free-lists">Explicit Free Lists</h3>
+<p>An explicit free list improves lookup performance by storing
+<code>next</code> and <code>prev</code> pointers inside the payload area
+of each free block, forming a doubly linked list of only the unallocated
+blocks. This reduces search time to <span
+class="math inline">\(O(F)\)</span>, where <span
+class="math inline">\(F\)</span> is the number of free blocks. When a
+block is freed, it can be inserted into the list using either a Last-In,
+First-Out (LIFO) policy—inserting at the head in <span
+class="math inline">\(O(1)\)</span> time—or an address-ordered policy,
+which keeps the list sorted by memory address to simplify
+coalescing.</p>
+<h3 id="segregated-free-lists">Segregated Free Lists</h3>
+<p>Segregated free lists partition free blocks into multiple lists based
+on size classes, such as powers of two (<span
+class="math inline">\(2^k\)</span>). An array of list heads points to
+each size class. When a request of size <span
+class="math inline">\(s\)</span> arrives, the allocator computes the
+appropriate size class index and searches only that list (or the next
+larger non-empty list). This approach approximates best-fit placement in
+near-constant time, <span class="math inline">\(O(1)\)</span>, and is
+widely used in production allocators like <code>jemalloc</code> and
+<code>ptmalloc</code>.</p>
+<h2 id="placement-policies">Placement Policies</h2>
+<p>When searching a free list for a block of size <span
+class="math inline">\(s\)</span>, the allocator uses a placement policy
+to choose among available candidates:</p>
+<ul>
+<li><strong>First Fit:</strong> Scans the list from the beginning and
+selects the first free block that is large enough. It is fast but can
+leave small, unusable splinters near the front of the list.</li>
+<li><strong>Next Fit:</strong> Resumes scanning from the point where the
+previous search ended. This avoids clustering splinters at the start of
+the heap, though it can slightly increase fragmentation compared to
+first fit.</li>
+<li><strong>Best Fit:</strong> Searches the entire list (or size class)
+to find the smallest free block that satisfies the request. This
+minimizes wasted space per allocation but can be slower and may produce
+tiny leftover fragments.</li>
+</ul>
+<h2 id="combating-external-fragmentation">Combating External
+Fragmentation</h2>
+<p>Even with optimal placement, repeated allocations and deallocations
+inevitably divide the heap into small, scattered chunks. Allocators use
+several mechanisms to restore contiguous free space.</p>
+<h3 id="block-splitting">Block Splitting</h3>
+<p>When an allocator selects a free block of size <span
+class="math inline">\(B\)</span> to satisfy a request of size <span
+class="math inline">\(s\)</span>, and <span class="math inline">\(B -
+s\)</span> is large enough to hold a valid block (including its header,
+footer, and minimum payload), the allocator splits the block into two.
+The first part of size <span class="math inline">\(s\)</span> is marked
+allocated, and the remainder of size <span class="math inline">\(B -
+s\)</span> is returned to the free list. Without splitting, internal
+fragmentation would waste the unused portion of the block.</p>
+<h3 id="coalescing-with-boundary-tags">Coalescing with Boundary
+Tags</h3>
+<p>Coalescing is the process of merging adjacent free blocks into a
+single larger block. To perform coalescing in <span
+class="math inline">\(O(1)\)</span> time without traversing the entire
+heap, allocators use boundary tags. Each block includes both a header at
+the start and a footer (a copy of the header) at the end. When a block
+is freed, the allocator checks the allocation bit of the immediately
+preceding block (via its footer) and the immediately following block
+(via its header). If either neighbor is free, their sizes are combined
+into one contiguous free block.</p>
+<h3 id="deferred-coalescing-and-compaction">Deferred Coalescing and
+Compaction</h3>
+<p>Immediate coalescing merges blocks on every <code>free()</code> call,
+which can cause thrashing if a program repeatedly allocates and frees
+blocks of the same size. Some allocators use deferred coalescing,
+waiting until an allocation request fails or a threshold is reached
+before scanning and merging adjacent free blocks. In environments with
+managed runtimes or garbage collection, allocators may also perform heap
+compaction—relocating live objects to one end of the heap to eliminate
+external fragmentation entirely—though this is generally not possible in
+unmanaged languages like C and C++ where raw pointers cannot be safely
+updated.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-memory-allocators-manage-free-lists-and-fragmentation';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

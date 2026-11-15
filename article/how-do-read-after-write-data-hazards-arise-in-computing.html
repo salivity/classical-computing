@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Read-After-Write Data Hazards Arise in Computing? - classical-computing</title>
+    <meta name="description" content="Read-after-write data hazards occur in pipelined processors when a subsequent instruction attempts to read a register or memory location before a preceding instruction has finished writing its result. Because modern CPUs overlap the execution of multiple">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-read-after-write-data-hazards-arise-in-computing">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Read-After-Write Data Hazards Arise in Computing? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-read-after-write-data-hazards-arise-in-computing" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Read-after-write data hazards occur in pipelined processors when a subsequent instruction attempts to read a register or memory location before a preceding instruction has finished writing its result. Because modern CPUs overlap the execution of multiple" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-read-after-write-data-hazards-arise-in-computing">How Do
+Read-After-Write Data Hazards Arise in Computing?</h1>
+<p>Read-after-write data hazards occur in pipelined processors when a
+subsequent instruction attempts to read a register or memory location
+before a preceding instruction has finished writing its result. Because
+modern CPUs overlap the execution of multiple sequential instructions to
+improve throughput, an instruction that depends on an earlier
+calculation can reach its read stage while the required value is still
+in flight. Without hardware or compiler intervention, the dependent
+instruction would read stale data and produce an incorrect result.</p>
+<h2 id="instruction-pipelining-and-overlapping-execution">Instruction
+Pipelining and Overlapping Execution</h2>
+<p>In a non-pipelined processor, each instruction completes all of its
+steps—fetching, decoding, executing, accessing memory, and writing
+back—before the next instruction begins. While simple, this sequential
+approach leaves most of the processor's functional units idle during any
+given clock cycle.</p>
+<p>Pipelining divides instruction execution into discrete stages, such
+as the classic five-stage RISC pipeline:</p>
+<ol type="1">
+<li><strong>IF (Instruction Fetch):</strong> Retrieve the instruction
+from memory.</li>
+<li><strong>ID (Instruction Decode):</strong> Decode the opcode and read
+source registers.</li>
+<li><strong>EX (Execute):</strong> Perform the arithmetic or logic
+operation.</li>
+<li><strong>MEM (Memory Access):</strong> Read from or write to data
+memory.</li>
+<li><strong>WB (Write Back):</strong> Write the final result back to the
+register file.</li>
+</ol>
+<p>When pipelined, a new instruction enters the IF stage on every clock
+cycle. Consequently, up to five instructions can be in different stages
+of execution simultaneously.</p>
+<h2 id="how-a-read-after-write-hazard-occurs">How a Read-After-Write
+Hazard Occurs</h2>
+<p>A read-after-write (RAW) hazard, also known as a true data
+dependency, happens when instruction <span
+class="math inline">\(I_2\)</span> needs a value produced by an earlier
+instruction <span class="math inline">\(I_1\)</span>. Consider the
+following two sequential assembly instructions:</p>
+<pre class="assembly"><code>ADD R1, R2, R3   ; I1: R1 = R2 + R3
+SUB R4, R1, R5   ; I2: R4 = R1 - R5</code></pre>
+<p>In this sequence, <span class="math inline">\(I_1\)</span> writes to
+register <code>R1</code>, and <span class="math inline">\(I_2\)</span>
+reads from <code>R1</code>. In a five-stage pipeline:</p>
+<ul>
+<li>At cycle 1, <span class="math inline">\(I_1\)</span> is in IF.</li>
+<li>At cycle 2, <span class="math inline">\(I_1\)</span> is in ID, and
+<span class="math inline">\(I_2\)</span> enters IF.</li>
+<li>At cycle 3, <span class="math inline">\(I_1\)</span> is in EX
+(computing <span class="math inline">\(R2 + R3\)</span>), while <span
+class="math inline">\(I_2\)</span> is in ID (reading <code>R1</code> and
+<code>R5</code>).</li>
+<li>At cycle 4, <span class="math inline">\(I_1\)</span> is in MEM, and
+<span class="math inline">\(I_2\)</span> is in EX.</li>
+<li>At cycle 5, <span class="math inline">\(I_1\)</span> finally reaches
+WB and writes the new value into <code>R1</code>.</li>
+</ul>
+<p>Because <span class="math inline">\(I_2\)</span> reads
+<code>R1</code> during cycle 3—two cycles before <span
+class="math inline">\(I_1\)</span> writes the updated value in cycle
+5—<span class="math inline">\(I_2\)</span> receives the old, stale value
+of <code>R1</code>.</p>
+<h2 id="calculating-the-hazard-window">Calculating the Hazard
+Window</h2>
+<p>If <span class="math inline">\(t_{\text{write}}(I_1)\)</span> is the
+clock cycle in which <span class="math inline">\(I_1\)</span> updates
+the architectural state and <span
+class="math inline">\(t_{\text{read}}(I_2)\)</span> is the cycle in
+which <span class="math inline">\(I_2\)</span> reads its operands, a RAW
+hazard arises whenever:</p>
+<p><span class="math display">\[t_{\text{read}}(I_2) &lt;
+t_{\text{write}}(I_1)\]</span></p>
+<p>The severity of the hazard depends on the distance between the two
+instructions and the depth of the pipeline. Deeper pipelines, which
+split execution into more stages to achieve higher clock frequencies,
+widen the gap between the decode/read stage and the write-back stage,
+increasing the likelihood of RAW hazards.</p>
+<h2 id="hardware-and-software-mitigations">Hardware and Software
+Mitigations</h2>
+<p>Processors and compilers use several techniques to resolve RAW
+hazards without sacrificing correctness:</p>
+<ul>
+<li><strong>Data Forwarding (Bypassing):</strong> Dedicated hardware
+paths route the result directly from the output of the EX or MEM stage
+of <span class="math inline">\(I_1\)</span> to the input of the EX stage
+of <span class="math inline">\(I_2\)</span>, eliminating the need to
+wait for the WB stage.</li>
+<li><strong>Pipeline Stalling (Bubbles):</strong> When forwarding cannot
+resolve the dependency—such as when <span
+class="math inline">\(I_1\)</span> is a memory load instruction whose
+data is only available after the MEM stage—the control unit inserts
+no-operation (NOP) cycles to delay <span
+class="math inline">\(I_2\)</span> until the data is ready.</li>
+<li><strong>Instruction Scheduling:</strong> Compilers reorder
+independent instructions between <span
+class="math inline">\(I_1\)</span> and <span
+class="math inline">\(I_2\)</span> so that the dependent instruction
+arrives at its read stage only after <span
+class="math inline">\(I_1\)</span> has completed its write.</li>
+<li><strong>Out-of-Order Execution:</strong> Advanced superscalar
+processors dynamically track dependencies using reservation stations and
+register renaming, allowing independent instructions to execute ahead of
+stalled dependent ones.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-read-after-write-data-hazards-arise-in-computing';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

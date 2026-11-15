@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does the Ford-Fulkerson Method Compute Maximum Flow? - classical-computing</title>
+    <meta name="description" content="The Ford-Fulkerson method computes the maximum flow from a source to a sink in a flow network by repeatedly finding augmenting paths in a residual graph and pushing additional flow along them until no more augmenting paths exist. By maintaining backward r">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-the-ford-fulkerson-method-compute-maximum-flow">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does the Ford-Fulkerson Method Compute Maximum Flow? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-the-ford-fulkerson-method-compute-maximum-flow" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Ford-Fulkerson method computes the maximum flow from a source to a sink in a flow network by repeatedly finding augmenting paths in a residual graph and pushing additional flow along them until no more augmenting paths exist. By maintaining backward r" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-the-ford-fulkerson-method-compute-maximum-flow">How
+Does the Ford-Fulkerson Method Compute Maximum Flow?</h1>
+<p>The Ford-Fulkerson method computes the maximum flow from a source to
+a sink in a flow network by repeatedly finding augmenting paths in a
+residual graph and pushing additional flow along them until no more
+augmenting paths exist. By maintaining backward residual edges that
+allow previously assigned flow to be redirected, the algorithm
+guarantees that greedy path choices can be corrected to reach the global
+optimum.</p>
+<h2 id="flow-networks-and-the-maximum-flow-problem">Flow Networks and
+the Maximum Flow Problem</h2>
+<p>A flow network is a directed graph <span class="math inline">\(G =
+(V, E)\)</span> with a designated source vertex <span
+class="math inline">\(s \in V\)</span>, a sink vertex <span
+class="math inline">\(t \in V\)</span>, and a non-negative capacity
+<span class="math inline">\(c(u, v) \ge 0\)</span> for each edge <span
+class="math inline">\((u, v) \in E\)</span>. A valid flow is a function
+<span class="math inline">\(f: V \times V \to \mathbb{R}\)</span> that
+satisfies two conditions:</p>
+<ol type="1">
+<li><strong>Capacity constraint:</strong> For every edge <span
+class="math inline">\((u, v) \in E\)</span>, the flow cannot exceed the
+capacity, so <span class="math inline">\(0 \le f(u, v) \le c(u,
+v)\)</span>.</li>
+<li><strong>Flow conservation:</strong> For every vertex <span
+class="math inline">\(u \in V \setminus \{s, t\}\)</span>, the total
+incoming flow equals the total outgoing flow: <span
+class="math display">\[\sum_{v \in V} f(v, u) = \sum_{v \in V} f(u,
+v)\]</span></li>
+</ol>
+<p>The value of a flow, denoted <span
+class="math inline">\(|f|\)</span>, is the net flow leaving the source
+<span class="math inline">\(s\)</span>. The maximum flow problem seeks
+to maximize <span class="math inline">\(|f|\)</span>.</p>
+<h2 id="the-residual-graph">The Residual Graph</h2>
+<p>The central mechanism of the Ford-Fulkerson method is the residual
+graph <span class="math inline">\(G_f = (V, E_f)\)</span>, which
+represents how much additional flow can be pushed through the network
+given the current flow <span class="math inline">\(f\)</span>. For every
+pair of vertices <span class="math inline">\((u, v)\)</span>, the
+residual capacity <span class="math inline">\(c_f(u, v)\)</span> is
+defined as:</p>
+<p><span class="math display">\[c_f(u, v) = c(u, v) - f(u, v) + f(v,
+u)\]</span></p>
+<p>In practice, this creates two types of edges in <span
+class="math inline">\(G_f\)</span> for each original edge <span
+class="math inline">\((u, v) \in E\)</span>:</p>
+<ul>
+<li><strong>Forward edges:</strong> If <span class="math inline">\(f(u,
+v) &lt; c(u, v)\)</span>, there is a residual capacity of <span
+class="math inline">\(c(u, v) - f(u, v)\)</span> available to send more
+flow from <span class="math inline">\(u\)</span> to <span
+class="math inline">\(v\)</span>.</li>
+<li><strong>Backward edges:</strong> If <span class="math inline">\(f(u,
+v) &gt; 0\)</span>, there is a residual edge <span
+class="math inline">\((v, u)\)</span> with capacity <span
+class="math inline">\(f(u, v)\)</span>. Pushing flow along this backward
+edge effectively cancels or redirects previously routed flow from <span
+class="math inline">\(u\)</span> to <span
+class="math inline">\(v\)</span>.</li>
+</ul>
+<p>Backward edges are essential because a greedy choice of paths early
+in the algorithm might block a better overall routing. The residual
+graph allows the algorithm to undo suboptimal decisions.</p>
+<h2 id="augmenting-paths-and-bottleneck-capacity">Augmenting Paths and
+Bottleneck Capacity</h2>
+<p>An augmenting path <span class="math inline">\(p\)</span> is a simple
+path from the source <span class="math inline">\(s\)</span> to the sink
+<span class="math inline">\(t\)</span> in the residual graph <span
+class="math inline">\(G_f\)</span> where every edge along <span
+class="math inline">\(p\)</span> has strictly positive residual
+capacity. The maximum amount of additional flow that can be pushed along
+<span class="math inline">\(p\)</span> is its bottleneck capacity, <span
+class="math inline">\(c_f(p)\)</span>, defined as the minimum residual
+capacity among all edges in the path:</p>
+<p><span class="math display">\[c_f(p) = \min_{(u, v) \in p} c_f(u,
+v)\]</span></p>
+<p>When the algorithm augments flow along <span
+class="math inline">\(p\)</span>, it updates the flow on each edge <span
+class="math inline">\((u, v) \in p\)</span>:</p>
+<ul>
+<li>If <span class="math inline">\((u, v)\)</span> is a forward edge,
+<span class="math inline">\(f(u, v)\)</span> increases by <span
+class="math inline">\(c_f(p)\)</span>.</li>
+<li>If <span class="math inline">\((u, v)\)</span> is a backward edge,
+<span class="math inline">\(f(v, u)\)</span> decreases by <span
+class="math inline">\(c_f(p)\)</span>.</li>
+</ul>
+<p>After updating the flow, the residual graph <span
+class="math inline">\(G_f\)</span> is recomputed, and the total flow
+value <span class="math inline">\(|f|\)</span> increases by <span
+class="math inline">\(c_f(p)\)</span>.</p>
+<h2 id="termination-and-the-max-flow-min-cut-theorem">Termination and
+the Max-Flow Min-Cut Theorem</h2>
+<p>The Ford-Fulkerson method repeats the search-and-augment loop until
+no augmenting path from <span class="math inline">\(s\)</span> to <span
+class="math inline">\(t\)</span> exists in <span
+class="math inline">\(G_f\)</span>. By the Max-Flow Min-Cut Theorem,
+when no augmenting path remains in the residual graph, the current flow
+<span class="math inline">\(f\)</span> is guaranteed to be a maximum
+flow. At termination, the vertices reachable from <span
+class="math inline">\(s\)</span> in <span
+class="math inline">\(G_f\)</span> form one side of a minimum <span
+class="math inline">\(s\)</span>-<span class="math inline">\(t\)</span>
+cut whose capacity equals <span class="math inline">\(|f|\)</span>.</p>
+<h2 id="time-complexity-and-path-selection">Time Complexity and Path
+Selection</h2>
+<p>Ford-Fulkerson is a method rather than a single fixed algorithm
+because it does not specify how to find the augmenting path. If
+capacities are integers, each augmentation increases the flow by at
+least <span class="math inline">\(1\)</span>, leading to a worst-case
+time complexity of <span class="math inline">\(O(E \cdot
+|f^*|)\)</span>, where <span class="math inline">\(|f^*|\)</span> is the
+maximum flow value.</p>
+<p>Using a breadth-first search to always select the shortest augmenting
+path (measured in number of edges) yields the Edmonds-Karp algorithm,
+which runs in <span class="math inline">\(O(V E^2)\)</span> time
+independent of capacity values.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-the-ford-fulkerson-method-compute-maximum-flow';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

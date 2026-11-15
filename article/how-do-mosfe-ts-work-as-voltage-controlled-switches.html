@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do MOSFETs Work as Voltage-Controlled Switches? - classical-computing</title>
+    <meta name="description" content="Metal-oxide-semiconductor field-effect transistors, commonly known as MOSFETs, serve as the fundamental building blocks of modern classical computing by acting as microscopic, electrically operated switches. By applying a voltage to a control terminal cal">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-mosfe-ts-work-as-voltage-controlled-switches">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do MOSFETs Work as Voltage-Controlled Switches? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-mosfe-ts-work-as-voltage-controlled-switches" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Metal-oxide-semiconductor field-effect transistors, commonly known as MOSFETs, serve as the fundamental building blocks of modern classical computing by acting as microscopic, electrically operated switches. By applying a voltage to a control terminal cal" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-mosfets-work-as-voltage-controlled-switches">How Do
+MOSFETs Work as Voltage-Controlled Switches?</h1>
+<p>Metal-oxide-semiconductor field-effect transistors, commonly known as
+MOSFETs, serve as the fundamental building blocks of modern classical
+computing by acting as microscopic, electrically operated switches. By
+applying a voltage to a control terminal called the gate, a MOSFET can
+either allow electrical current to flow between two other terminals or
+block it completely. This binary switching behavior enables processors
+to represent and manipulate the ones and zeros of digital logic at
+billions of times per second.</p>
+<h2 id="structure-of-a-mosfet">Structure of a MOSFET</h2>
+<p>A standard enhancement-mode n-channel MOSFET (nMOS) is built on a
+lightly doped p-type silicon substrate, which has an excess of positive
+charge carriers called holes. Two heavily doped n-type regions, rich in
+electrons, are embedded into the substrate to form the
+<strong>source</strong> and the <strong>drain</strong>.</p>
+<p>Between the source and the drain lies a thin insulating layer of
+silicon dioxide (<span class="math inline">\(\text{SiO}_2\)</span>),
+topped by a conductive <strong>gate</strong> electrode. Because the
+silicon dioxide layer acts as a dielectric, no direct current flows from
+the gate into the semiconductor substrate. Instead, the gate and the
+substrate form a parallel-plate capacitor.</p>
+<h2 id="the-switching-mechanism">The Switching Mechanism</h2>
+<p>The operation of a MOSFET as a switch depends on the voltage applied
+between the gate and the source, denoted as <span
+class="math inline">\(V_{GS}\)</span>, relative to a device-specific
+threshold voltage, <span class="math inline">\(V_{th}\)</span>.</p>
+<h3 id="cutoff-region-switch-off">Cutoff Region (Switch Off)</h3>
+<p>When <span class="math inline">\(V_{GS} &lt; V_{th}\)</span>
+(including when <span class="math inline">\(V_{GS} = 0\)</span>), there
+is no conductive path between the source and the drain. The p-type
+substrate between the two n-type regions forms back-to-back p-n
+junctions, which block current flow even if a voltage <span
+class="math inline">\(V_{DS}\)</span> is applied between the drain and
+the source. In this state, the drain current <span
+class="math inline">\(I_D\)</span> is effectively zero:</p>
+<p><span class="math display">\[I_D \approx 0\]</span></p>
+<p>The transistor acts as an open switch, corresponding to a logical off
+state.</p>
+<h3 id="triode-and-saturation-regions-switch-on">Triode and Saturation
+Regions (Switch On)</h3>
+<p>When a positive voltage <span class="math inline">\(V_{GS} &gt;
+V_{th}\)</span> is applied to the gate, the resulting electric field
+penetrates the oxide layer and repels the holes in the p-type substrate
+beneath the gate. Simultaneously, it attracts free electrons toward the
+surface. Once <span class="math inline">\(V_{GS}\)</span> exceeds <span
+class="math inline">\(V_{th}\)</span>, a thin layer of electrons forms
+directly under the oxide, creating an <strong>inversion layer</strong>
+or conductive n-type channel that bridges the source and the drain.</p>
+<p>With this channel established, applying a drain-to-source voltage
+<span class="math inline">\(V_{DS} &gt; 0\)</span> causes electrons to
+flow from the source to the drain. For small <span
+class="math inline">\(V_{DS}\)</span> (where <span
+class="math inline">\(V_{DS} &lt; V_{GS} - V_{th}\)</span>), the MOSFET
+operates in the <strong>triode (linear) region</strong>, behaving much
+like a low-value resistor:</p>
+<p><span class="math display">\[I_D = \mu_n C_{ox} \frac{W}{L} \left[
+(V_{GS} - V_{th})V_{DS} - \frac{1}{2}V_{DS}^2 \right]\]</span></p>
+<p>Here, <span class="math inline">\(\mu_n\)</span> is electron
+mobility, <span class="math inline">\(C_{ox}\)</span> is the gate oxide
+capacitance per unit area, and <span class="math inline">\(W/L\)</span>
+is the width-to-length ratio of the channel. In digital circuits, this
+low-resistance path represents a closed switch, or a logical on
+state.</p>
+<h2 id="complementary-logic-in-classical-computing">Complementary Logic
+in Classical Computing</h2>
+<p>Modern digital processors rarely use nMOS transistors alone; instead,
+they pair nMOS with p-channel MOSFETs (pMOS) in a configuration called
+<strong>CMOS</strong> (Complementary Metal-Oxide-Semiconductor).</p>
+<p>In a pMOS transistor, the substrate is n-type, the source and drain
+are p-type, and the channel conducts when the gate voltage is pulled low
+relative to the source. By combining nMOS and pMOS transistors into
+logic gates—such as inverters, NAND gates, and NOR gates—CMOS circuits
+ensure that one type of transistor is always off when the other is on in
+steady state. This complementary pairing minimizes static power
+consumption while allowing rapid, reliable switching between high and
+low voltage levels.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-mosfe-ts-work-as-voltage-controlled-switches';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

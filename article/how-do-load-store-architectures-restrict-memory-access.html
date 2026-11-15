@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How do load-store architectures restrict memory access? - classical-computing</title>
+    <meta name="description" content="Load-store architectures enforce a strict separation between data processing and memory access at the instruction set and hardware levels. In classical computing, this design ensures that arithmetic, logic, and control-flow instructions operate exclusivel">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-load-store-architectures-restrict-memory-access">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How do load-store architectures restrict memory access? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-load-store-architectures-restrict-memory-access" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Load-store architectures enforce a strict separation between data processing and memory access at the instruction set and hardware levels. In classical computing, this design ensures that arithmetic, logic, and control-flow instructions operate exclusivel" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-load-store-architectures-restrict-memory-access">How do
+load-store architectures restrict memory access?</h1>
+<p>Load-store architectures enforce a strict separation between data
+processing and memory access at the instruction set and hardware levels.
+In classical computing, this design ensures that arithmetic, logic, and
+control-flow instructions operate exclusively on CPU registers, while
+only dedicated load and store instructions can read from or write to
+main memory.</p>
+<h2 id="instruction-set-architecture-isa-constraints">Instruction Set
+Architecture (ISA) Constraints</h2>
+<p>The primary mechanism that restricts memory access is the design of
+the instruction set itself. In a load-store architecture, such as
+RISC-V, ARM, or MIPS, the instruction formats for computational
+operations do not include fields for memory addresses or memory
+addressing modes.</p>
+<ul>
+<li><strong>Register-only operands:</strong> Arithmetic and logic
+instructions (such as <code>ADD</code>, <code>SUB</code>, or
+<code>AND</code>) only encode register identifiers (e.g.,
+<code>rd</code>, <code>rs1</code>, <code>rs2</code>) or immediate
+constants. There is no bit-level encoding available to specify a memory
+location.</li>
+<li><strong>Dedicated memory instructions:</strong> Only explicit load
+instructions (such as <code>LW</code> or <code>LDR</code>) and store
+instructions (such as <code>SW</code> or <code>STR</code>) contain the
+opcodes and addressing fields—typically a base register plus an
+offset—needed to reference main memory.</li>
+</ul>
+<p>Because the ISA provides no way to encode a memory operand inside an
+ALU instruction, programs are structurally incapable of performing
+direct memory-to-memory or register-to-memory arithmetic.</p>
+<h2 id="datapath-and-pipeline-separation">Datapath and Pipeline
+Separation</h2>
+<p>The hardware datapath mirrors this ISA restriction by physically
+isolating the Arithmetic Logic Unit (ALU) from the memory interface.</p>
+<ol type="1">
+<li><strong>Register file as the sole ALU source:</strong> The inputs to
+the ALU are wired exclusively to the outputs of the general-purpose
+register file (and immediate-value generators). The ALU cannot directly
+receive data from the data cache or system bus.</li>
+<li><strong>Dedicated memory stage:</strong> In a classic five-stage
+pipeline (Instruction Fetch, Instruction Decode, Execute, Memory Access,
+Write Back), the Memory Access stage is only active for load and store
+instructions. For all other instructions, this stage is bypassed.</li>
+<li><strong>Address calculation:</strong> During the Execute stage, load
+and store instructions use the ALU to compute the effective memory
+address, typically expressed as <span
+class="math inline">\(\text{Effective Address} = \text{Base Register} +
+\text{Offset}\)</span>. That computed address is then passed to the
+memory subsystem.</li>
+</ol>
+<h2 id="control-unit-enforcement">Control Unit Enforcement</h2>
+<p>The CPU's control unit decodes each instruction's opcode and
+generates the control signals that govern the datapath. Hardware-level
+enforcement relies on these signals:</p>
+<ul>
+<li><strong>Memory Read (<code>MemRead</code>) and Memory Write
+(<code>MemWrite</code>):</strong> These control lines are only asserted
+when the decoded opcode belongs to a load or store instruction,
+respectively.</li>
+<li><strong>Multiplexer routing:</strong> Control signals configure
+multiplexers at the write-back stage so that only a load instruction
+routes data from memory into the register file, whereas ALU instructions
+route the ALU's output back to the register file.</li>
+</ul>
+<p>If an instruction is not a load or store, the memory interface
+remains idle during its execution, preventing any unintended memory bus
+transactions.</p>
+<h2 id="advantages-of-strict-separation">Advantages of Strict
+Separation</h2>
+<p>Restricting memory access to dedicated instructions simplifies
+processor design and improves execution predictability:</p>
+<ul>
+<li><strong>Uniform instruction length:</strong> Without variable-length
+memory addressing modes in every instruction, instructions can be
+fixed-width (commonly 32 bits), simplifying instruction fetch and
+decode.</li>
+<li><strong>Simplified pipelining:</strong> Separating memory latency
+from arithmetic execution makes pipeline hazards easier to manage and
+reduces structural conflicts.</li>
+<li><strong>Predictable timing:</strong> Register-to-register operations
+complete in a consistent number of cycles, whereas variable-latency
+memory operations are isolated to explicit load and store
+instructions.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-load-store-architectures-restrict-memory-access';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

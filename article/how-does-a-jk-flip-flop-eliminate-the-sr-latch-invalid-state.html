@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a JK Flip-Flop Eliminate the SR Latch Invalid State? - classical-computing</title>
+    <meta name="description" content="A JK flip-flop eliminates the invalid indeterminate state of a basic SR latch by feeding its complementary outputs back into the input logic gates. When both inputs are active simultaneously, this feedback mechanism forces the circuit to toggle its curren">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-jk-flip-flop-eliminate-the-sr-latch-invalid-state">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a JK Flip-Flop Eliminate the SR Latch Invalid State? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-jk-flip-flop-eliminate-the-sr-latch-invalid-state" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A JK flip-flop eliminates the invalid indeterminate state of a basic SR latch by feeding its complementary outputs back into the input logic gates. When both inputs are active simultaneously, this feedback mechanism forces the circuit to toggle its curren" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1
+id="how-does-a-jk-flip-flop-eliminate-the-sr-latch-invalid-state">How
+Does a JK Flip-Flop Eliminate the SR Latch Invalid State?</h1>
+<p>A JK flip-flop eliminates the invalid indeterminate state of a basic
+SR latch by feeding its complementary outputs back into the input logic
+gates. When both inputs are active simultaneously, this feedback
+mechanism forces the circuit to toggle its current state rather than
+driving both outputs to the same forbidden logic level.</p>
+<h2 id="the-indeterminate-state-in-basic-sr-latches">The Indeterminate
+State in Basic SR Latches</h2>
+<p>In a standard NOR-based SR (Set-Reset) latch, the inputs <span
+class="math inline">\(S\)</span> and <span
+class="math inline">\(R\)</span> control the stored bit <span
+class="math inline">\(Q\)</span> and its complement <span
+class="math inline">\(\overline{Q}\)</span>. Under normal operation,
+setting <span class="math inline">\(S = 1\)</span> and <span
+class="math inline">\(R = 0\)</span> forces <span
+class="math inline">\(Q = 1\)</span>, while setting <span
+class="math inline">\(S = 0\)</span> and <span class="math inline">\(R =
+1\)</span> resets <span class="math inline">\(Q = 0\)</span>. When both
+inputs are <span class="math inline">\(0\)</span>, the latch holds its
+previous value.</p>
+<p>The problem arises when <span class="math inline">\(S = 1\)</span>
+and <span class="math inline">\(R = 1\)</span> at the same time. Because
+a NOR gate outputs <span class="math inline">\(0\)</span> whenever any
+input is <span class="math inline">\(1\)</span>, both <span
+class="math inline">\(Q\)</span> and <span
+class="math inline">\(\overline{Q}\)</span> are forced to <span
+class="math inline">\(0\)</span>. This violates the fundamental
+requirement that <span class="math inline">\(\overline{Q}\)</span> must
+be the logical inverse of <span class="math inline">\(Q\)</span>.
+Furthermore, if both inputs return to <span
+class="math inline">\(0\)</span> simultaneously, the latch enters a race
+condition where the final stored state is unpredictable.</p>
+<h2 id="how-cross-coupled-feedback-solves-the-problem">How Cross-Coupled
+Feedback Solves the Problem</h2>
+<p>The JK flip-flop builds upon a clocked SR flip-flop by adding two
+three-input AND gates (or NAND gates, depending on the implementation)
+at the front end. The inputs <span class="math inline">\(J\)</span>
+(analogous to Set) and <span class="math inline">\(K\)</span> (analogous
+to Reset) are gated not only with the clock signal <span
+class="math inline">\(CLK\)</span>, but also with the outputs <span
+class="math inline">\(\overline{Q}\)</span> and <span
+class="math inline">\(Q\)</span>:</p>
+<p><span class="math display">\[S_{internal} = J \cdot \overline{Q}
+\cdot CLK\]</span></p>
+<p><span class="math display">\[R_{internal} = K \cdot Q \cdot
+CLK\]</span></p>
+<p>Because <span class="math inline">\(Q\)</span> and <span
+class="math inline">\(\overline{Q}\)</span> are always complements of
+each other in valid states, at most one of the two internal signals
+(<span class="math inline">\(S_{internal}\)</span> or <span
+class="math inline">\(R_{internal}\)</span>) can be active during a
+clock edge. This structural constraint guarantees that the underlying SR
+latch never receives <span class="math inline">\(S = 1\)</span> and
+<span class="math inline">\(R = 1\)</span> at the same time.</p>
+<h2 id="the-toggle-state-when-j--1-and-k--1">The Toggle State When J = 1
+and K = 1</h2>
+<p>When <span class="math inline">\(J = 1\)</span> and <span
+class="math inline">\(K = 1\)</span> on an active clock edge, the
+feedback paths determine which internal gate fires:</p>
+<ul>
+<li>If the current state is <span class="math inline">\(Q = 0\)</span>
+(meaning <span class="math inline">\(\overline{Q} = 1\)</span>), then
+<span class="math inline">\(S_{internal} = 1 \cdot 1 \cdot 1 =
+1\)</span> and <span class="math inline">\(R_{internal} = 1 \cdot 0
+\cdot 1 = 0\)</span>. The flip-flop sets <span
+class="math inline">\(Q\)</span> to <span
+class="math inline">\(1\)</span>.</li>
+<li>If the current state is <span class="math inline">\(Q = 1\)</span>
+(meaning <span class="math inline">\(\overline{Q} = 0\)</span>), then
+<span class="math inline">\(S_{internal} = 1 \cdot 0 \cdot 1 =
+0\)</span> and <span class="math inline">\(R_{internal} = 1 \cdot 1
+\cdot 1 = 1\)</span>. The flip-flop resets <span
+class="math inline">\(Q\)</span> to <span
+class="math inline">\(0\)</span>.</li>
+</ul>
+<p>In both cases, the output flips to its opposite value. This behavior
+is captured by the JK flip-flop characteristic equation:</p>
+<p><span class="math display">\[Q_{next} = J\overline{Q} +
+\overline{K}Q\]</span></p>
+<p>Substituting <span class="math inline">\(J = 1\)</span> and <span
+class="math inline">\(K = 1\)</span> into the equation yields <span
+class="math inline">\(Q_{next} = \overline{Q}\)</span>, confirming that
+the forbidden state is cleanly replaced by a deterministic toggle
+operation.</p>
+<h2 id="preventing-race-around-conditions">Preventing Race-Around
+Conditions</h2>
+<p>In level-triggered JK flip-flops, holding <span
+class="math inline">\(J = 1\)</span> and <span class="math inline">\(K =
+1\)</span> while the clock pulse remains high can cause the output to
+oscillate rapidly, known as the race-around condition. Practical
+classical computing circuits eliminate this by using edge-triggered
+designs or a master-slave configuration, ensuring the flip-flop samples
+its inputs and toggles only once per clock cycle.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-jk-flip-flop-eliminate-the-sr-latch-invalid-state';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

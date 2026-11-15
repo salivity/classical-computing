@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a Single Parity Bit Detect Odd Bit Flips? - classical-computing</title>
+    <meta name="description" content="A single parity bit is a simple error-detection mechanism used in classical computing to verify the integrity of binary data during storage or transmission. By appending one extra bit to a data word, a system can ensure that the total number of ones in th">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-single-parity-bit-detect-odd-bit-flips">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a Single Parity Bit Detect Odd Bit Flips? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-single-parity-bit-detect-odd-bit-flips" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A single parity bit is a simple error-detection mechanism used in classical computing to verify the integrity of binary data during storage or transmission. By appending one extra bit to a data word, a system can ensure that the total number of ones in th" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-single-parity-bit-detect-odd-bit-flips">How Does a
+Single Parity Bit Detect Odd Bit Flips?</h1>
+<p>A single parity bit is a simple error-detection mechanism used in
+classical computing to verify the integrity of binary data during
+storage or transmission. By appending one extra bit to a data word, a
+system can ensure that the total number of ones in the word is always
+either even or odd. This property allows the receiver to immediately
+spot any single-bit error or other odd-numbered bit flips, though it
+cannot detect when two bits—or any even number of bits—flip at the same
+time.</p>
+<h2 id="what-is-a-parity-bit">What Is a Parity Bit?</h2>
+<p>In binary arithmetic, data is represented as strings of <span
+class="math inline">\(0\)</span>s and <span
+class="math inline">\(1\)</span>s. A parity bit <span
+class="math inline">\(p\)</span> is calculated from the <span
+class="math inline">\(n\)</span> data bits <span
+class="math inline">\(d_1, d_2, \dots, d_n\)</span> and appended to the
+message before it is sent or stored. There are two standard
+conventions:</p>
+<ul>
+<li><strong>Even parity:</strong> The parity bit is chosen so that the
+total count of <span class="math inline">\(1\)</span>s in the entire
+<span class="math inline">\((n+1)\)</span>-bit word is even.</li>
+<li><strong>Odd parity:</strong> The parity bit is chosen so that the
+total count of <span class="math inline">\(1\)</span>s in the entire
+<span class="math inline">\((n+1)\)</span>-bit word is odd.</li>
+</ul>
+<p>Mathematically, for even parity, the parity bit is the modulo-<span
+class="math inline">\(2\)</span> sum (or exclusive OR, <span
+class="math inline">\(\oplus\)</span>) of all data bits:</p>
+<p><span class="math display">\[p = d_1 \oplus d_2 \oplus \dots \oplus
+d_n\]</span></p>
+<p>When the receiver gets the <span
+class="math inline">\((n+1)\)</span>-bit word, it recomputes the
+modulo-<span class="math inline">\(2\)</span> sum of all bits, including
+<span class="math inline">\(p\)</span>. Under even parity, a valid,
+uncorrupted word always satisfies:</p>
+<p><span class="math display">\[d_1 \oplus d_2 \oplus \dots \oplus d_n
+\oplus p = 0\]</span></p>
+<h2 id="why-odd-numbers-of-bit-flips-are-detected">Why Odd Numbers of
+Bit Flips Are Detected</h2>
+<p>Each bit flip changes a <span class="math inline">\(0\)</span> to a
+<span class="math inline">\(1\)</span> or a <span
+class="math inline">\(1\)</span> to a <span
+class="math inline">\(0\)</span>. In modulo-<span
+class="math inline">\(2\)</span> arithmetic, flipping a single bit adds
+<span class="math inline">\(1 \pmod 2\)</span> to the total sum.</p>
+<p>Suppose a valid even-parity word has an even number of <span
+class="math inline">\(1\)</span>s, so its modulo-<span
+class="math inline">\(2\)</span> sum is <span
+class="math inline">\(0\)</span>. If an odd number of bits <span
+class="math inline">\(k = 2m + 1\)</span> flip during transmission, the
+sum changes by:</p>
+<p><span class="math display">\[(2m + 1) \equiv 1 \pmod 2\]</span></p>
+<p>Because the resulting sum is <span class="math inline">\(1\)</span>
+instead of <span class="math inline">\(0\)</span>, the parity of the
+word has inverted from even to odd. The receiver's parity check
+immediately flags this mismatch as an error.</p>
+<h2 id="why-two-bit-errors-go-undetected">Why Two-Bit Errors Go
+Undetected</h2>
+<p>If two bits flip simultaneously, each flip adds <span
+class="math inline">\(1 \pmod 2\)</span> to the sum. Together, two flips
+add:</p>
+<p><span class="math display">\[1 + 1 = 2 \equiv 0 \pmod 2\]</span></p>
+<p>Whether two <span class="math inline">\(0\)</span>s become <span
+class="math inline">\(1\)</span>s, two <span
+class="math inline">\(1\)</span>s become <span
+class="math inline">\(0\)</span>s, or one <span
+class="math inline">\(0\)</span> becomes a <span
+class="math inline">\(1\)</span> while one <span
+class="math inline">\(1\)</span> becomes a <span
+class="math inline">\(0\)</span>, the total number of <span
+class="math inline">\(1\)</span>s changes by <span
+class="math inline">\(-2\)</span>, <span
+class="math inline">\(0\)</span>, or <span
+class="math inline">\(+2\)</span>. In every case, an even count of <span
+class="math inline">\(1\)</span>s remains even, and an odd count remains
+odd.</p>
+<p>Because the parity check only inspects whether the total count of
+<span class="math inline">\(1\)</span>s is even or odd, any even number
+of bit flips leaves the parity invariant. As a result, a single parity
+bit has a Hamming distance of <span class="math inline">\(2\)</span>,
+meaning it can detect <span class="math inline">\(1\)</span>-bit errors
+(and any odd number of errors) but is completely blind to <span
+class="math inline">\(2\)</span>-bit errors and cannot correct any
+errors on its own.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-single-parity-bit-detect-odd-bit-flips';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

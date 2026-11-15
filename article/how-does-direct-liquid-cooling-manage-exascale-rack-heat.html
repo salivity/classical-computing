@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Direct Liquid Cooling Manage Exascale Rack Heat? - classical-computing</title>
+    <meta name="description" content="Direct liquid cooling manages extreme rack thermal densities in modern exascale classical computing by circulating dielectric or treated water-based coolants directly to high-power processors, accelerators, and memory modules. By replacing air as the prim">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-direct-liquid-cooling-manage-exascale-rack-heat">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Direct Liquid Cooling Manage Exascale Rack Heat? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-direct-liquid-cooling-manage-exascale-rack-heat" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Direct liquid cooling manages extreme rack thermal densities in modern exascale classical computing by circulating dielectric or treated water-based coolants directly to high-power processors, accelerators, and memory modules. By replacing air as the prim" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-direct-liquid-cooling-manage-exascale-rack-heat">How
+Does Direct Liquid Cooling Manage Exascale Rack Heat?</h1>
+<p>Direct liquid cooling manages extreme rack thermal densities in
+modern exascale classical computing by circulating dielectric or treated
+water-based coolants directly to high-power processors, accelerators,
+and memory modules. By replacing air as the primary heat-transfer medium
+inside the server chassis, these systems capture thermal energy at the
+source before it can dissipate into the data center room, enabling rack
+power densities exceeding 100 kilowatts while maintaining stable silicon
+operating temperatures.</p>
+<h2 id="the-thermal-challenge-of-exascale-computing">The Thermal
+Challenge of Exascale Computing</h2>
+<p>Modern exascale supercomputers pack thousands of high-wattage CPUs
+and GPUs into compact server blades to minimize interconnect latency and
+maximize compute density. A single accelerator module can draw over 700
+watts, and densely populated compute racks routinely exceed 80 to 120
+kilowatts of thermal output.</p>
+<p>Traditional forced-air cooling struggles at these densities because
+air has a low volumetric heat capacity and low thermal conductivity.
+Moving enough air through a tightly packed rack requires massive fan
+speeds, which consume significant parasitic power, generate acoustic
+noise, and still leave hotspots on high-flux silicon dies.</p>
+<h2 id="heat-transfer-physics-liquid-vs-air">Heat Transfer Physics:
+Liquid vs. Air</h2>
+<p>Liquid coolants outperform air due to superior thermophysical
+properties. The rate of convective heat transfer is governed by Newton's
+law of cooling:</p>
+<p><span class="math display">\[Q = h A (T_s - T_f)\]</span></p>
+<p>Here, <span class="math inline">\(Q\)</span> is the heat transfer
+rate, <span class="math inline">\(h\)</span> is the convective heat
+transfer coefficient, <span class="math inline">\(A\)</span> is the
+surface area, <span class="math inline">\(T_s\)</span> is the surface
+temperature, and <span class="math inline">\(T_f\)</span> is the fluid
+temperature. Water-based coolants exhibit a convective heat transfer
+coefficient <span class="math inline">\(h\)</span> that is orders of
+magnitude higher than air, alongside a much higher specific heat
+capacity <span class="math inline">\(c_p\)</span>.</p>
+<p>The mass flow rate <span class="math inline">\(\dot{m}\)</span>
+required to remove a given thermal load <span
+class="math inline">\(Q\)</span> for a temperature rise <span
+class="math inline">\(\Delta T\)</span> is:</p>
+<p><span class="math display">\[\dot{m} = \frac{Q}{c_p \Delta
+T}\]</span></p>
+<p>Because water has a specific heat capacity of approximately <span
+class="math inline">\(4.18\,\text{J}/(\text{g}\cdot\text{K})\)</span>
+compared to air at roughly <span
+class="math inline">\(1.01\,\text{J}/(\text{g}\cdot\text{K})\)</span>,
+and a density nearly 800 times greater, a small volume of liquid can
+absorb and transport massive amounts of heat with minimal temperature
+rise.</p>
+<h2 id="core-architecture-of-direct-liquid-cooling">Core Architecture of
+Direct Liquid Cooling</h2>
+<p>Direct liquid cooling (DLC) systems in exascale facilities rely on a
+closed-loop architecture that isolates the facility water from the
+sensitive electronics:</p>
+<ol type="1">
+<li><strong>Cold Plates:</strong> Microchannel copper or aluminum cold
+plates sit directly on top of CPUs, GPUs, and high-bandwidth memory
+stacks, separated only by a thin layer of thermal interface
+material.</li>
+<li><strong>Manifolds and Quick-Disconnects:</strong> Rack-level
+vertical manifolds distribute cool supply fluid to each compute blade
+and collect heated return fluid. Dripless quick-disconnect couplings
+allow technicians to hot-swap blades without draining the loop.</li>
+<li><strong>Coolant Distribution Units (CDUs):</strong> The CDU acts as
+the thermal bridge between the server loop (secondary loop) and the
+facility chilled-water or warm-water loop (primary loop). Inside the
+CDU, a brazed-plate heat exchanger transfers heat from the treated
+server coolant to the facility water without mixing the two fluids.</li>
+<li><strong>Heat Rejection:</strong> Heated facility water is pumped to
+external cooling towers or dry coolers, where the thermal energy is
+rejected to the atmosphere.</li>
+</ol>
+<h2 id="warm-water-cooling-and-energy-efficiency">Warm-Water Cooling and
+Energy Efficiency</h2>
+<p>Because liquid cooling has such a low thermal resistance between the
+silicon and the coolant, exascale systems do not require refrigerated
+chilled water. Many modern deployments operate with supply water
+temperatures between <span
+class="math inline">\(30^\circ\text{C}\)</span> and <span
+class="math inline">\(45^\circ\text{C}\)</span>.</p>
+<p>Warm-water cooling eliminates the need for energy-intensive
+mechanical chillers, allowing data centers to rely on free cooling
+(evaporative cooling towers or dry coolers) year-round. This approach
+dramatically lowers Power Usage Effectiveness (PUE), often bringing
+exascale facilities below a PUE of <span
+class="math inline">\(1.10\)</span>, and enables waste-heat recovery for
+nearby campus or district heating networks.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-direct-liquid-cooling-manage-exascale-rack-heat';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

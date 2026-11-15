@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Do Row Stores Suit OLTP and Columnar Suit OLAP? - classical-computing</title>
+    <meta name="description" content="Row-oriented storage engines and columnar stores organize data on disk and in memory in fundamentally different ways, which directly determines their performance under different workloads. Row-oriented databases store all attributes of a single record con">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-do-row-stores-suit-oltp-and-columnar-suit-olap">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Do Row Stores Suit OLTP and Columnar Suit OLAP? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-do-row-stores-suit-oltp-and-columnar-suit-olap" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Row-oriented storage engines and columnar stores organize data on disk and in memory in fundamentally different ways, which directly determines their performance under different workloads. Row-oriented databases store all attributes of a single record con" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-do-row-stores-suit-oltp-and-columnar-suit-olap">Why Do Row
+Stores Suit OLTP and Columnar Suit OLAP?</h1>
+<p>Row-oriented storage engines and columnar stores organize data on
+disk and in memory in fundamentally different ways, which directly
+determines their performance under different workloads. Row-oriented
+databases store all attributes of a single record contiguously, making
+them ideal for online transaction processing where applications
+frequently read, insert, or update entire records. Columnar databases
+store all values of a single attribute contiguously, which makes them
+far more efficient for online analytical processing where queries scan
+and aggregate a few columns across millions of rows. Understanding how
+these layouts interact with disk I/O, CPU caches, and compression
+explains why each architecture dominates its respective domain.</p>
+<h2 id="how-row-oriented-storage-works">How Row-Oriented Storage
+Works</h2>
+<p>In a row-oriented storage engine, each table is stored as a sequence
+of records. Every column value belonging to a given row is placed side
+by side in a single block or page. For example, a user record containing
+an ID, name, email, and signup date is written as one contiguous byte
+sequence.</p>
+<p>This layout aligns naturally with online transaction processing
+(OLTP) workloads. OLTP applications—such as banking systems, e-commerce
+checkouts, and user authentication services—typically perform point
+lookups, single-row inserts, and targeted updates. When an application
+fetches a user profile by ID, the storage engine can retrieve all fields
+of that user in a single disk seek or page read. Similarly, inserting a
+new order or updating a customer's address requires writing to only one
+contiguous location on disk.</p>
+<p>Because OLTP workloads often involve high concurrency and strict ACID
+guarantees, row-oriented engines also benefit from straightforward
+record-level locking and write-ahead logging. Modifying one row touches
+a single page, minimizing lock contention and keeping transaction
+latency low.</p>
+<h2 id="how-columnar-storage-works">How Columnar Storage Works</h2>
+<p>A columnar store flips this physical layout on its head. Instead of
+keeping all fields of one record together, it groups all values of the
+same column together into contiguous blocks. All user IDs are stored in
+one segment, all names in another, and all signup dates in a third.</p>
+<p>This design is tailored for online analytical processing (OLAP)
+workloads. Analytical queries rarely need every column of a table. A
+typical business intelligence query might calculate total revenue by
+region over the last quarter, touching only two or three columns out of
+fifty. In a row-oriented engine, reading those two columns still forces
+the system to load all fifty columns from disk into memory, wasting I/O
+bandwidth and polluting the buffer pool.</p>
+<p>In a columnar store, the engine reads only the specific column
+segments referenced by the query. If a table has <span
+class="math inline">\(C\)</span> columns and a query accesses <span
+class="math inline">\(k\)</span> columns, the I/O volume scales roughly
+with <span class="math inline">\(\frac{k}{C}\)</span> rather than the
+full table width, assuming uniform column sizes.</p>
+<h2 id="io-efficiency-compression-and-cpu-cache-behavior">I/O
+Efficiency, Compression, and CPU Cache Behavior</h2>
+<p>Beyond selective column reading, columnar storage unlocks major
+advantages in compression and CPU execution:</p>
+<ul>
+<li><strong>Higher Compression Ratios:</strong> Values within a single
+column share the same data type and often have low cardinality or
+repeating patterns, such as country codes, timestamps, or status flags.
+Techniques like run-length encoding, dictionary encoding, and delta
+encoding compress homogeneous column data far more effectively than
+mixed-type row data.</li>
+<li><strong>Better CPU Cache Utilization:</strong> Modern CPUs fetch
+memory in cache lines (typically 64 bytes). When scanning a column of
+32-bit integers, a single cache line holds 16 consecutive values ready
+for aggregation. In a row store, that same cache line is filled with
+unrelated attributes from a single record, leading to frequent cache
+misses during analytical scans.</li>
+<li><strong>Vectorized Execution:</strong> Because column values are
+stored contiguously in arrays, analytical engines can process batches of
+values using SIMD (Single Instruction, Multiple Data) instructions,
+accelerating filters, sums, and averages.</li>
+</ul>
+<h2 id="the-trade-offs-between-both-architectures">The Trade-Offs
+Between Both Architectures</h2>
+<p>The strengths of each engine become weaknesses when applied to the
+wrong workload. Updating a single record in a columnar store is
+expensive because the engine must locate and modify values across
+multiple separate column files or segments. Inserting a single row
+requires writing to every column, which degrades write throughput for
+transactional workloads.</p>
+<p>Conversely, running heavy analytical aggregations on a row-oriented
+engine saturates disk I/O and memory bandwidth with unused fields, while
+poor compression increases storage costs and scan times.</p>
+<h2 id="choosing-the-right-engine">Choosing the Right Engine</h2>
+<p>Row-oriented storage engines remain the standard choice for
+operational databases that power day-to-day applications requiring fast,
+concurrent reads and writes of individual records. Columnar stores
+dominate data warehouses, data lakes, and analytical engines where
+read-heavy queries scan large datasets to compute aggregations and
+trends. Many modern systems bridge this gap through hybrid
+transactional/analytical processing (HTAP) architectures, maintaining a
+row store for live transactions and asynchronously replicating changes
+into a columnar format for analytics.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-do-row-stores-suit-oltp-and-columnar-suit-olap';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

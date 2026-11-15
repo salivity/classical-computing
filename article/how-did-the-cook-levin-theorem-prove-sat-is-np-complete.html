@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Did the Cook-Levin Theorem Prove SAT Is NP-Complete? - classical-computing</title>
+    <meta name="description" content="The Cook-Levin theorem, proved independently by Stephen Cook in 1971 and Leonid Levin in 1973, established that the Boolean satisfiability problem, known as SAT, is NP-complete. Before this result, computer scientists knew many problems belonged to the cl">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-did-the-cook-levin-theorem-prove-sat-is-np-complete">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Did the Cook-Levin Theorem Prove SAT Is NP-Complete? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-did-the-cook-levin-theorem-prove-sat-is-np-complete" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Cook-Levin theorem, proved independently by Stephen Cook in 1971 and Leonid Levin in 1973, established that the Boolean satisfiability problem, known as SAT, is NP-complete. Before this result, computer scientists knew many problems belonged to the cl" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-did-the-cook-levin-theorem-prove-sat-is-np-complete">How Did
+the Cook-Levin Theorem Prove SAT Is NP-Complete?</h1>
+<p>The Cook-Levin theorem, proved independently by Stephen Cook in 1971
+and Leonid Levin in 1973, established that the Boolean satisfiability
+problem, known as SAT, is NP-complete. Before this result, computer
+scientists knew many problems belonged to the class NP, meaning their
+solutions could be verified quickly, but they had no way to prove that a
+single problem captured the hardest possible cases in that class. By
+showing that any problem solvable by a nondeterministic Turing machine
+in polynomial time can be translated into a Boolean formula, the theorem
+created the foundation for modern computational complexity theory.</p>
+<h2 id="understanding-np-and-np-completeness">Understanding NP and
+NP-Completeness</h2>
+<p>In classical computing, the complexity class <span
+class="math inline">\(\text{NP}\)</span> consists of decision problems
+for which a proposed solution can be verified by a deterministic Turing
+machine in polynomial time. Equivalently, <span
+class="math inline">\(\text{NP}\)</span> is the set of problems solvable
+by a nondeterministic Turing machine in polynomial time, meaning the
+machine can explore multiple computational paths simultaneously and
+accept if at least one path reaches an accepting state within <span
+class="math inline">\(p(n)\)</span> steps for an input of size <span
+class="math inline">\(n\)</span>.</p>
+<p>A problem <span class="math inline">\(L\)</span> is <span
+class="math inline">\(\text{NP}\)</span>-complete if it satisfies two
+conditions:</p>
+<ol type="1">
+<li><span class="math inline">\(L \in \text{NP}\)</span>.</li>
+<li><span class="math inline">\(L\)</span> is <span
+class="math inline">\(\text{NP}\)</span>-hard, meaning every problem
+<span class="math inline">\(A \in \text{NP}\)</span> can be reduced to
+<span class="math inline">\(L\)</span> in polynomial time (written <span
+class="math inline">\(A \le_p L\)</span>).</li>
+</ol>
+<p>Proving that SAT is in <span class="math inline">\(\text{NP}\)</span>
+is straightforward: given a Boolean formula <span
+class="math inline">\(\phi\)</span> and a truth assignment to its
+variables, a deterministic algorithm can evaluate <span
+class="math inline">\(\phi\)</span> in polynomial time to check whether
+it outputs true. The breakthrough of the Cook-Levin theorem was proving
+the second condition—that every problem in <span
+class="math inline">\(\text{NP}\)</span> reduces to SAT.</p>
+<h2 id="encoding-a-turing-machine-computation">Encoding a Turing Machine
+Computation</h2>
+<p>To show that any language <span class="math inline">\(A \in
+\text{NP}\)</span> reduces to SAT, the Cook-Levin proof constructs a
+polynomial-time reduction that takes an arbitrary input string <span
+class="math inline">\(w\)</span> of length <span
+class="math inline">\(n\)</span> and produces a Boolean formula <span
+class="math inline">\(\phi_{M,w}\)</span> such that <span
+class="math inline">\(w \in A\)</span> if and only if <span
+class="math inline">\(\phi_{M,w}\)</span> is satisfiable. Here, <span
+class="math inline">\(M\)</span> is a nondeterministic Turing machine
+that decides <span class="math inline">\(A\)</span> in at most <span
+class="math inline">\(p(n)\)</span> steps, where <span
+class="math inline">\(p(n)\)</span> is a polynomial.</p>
+<p>Because <span class="math inline">\(M\)</span> runs for at most <span
+class="math inline">\(p(n)\)</span> steps, its tape head can visit at
+most <span class="math inline">\(p(n)\)</span> tape cells. We can
+therefore represent the entire computation of <span
+class="math inline">\(M\)</span> on input <span
+class="math inline">\(w\)</span> as a two-dimensional grid, called a
+tableau, of size <span class="math inline">\(p(n) \times p(n)\)</span>.
+Each row <span class="math inline">\(i\)</span> (from <span
+class="math inline">\(0\)</span> to <span class="math inline">\(p(n) -
+1\)</span>) represents the configuration of <span
+class="math inline">\(M\)</span> at time step <span
+class="math inline">\(i\)</span>, and each column <span
+class="math inline">\(j\)</span> (from <span
+class="math inline">\(0\)</span> to <span class="math inline">\(p(n) -
+1\)</span>) represents tape cell <span
+class="math inline">\(j\)</span>.</p>
+<h2 id="building-the-boolean-formula">Building the Boolean Formula</h2>
+<p>The formula <span class="math inline">\(\phi_{M,w}\)</span> uses
+Boolean variables to describe the contents of every cell in the tableau.
+Specifically, for each row <span class="math inline">\(i\)</span>,
+column <span class="math inline">\(j\)</span>, and symbol <span
+class="math inline">\(s\)</span> (which can be a tape symbol, a blank,
+or a state-symbol pair indicating the head's position and current
+state), we define a variable <span
+class="math inline">\(x_{i,j,s}\)</span> that is true if and only if
+cell <span class="math inline">\((i, j)\)</span> contains <span
+class="math inline">\(s\)</span>.</p>
+<p>The formula <span class="math inline">\(\phi_{M,w}\)</span> is a
+conjunction of four subformulas:</p>
+<p><span class="math display">\[\phi_{M,w} = \phi_{\text{cell}} \land
+\phi_{\text{start}} \land \phi_{\text{move}} \land
+\phi_{\text{accept}}\]</span></p>
+<p>Each part enforces a specific rule of a valid computation:</p>
+<ul>
+<li><strong><span
+class="math inline">\(\phi_{\text{cell}}\)</span></strong>: Ensures that
+every cell <span class="math inline">\((i, j)\)</span> in the tableau
+contains exactly one symbol.</li>
+<li><strong><span
+class="math inline">\(\phi_{\text{start}}\)</span></strong>: Forces row
+<span class="math inline">\(0\)</span> to match the initial
+configuration of <span class="math inline">\(M\)</span> on input <span
+class="math inline">\(w\)</span>, with the tape head at cell <span
+class="math inline">\(0\)</span> in the start state <span
+class="math inline">\(q_0\)</span>, followed by the symbols of <span
+class="math inline">\(w\)</span> and blanks.</li>
+<li><strong><span
+class="math inline">\(\phi_{\text{move}}\)</span></strong>: Guarantees
+that every row <span class="math inline">\(i+1\)</span> follows legally
+from row <span class="math inline">\(i\)</span> according to the
+transition function of <span class="math inline">\(M\)</span>. Because a
+Turing machine only modifies the cell under its head and moves one step
+left or right, each <span class="math inline">\(2 \times 3\)</span>
+window of cells between rows <span class="math inline">\(i\)</span> and
+<span class="math inline">\(i+1\)</span> must match a valid local
+transition.</li>
+<li><strong><span
+class="math inline">\(\phi_{\text{accept}}\)</span></strong>: Requires
+that the accepting state <span
+class="math inline">\(q_{\text{accept}}\)</span> appears somewhere in
+the tableau.</li>
+</ul>
+<h2 id="why-the-reduction-works">Why the Reduction Works</h2>
+<p>If <span class="math inline">\(M\)</span> accepts <span
+class="math inline">\(w\)</span>, there exists a valid sequence of
+configurations ending in <span
+class="math inline">\(q_{\text{accept}}\)</span>, which directly gives a
+truth assignment that satisfies all four parts of <span
+class="math inline">\(\phi_{M,w}\)</span>. Conversely, any satisfying
+assignment to <span class="math inline">\(\phi_{M,w}\)</span> forces the
+variables to describe a valid, accepting computation of <span
+class="math inline">\(M\)</span> on <span
+class="math inline">\(w\)</span>.</p>
+<p>Crucially, the size of the tableau is <span
+class="math inline">\(O(p(n)^2)\)</span>, and the number of variables
+and clauses in <span class="math inline">\(\phi_{M,w}\)</span> is
+polynomial in <span class="math inline">\(n\)</span>. Constructing <span
+class="math inline">\(\phi_{M,w}\)</span> also takes polynomial time.
+Thus, <span class="math inline">\(A \le_p \text{SAT}\)</span> holds for
+every <span class="math inline">\(A \in \text{NP}\)</span>, proving that
+SAT is <span class="math inline">\(\text{NP}\)</span>-complete.</p>
+<h2 id="impact-on-complexity-theory">Impact on Complexity Theory</h2>
+<p>Once SAT was established as <span
+class="math inline">\(\text{NP}\)</span>-complete, proving other
+problems <span class="math inline">\(\text{NP}\)</span>-complete became
+much easier. Instead of encoding Turing machine tableaus from scratch,
+researchers only needed to show a polynomial-time reduction from SAT—or
+from any already known <span
+class="math inline">\(\text{NP}\)</span>-complete problem—to the new
+problem. This chain of reductions, famously expanded by Richard Karp in
+1972 to 21 classic problems including 3-SAT, Clique, and Hamiltonian
+Cycle, established <span
+class="math inline">\(\text{NP}\)</span>-completeness as a central
+concept in computer science.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-did-the-cook-levin-theorem-prove-sat-is-np-complete';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

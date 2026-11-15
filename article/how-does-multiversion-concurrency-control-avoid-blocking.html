@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Multiversion Concurrency Control Avoid Blocking? - classical-computing</title>
+    <meta name="description" content="Multiversion Concurrency Control, commonly known as MVCC, is a database concurrency method that allows read transactions and write transactions to execute simultaneously without blocking each other. Instead of overwriting data in place and forcing readers">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-multiversion-concurrency-control-avoid-blocking">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Multiversion Concurrency Control Avoid Blocking? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-multiversion-concurrency-control-avoid-blocking" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Multiversion Concurrency Control, commonly known as MVCC, is a database concurrency method that allows read transactions and write transactions to execute simultaneously without blocking each other. Instead of overwriting data in place and forcing readers" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-multiversion-concurrency-control-avoid-blocking">How
+Does Multiversion Concurrency Control Avoid Blocking?</h1>
+<p>Multiversion Concurrency Control, commonly known as MVCC, is a
+database concurrency method that allows read transactions and write
+transactions to execute simultaneously without blocking each other.
+Instead of overwriting data in place and forcing readers to wait for
+locks, the system maintains multiple historical versions of each data
+item. By assigning each transaction a consistent snapshot of the
+database based on timestamps or transaction IDs, readers can safely
+access older committed versions while writers create new versions in
+parallel.</p>
+<h2 id="the-core-mechanism-of-multiple-versions">The Core Mechanism of
+Multiple Versions</h2>
+<p>In traditional locking systems, a write operation acquires an
+exclusive lock on a record, which forces any concurrent read operation
+to wait until the write completes. MVCC eliminates this contention by
+treating data updates as the creation of new versions rather than
+in-place modifications.</p>
+<p>When a transaction modifies a record, the database management system
+preserves the existing version and writes the updated value to a new
+version. Each version is tagged with metadata, typically including a
+creation timestamp <span
+class="math inline">\(t_{\text{create}}\)</span> and an expiration or
+deletion timestamp <span
+class="math inline">\(t_{\text{expire}}\)</span>.</p>
+<h2 id="snapshot-isolation-and-visibility-rules">Snapshot Isolation and
+Visibility Rules</h2>
+<p>To ensure that a read transaction sees a consistent state of the
+database, MVCC assigns each transaction a unique, monotonically
+increasing transaction identifier or start timestamp <span
+class="math inline">\(T_{\text{start}}\)</span>. When a reader queries a
+data item, the database evaluates the available versions against
+visibility rules:</p>
+<ol type="1">
+<li>The version must have been created by a transaction that committed
+before <span class="math inline">\(T_{\text{start}}\)</span>.</li>
+<li>The version must not have been expired or deleted by a transaction
+that committed before <span
+class="math inline">\(T_{\text{start}}\)</span>.</li>
+</ol>
+<p>Mathematically, a version <span class="math inline">\(V\)</span> is
+visible to a read transaction with start timestamp <span
+class="math inline">\(T_{\text{start}}\)</span> if:</p>
+<p><span class="math display">\[t_{\text{create}}(V) \le
+T_{\text{start}} &lt; t_{\text{expire}}(V)\]</span></p>
+<p>Because these visibility checks rely on immutable committed metadata,
+the reader never needs to acquire a shared lock on the record. Even if a
+concurrent writer is actively creating a newer version <span
+class="math inline">\(V_{\text{new}}\)</span> with <span
+class="math inline">\(t_{\text{create}}(V_{\text{new}}) &gt;
+T_{\text{start}}\)</span>, the reader simply ignores the uncommitted or
+newer version and reads <span class="math inline">\(V\)</span>.</p>
+<h2 id="handling-concurrent-writes-and-garbage-collection">Handling
+Concurrent Writes and Garbage Collection</h2>
+<p>While readers never block writers and writers never block readers,
+two concurrent write transactions attempting to modify the same record
+still require coordination. Most MVCC implementations use
+first-committer-wins or row-level write locks to prevent lost updates.
+If a second writer tries to update a record that has already been
+modified by a concurrent transaction, it either waits for the first
+writer or aborts and retries.</p>
+<p>Maintaining multiple versions of data over time increases storage
+overhead. To reclaim space, MVCC systems run background garbage
+collection or vacuuming processes. These processes identify and remove
+obsolete versions whose <span
+class="math inline">\(t_{\text{expire}}\)</span> is older than the <span
+class="math inline">\(T_{\text{start}}\)</span> of the oldest active
+transaction in the system, ensuring that no running reader still needs
+them.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-multiversion-concurrency-control-avoid-blocking';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

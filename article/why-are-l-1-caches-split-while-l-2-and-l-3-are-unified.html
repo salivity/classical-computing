@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Are L1 Caches Split While L2 and L3 Are Unified? - classical-computing</title>
+    <meta name="description" content="Modern processors use a split Level 1 cache with separate instruction and data caches while keeping Level 2 and Level 3 caches unified to balance execution speed against capacity efficiency. At the core pipeline boundary, instructions and data are accesse">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-are-l-1-caches-split-while-l-2-and-l-3-are-unified">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Are L1 Caches Split While L2 and L3 Are Unified? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-are-l-1-caches-split-while-l-2-and-l-3-are-unified" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern processors use a split Level 1 cache with separate instruction and data caches while keeping Level 2 and Level 3 caches unified to balance execution speed against capacity efficiency. At the core pipeline boundary, instructions and data are accesse" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-are-l1-caches-split-while-l2-and-l3-are-unified">Why Are L1
+Caches Split While L2 and L3 Are Unified?</h1>
+<p>Modern processors use a split Level 1 cache with separate instruction
+and data caches while keeping Level 2 and Level 3 caches unified to
+balance execution speed against capacity efficiency. At the core
+pipeline boundary, instructions and data are accessed simultaneously
+with very different patterns, making separation essential to avoid
+bottlenecks. Deeper in the memory hierarchy, workloads vary widely in
+how much instruction versus data space they need, so a unified design
+lets the processor share cache capacity dynamically and simplify
+coherence.</p>
+<h2 id="why-l1-caches-are-split">Why L1 Caches Are Split</h2>
+<p>The primary reason for splitting the L1 cache into an instruction
+cache (L1i) and a data cache (L1d) is to eliminate structural hazards in
+the CPU pipeline. In a pipelined processor, the instruction fetch stage
+needs to read the next instruction on every clock cycle, while the
+memory access stage may simultaneously need to read or write data for an
+earlier instruction. If L1 were a single unified cache, both stages
+would compete for the same cache ports, forcing the pipeline to stall
+unless expensive multi-ported memory arrays were used.</p>
+<p>Splitting L1 also allows each cache to be tailored to its specific
+access pattern:</p>
+<ul>
+<li><strong>Instruction cache (L1i):</strong> Instructions are mostly
+read-only during normal execution and are typically fetched sequentially
+or in predictable branch targets. Because the CPU rarely writes to L1i,
+it does not need write-back hardware or complex dirty-bit tracking, and
+it can include instruction-specific optimizations such as pre-decoded
+bits.</li>
+<li><strong>Data cache (L1d):</strong> Data accesses involve both reads
+and writes, often with less predictable addresses. L1d must support fast
+store buffers, write-back or write-through policies, and byte-level or
+word-level masking.</li>
+</ul>
+<h2 id="why-l2-and-l3-caches-are-unified">Why L2 and L3 Caches Are
+Unified</h2>
+<p>Once requests miss the L1 caches and move to L2 or L3, the immediate
+pressure of single-cycle pipeline port contention disappears. At these
+levels, latency is higher and accesses are less frequent, so a unified
+cache can serve both instruction and data misses without causing the
+same pipeline bottleneck.</p>
+<p>A unified design offers several major advantages at L2 and L3:</p>
+<ul>
+<li><strong>Dynamic capacity sharing:</strong> Different programs have
+very different working sets. A tight numerical loop might need almost no
+instruction space and a large amount of data space, whereas a large
+application with complex control flow might have a huge instruction
+footprint. A unified cache automatically allocates space to whichever
+type of information needs it most.</li>
+<li><strong>Simpler cache coherence:</strong> In multi-core processors,
+keeping caches consistent across cores requires tracking which core
+holds which cache lines. Having a single unified L2 and L3 structure
+avoids duplicating coherence tracking for separate instruction and data
+hierarchies, and it makes handling self-modifying code or just-in-time
+compilation much simpler.</li>
+<li><strong>Better area and power efficiency:</strong> Maintaining one
+larger, unified tag and data array reduces control logic overhead
+compared to managing two separate caches at every level.</li>
+</ul>
+<h2 id="balancing-speed-and-flexibility">Balancing Speed and
+Flexibility</h2>
+<p>The split-L1, unified-L2/L3 hierarchy is a practical compromise
+between two classic computer architecture models. At the fastest level
+closest to the execution units, the processor behaves like a modified
+Harvard architecture to maximize bandwidth and prevent pipeline stalls.
+Deeper in the hierarchy, it reverts to a unified Von Neumann view so
+that expensive silicon area is used as efficiently as possible across
+diverse workloads.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-are-l-1-caches-split-while-l-2-and-l-3-are-unified';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

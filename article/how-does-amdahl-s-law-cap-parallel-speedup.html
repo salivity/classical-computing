@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Amdahl&#39;s Law Cap Parallel Speedup? - classical-computing</title>
+    <meta name="description" content="Amdahl&#39;s law demonstrates that the sequential portion of a program strictly limits the maximum speedup achievable through parallel processing, regardless of how many processors are added. Even when a large percentage of a task can run concurrently, the re">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-amdahl-s-law-cap-parallel-speedup">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Amdahl&#39;s Law Cap Parallel Speedup? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-amdahl-s-law-cap-parallel-speedup" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Amdahl&#39;s law demonstrates that the sequential portion of a program strictly limits the maximum speedup achievable through parallel processing, regardless of how many processors are added. Even when a large percentage of a task can run concurrently, the re" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-amdahls-law-cap-parallel-speedup">How Does Amdahl's Law
+Cap Parallel Speedup?</h1>
+<p>Amdahl's law demonstrates that the sequential portion of a program
+strictly limits the maximum speedup achievable through parallel
+processing, regardless of how many processors are added. Even when a
+large percentage of a task can run concurrently, the remaining serial
+fraction creates an unavoidable bottleneck that caps overall performance
+gains.</p>
+<h2 id="the-formula-behind-amdahls-law">The Formula Behind Amdahl's
+Law</h2>
+<p>Formulated by computer architect Gene Amdahl in 1967, the law
+quantifies the theoretical speedup <span
+class="math inline">\(S_{\text{latency}}\)</span> of a fixed-size task
+when executed across multiple processors:</p>
+<p><span class="math display">\[S_{\text{latency}}(s) = \frac{1}{(1 - p)
++ \frac{p}{s}}\]</span></p>
+<p>In this equation:</p>
+<ul>
+<li><span class="math inline">\(p\)</span> represents the proportion of
+the program's execution time that can be parallelized (<span
+class="math inline">\(0 \le p \le 1\)</span>).</li>
+<li><span class="math inline">\(1 - p\)</span> represents the serial
+fraction of the program that must execute sequentially on a single
+processor.</li>
+<li><span class="math inline">\(s\)</span> represents the speedup factor
+of the parallelized portion, typically corresponding to the number of
+available processor cores.</li>
+</ul>
+<h2 id="why-the-serial-fraction-dominates">Why the Serial Fraction
+Dominates</h2>
+<p>As the number of processors <span class="math inline">\(s\)</span>
+approaches infinity, the parallel execution term <span
+class="math inline">\(\frac{p}{s}\)</span> approaches zero. At this
+theoretical limit, the maximum possible speedup simplifies to:</p>
+<p><span class="math display">\[\lim_{s \to \infty}
+S_{\text{latency}}(s) = \frac{1}{1 - p}\]</span></p>
+<p>This limit reveals a stark reality for classical computing
+architectures:</p>
+<ul>
+<li><strong>90% parallelizable (<span class="math inline">\(p =
+0.90\)</span>):</strong> The serial fraction is <span
+class="math inline">\(0.10\)</span>, capping maximum speedup at <span
+class="math inline">\(\frac{1}{0.10} = 10\times\)</span>, even with
+thousands of cores.</li>
+<li><strong>95% parallelizable (<span class="math inline">\(p =
+0.95\)</span>):</strong> The serial fraction is <span
+class="math inline">\(0.05\)</span>, capping maximum speedup at <span
+class="math inline">\(\frac{1}{0.05} = 20\times\)</span>.</li>
+<li><strong>99% parallelizable (<span class="math inline">\(p =
+0.99\)</span>):</strong> The serial fraction is <span
+class="math inline">\(0.01\)</span>, capping maximum speedup at <span
+class="math inline">\(\frac{1}{0.01} = 100\times\)</span>.</li>
+</ul>
+<h2 id="diminishing-returns-in-multi-core-scaling">Diminishing Returns
+in Multi-Core Scaling</h2>
+<p>Adding more cores yields rapidly diminishing returns once <span
+class="math inline">\(s\)</span> becomes large relative to <span
+class="math inline">\(\frac{p}{1 - p}\)</span>. For example, if a
+program is 90% parallelizable, moving from 1 to 10 cores increases
+speedup from <span class="math inline">\(1\times\)</span> to roughly
+<span class="math inline">\(5.26\times\)</span>. Increasing from 10
+cores to 100 cores only raises speedup to about <span
+class="math inline">\(9.17\times\)</span>, and jumping to 1,000 cores
+brings it to <span class="math inline">\(9.91\times\)</span>. Beyond a
+certain threshold, additional hardware resources sit largely idle while
+waiting for the sequential code to finish.</p>
+<h2 id="practical-implications-for-classical-computing">Practical
+Implications for Classical Computing</h2>
+<p>In real-world systems, the serial fraction includes more than just
+single-threaded algorithms. It encompasses thread synchronization, lock
+contention, memory bus bandwidth limits, I/O operations, and task
+scheduling overhead. Because of Amdahl's law, improving single-thread
+performance—such as through higher clock speeds, better branch
+prediction, and larger caches—remains essential alongside adding more
+cores. Ultimately, meaningful parallel scaling requires actively
+minimizing the serial fraction through lock-free data structures,
+asynchronous I/O, and algorithmic redesign.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-amdahl-s-law-cap-parallel-speedup';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

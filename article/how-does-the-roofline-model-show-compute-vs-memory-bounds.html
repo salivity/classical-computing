@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does the Roofline Model Show Compute vs Memory Bounds? - classical-computing</title>
+    <meta name="description" content="The Roofline performance model is a visual tool used in classical computing to evaluate how efficiently a computational kernel utilizes hardware resources. By plotting attainable performance against arithmetic intensity on a log-log scale, it creates a ce">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-the-roofline-model-show-compute-vs-memory-bounds">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does the Roofline Model Show Compute vs Memory Bounds? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-the-roofline-model-show-compute-vs-memory-bounds" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Roofline performance model is a visual tool used in classical computing to evaluate how efficiently a computational kernel utilizes hardware resources. By plotting attainable performance against arithmetic intensity on a log-log scale, it creates a ce" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-the-roofline-model-show-compute-vs-memory-bounds">How
+Does the Roofline Model Show Compute vs Memory Bounds?</h1>
+<p>The Roofline performance model is a visual tool used in classical
+computing to evaluate how efficiently a computational kernel utilizes
+hardware resources. By plotting attainable performance against
+arithmetic intensity on a log-log scale, it creates a ceiling shaped
+like a roof that separates memory-bandwidth-bound workloads from
+compute-bound workloads.</p>
+<h2 id="core-axes-of-the-roofline-plot">Core Axes of the Roofline
+Plot</h2>
+<p>The Roofline model uses two primary axes, both typically displayed on
+a logarithmic scale:</p>
+<ul>
+<li><strong>Horizontal Axis (Arithmetic Intensity):</strong> Measured in
+floating-point operations per byte of memory transferred (<span
+class="math inline">\(\text{FLOP/byte}\)</span>). It represents how much
+computation a kernel performs for each byte moved between main memory
+and the processor.</li>
+<li><strong>Vertical Axis (Performance):</strong> Measured in
+floating-point operations per second (<span
+class="math inline">\(\text{FLOP/s}\)</span> or <span
+class="math inline">\(\text{GFLOP/s}\)</span>). It represents the actual
+or theoretical computational throughput of the kernel.</li>
+</ul>
+<h2 id="constructing-the-roofline-ceilings">Constructing the Roofline
+Ceilings</h2>
+<p>Two hardware limits define the upper boundary of the Roofline
+plot:</p>
+<ol type="1">
+<li><strong>Peak Compute Performance (<span
+class="math inline">\(\pi\)</span>):</strong> The maximum rate at which
+the processor can execute floating-point operations, measured in <span
+class="math inline">\(\text{FLOP/s}\)</span>. This forms a flat
+horizontal line at the top of the chart.</li>
+<li><strong>Peak Memory Bandwidth (<span
+class="math inline">\(\beta\)</span>):</strong> The maximum rate at
+which data can be transferred between memory and the processor, measured
+in <span class="math inline">\(\text{bytes/s}\)</span>. On a log-log
+plot, the memory-bandwidth limit forms a diagonal line with a slope of
+<span class="math inline">\(1\)</span>, given by:</li>
+</ol>
+<p><span class="math display">\[\text{Performance} = \beta \times
+I\]</span></p>
+<p>where <span class="math inline">\(I\)</span> is the arithmetic
+intensity.</p>
+<p>Combining these two limits yields the Roofline equation for maximum
+attainable performance <span class="math inline">\(P\)</span>:</p>
+<p><span class="math display">\[P = \min(\pi, \beta \times
+I)\]</span></p>
+<h2
+id="identifying-compute-bound-vs-memory-bandwidth-bound-kernels">Identifying
+Compute-Bound vs. Memory-Bandwidth-Bound Kernels</h2>
+<p>The intersection of the diagonal memory-bandwidth line and the
+horizontal peak-compute line is called the <strong>ridge point</strong>.
+The arithmetic intensity at this intersection is:</p>
+<p><span class="math display">\[I_{\text{ridge}} =
+\frac{\pi}{\beta}\]</span></p>
+<p>This ridge point divides the plot into two distinct regions:</p>
+<ul>
+<li><strong>Memory-Bandwidth-Bound Region (<span class="math inline">\(I
+&lt; I_{\text{ridge}}\)</span>):</strong> Kernels plotted to the left of
+the ridge point fall under the sloped memory-bandwidth roof. Their
+performance is limited by how fast data can be fetched from memory
+rather than how fast the processor can compute. Increasing processor
+speed alone will not improve performance in this region; instead,
+optimizations must reduce memory traffic or improve data reuse.</li>
+<li><strong>Compute-Bound Region (<span class="math inline">\(I &gt;
+I_{\text{ridge}}\)</span>):</strong> Kernels plotted to the right of the
+ridge point fall under the flat compute roof. Their performance is
+limited by the processor's peak arithmetic throughput. Memory bandwidth
+is sufficient to keep the execution units fed, so optimizations should
+focus on instruction-level parallelism, vectorization, or reducing the
+total operation count.</li>
+</ul>
+<h2 id="interpreting-kernel-placement">Interpreting Kernel
+Placement</h2>
+<p>When a kernel's measured performance and arithmetic intensity are
+plotted as a point on the chart, its vertical distance from the roof
+indicates optimization headroom. A point sitting directly on the
+diagonal line is achieving the maximum possible memory bandwidth, while
+a point sitting on the flat line is saturating the processor's compute
+units. A point far below the roof reveals inefficiencies such as poor
+cache utilization, thread divergence, or unoptimized instruction
+scheduling.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-the-roofline-model-show-compute-vs-memory-bounds';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

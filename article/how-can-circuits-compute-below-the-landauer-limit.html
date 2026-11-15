@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How can circuits compute below the Landauer limit? - classical-computing</title>
+    <meta name="description" content="Classical computers can theoretically operate below the Landauer thermal dissipation limit by combining logically reversible gates with physically adiabatic switching. Standard digital circuits lose energy both when they erase information and when they ch">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-can-circuits-compute-below-the-landauer-limit">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How can circuits compute below the Landauer limit? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-can-circuits-compute-below-the-landauer-limit" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Classical computers can theoretically operate below the Landauer thermal dissipation limit by combining logically reversible gates with physically adiabatic switching. Standard digital circuits lose energy both when they erase information and when they ch" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-can-circuits-compute-below-the-landauer-limit">How can
+circuits compute below the Landauer limit?</h1>
+<p>Classical computers can theoretically operate below the Landauer
+thermal dissipation limit by combining logically reversible gates with
+physically adiabatic switching. Standard digital circuits lose energy
+both when they erase information and when they charge or discharge
+capacitances abruptly. By preserving all input information through
+reversible logic and ramping electrical signals slowly compared to the
+circuit time constant, energy dissipation per operation can be reduced
+arbitrarily far below the thermal threshold.</p>
+<h2 id="understanding-the-landauer-limit">Understanding the Landauer
+Limit</h2>
+<p>Landauer's principle establishes a fundamental thermodynamic lower
+bound on the energy required to erase one bit of information. Whenever a
+logic gate performs a logically irreversible operation—such as a
+standard AND or OR gate, where two inputs map to a single
+output—information is lost. Reducing the number of possible states
+decreases the entropy of the computational system, which must be
+compensated by an equal or greater increase in the entropy of the
+surrounding environment.</p>
+<p>At a temperature <span class="math inline">\(T\)</span>, erasing a
+single bit of information dissipates a minimum amount of heat given
+by:</p>
+<p><span class="math display">\[E_{\text{Landauer}} = k_B T \ln
+2\]</span></p>
+<p>where <span class="math inline">\(k_B\)</span> is the Boltzmann
+constant. At room temperature (<span class="math inline">\(T \approx
+300\text{ K}\)</span>), this corresponds to roughly <span
+class="math inline">\(2.87 \times 10^{-21}\text{ J}\)</span> per bit
+erased.</p>
+<h2 id="reversible-logic-eliminates-information-erasure">Reversible
+Logic Eliminates Information Erasure</h2>
+<p>To bypass the Landauer bound, a circuit must avoid erasing bits
+altogether. Reversible computing achieves this by using bijective logic
+gates, where every unique input state maps to a unique output state.
+Because the mapping is one-to-one, the original inputs can always be
+reconstructed from the outputs, meaning no information is lost and the
+thermodynamic entropy cost is zero.</p>
+<p>Common universal reversible gates include:</p>
+<ul>
+<li><strong>CNOT (Controlled-NOT) gate</strong>: Flips a target bit if a
+control bit is set, preserving the control bit.</li>
+<li><strong>Toffoli (CCNOT) gate</strong>: A three-bit gate that flips
+the target bit only when both control bits are <span
+class="math inline">\(1\)</span>.</li>
+<li><strong>Fredkin (CSWAP) gate</strong>: A three-bit gate that swaps
+two target bits if the control bit is <span
+class="math inline">\(1\)</span>.</li>
+</ul>
+<p>Any classical computation can be built from Toffoli or Fredkin gates
+by retaining intermediate "garbage" bits or uncomputing them cleanly at
+the end of a calculation.</p>
+<h2 id="adiabatic-switching-minimizes-resistive-loss">Adiabatic
+Switching Minimizes Resistive Loss</h2>
+<p>Logical reversibility alone is not enough to beat the Landauer limit
+if the physical hardware still dissipates energy during state
+transitions. In conventional CMOS circuits, charging a load capacitance
+<span class="math inline">\(C\)</span> to a supply voltage <span
+class="math inline">\(V\)</span> through a channel resistance <span
+class="math inline">\(R\)</span> dissipates a fixed amount of
+energy:</p>
+<p><span class="math display">\[E_{\text{CMOS}} = \frac{1}{2} C
+V^2\]</span></p>
+<p>This loss occurs regardless of how small <span
+class="math inline">\(R\)</span> is, because the voltage is applied
+abruptly.</p>
+<p>Adiabatic circuits avoid this by using a slowly varying, ramped
+power-clock instead of a fixed DC supply. If the voltage ramps linearly
+from <span class="math inline">\(0\)</span> to <span
+class="math inline">\(V\)</span> over a transition time <span
+class="math inline">\(T_{\text{ramp}}\)</span> that is much longer than
+the circuit's <span class="math inline">\(RC\)</span> time constant, the
+current flowing through the channel remains small. The energy dissipated
+during the transition scales inversely with the ramp time:</p>
+<p><span class="math display">\[E_{\text{adiabatic}} \approx
+\frac{RC}{T_{\text{ramp}}} C V^2\]</span></p>
+<p>As <span class="math inline">\(T_{\text{ramp}} \to \infty\)</span>,
+the dissipated energy approaches zero. During the discharge phase, the
+energy stored on the capacitance is returned to the resonant power-clock
+rather than being dumped to ground as heat.</p>
+<h2 id="practical-trade-offs-and-limitations">Practical Trade-offs and
+Limitations</h2>
+<p>While adiabatic and reversible circuits can theoretically compute at
+energies far below <span class="math inline">\(k_B T \ln 2\)</span>,
+they face practical engineering trade-offs:</p>
+<ol type="1">
+<li><strong>Speed vs. Energy</strong>: Reducing dissipation requires
+increasing <span class="math inline">\(T_{\text{ramp}}\)</span>, which
+directly lowers the maximum clock frequency.</li>
+<li><strong>Leakage Currents</strong>: In real transistors, subthreshold
+leakage continues to draw power even when switching slowly, creating a
+minimum energy floor at very long ramp times.</li>
+<li><strong>Circuit Overhead</strong>: Maintaining reversibility
+requires extra ancillary wires and uncomputation steps, increasing chip
+area and capacitance.</li>
+</ol>
+<p>Despite these physical constraints, adiabatic reversible
+architectures demonstrate that the Landauer limit is a bound on
+information erasure rather than on computation itself.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-can-circuits-compute-below-the-landauer-limit';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do GPUs Hide High Memory Access Latency? - classical-computing</title>
+    <meta name="description" content="Graphics Processing Units (GPUs) achieve high computational throughput not by minimizing memory access latency, but by hiding it. While traditional CPUs dedicate large amounts of chip area to caches and branch predictors to make individual threads run as">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-gp-us-hide-high-memory-access-latency">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do GPUs Hide High Memory Access Latency? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-gp-us-hide-high-memory-access-latency" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Graphics Processing Units (GPUs) achieve high computational throughput not by minimizing memory access latency, but by hiding it. While traditional CPUs dedicate large amounts of chip area to caches and branch predictors to make individual threads run as" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-gpus-hide-high-memory-access-latency">How Do GPUs Hide
+High Memory Access Latency?</h1>
+<p>Graphics Processing Units (GPUs) achieve high computational
+throughput not by minimizing memory access latency, but by hiding it.
+While traditional CPUs dedicate large amounts of chip area to caches and
+branch predictors to make individual threads run as fast as possible,
+GPUs dedicate most of their silicon to arithmetic logic units and large
+register files. By maintaining thousands of active threads
+simultaneously and switching between them in a single clock cycle with
+zero overhead, a GPU keeps its execution units busy while other threads
+wait for slow off-chip memory requests to complete.</p>
+<h2 id="the-memory-latency-problem-in-classical-computing">The Memory
+Latency Problem in Classical Computing</h2>
+<p>In modern classical computing, processor speeds have grown much
+faster than main memory (DRAM) speeds. Fetching data from off-chip
+global memory (such as GDDR6 or HBM) can take hundreds of clock cycles,
+whereas an arithmetic instruction like a floating-point addition takes
+only a few cycles.</p>
+<p>If a processor executes only one thread at a time, a memory stall
+forces the execution pipeline to sit idle until the data arrives. CPUs
+mitigate this using deep cache hierarchies (L1, L2, L3), out-of-order
+execution, and hardware prefetching. These mechanisms reduce the
+<em>effective</em> latency experienced by a single thread, but they
+consume substantial die area and power.</p>
+<p>GPUs take a fundamentally different approach: they optimize for
+<strong>throughput</strong> rather than <strong>single-thread
+latency</strong>. Instead of trying to make one thread's memory fetch
+faster, a GPU schedules another ready thread to execute while the first
+thread waits.</p>
+<h2 id="massive-hardware-multithreading">Massive Hardware
+Multithreading</h2>
+<p>A GPU is composed of many Streaming Multiprocessors (SMs) in NVIDIA
+terminology, or Compute Units (CUs) in AMD terminology. Each SM is
+designed to manage a massive number of concurrent threads, often grouped
+into fixed-size bundles called <strong>warps</strong> (typically 32
+threads) or <strong>wavefronts</strong> (typically 64 threads).</p>
+<p>All threads in a warp execute the same instruction in lockstep under
+the Single Instruction, Multiple Thread (SIMT) execution model. An SM
+can hold dozens of active warps—representing thousands of
+threads—resident in hardware at the same time.</p>
+<p>To understand how this hides latency, consider Little's Law applied
+to a processor pipeline:</p>
+<p><span class="math display">\[\text{Concurrency} = \text{Latency}
+\times \text{Throughput}\]</span></p>
+<p>If a memory operation has a latency of <span class="math inline">\(L
+= 400\)</span> cycles and the SM can issue <span class="math inline">\(T
+= 2\)</span> warp instructions per cycle, the SM needs at least:</p>
+<p><span class="math display">\[400 \times 2 = 800 \text{ warps (or
+independent instructions)}\]</span></p>
+<p>in flight across its schedulers and functional units to completely
+mask the memory stall. By oversubscribing the SM with many resident
+warps, there is almost always at least one warp whose data is already in
+registers and ready to execute.</p>
+<h2 id="zero-overhead-context-switching">Zero-Overhead Context
+Switching</h2>
+<p>On a CPU, switching between threads (context switching) is expensive.
+The operating system or hardware must save the current thread's
+architectural state—including general-purpose registers, program
+counter, and stack pointer—to memory, and then load the next thread's
+state. This process can take hundreds or thousands of cycles and
+pollutes the CPU caches.</p>
+<p>GPUs eliminate this cost entirely through <strong>hardware-managed,
+zero-overhead context switching</strong>. Every resident warp on an SM
+has its own dedicated partition of the on-chip <strong>register
+file</strong> and <strong>shared memory</strong>, as well as its own
+program counter and execution mask.</p>
+<p>Because the architectural state of every active warp remains
+permanently resident on-chip for the lifetime of the thread block:</p>
+<ul>
+<li><strong>No state saving or restoring is required.</strong> Nothing
+is spilled to off-chip memory during a switch.</li>
+<li><strong>Switching happens in a single clock cycle.</strong> On every
+cycle, the SM's <strong>warp scheduler</strong> inspects the pool of
+resident warps, checks which ones are not stalled on memory or execution
+dependencies, and immediately issues an instruction from a ready
+warp.</li>
+</ul>
+<h2 id="trade-offs-and-occupancy">Trade-offs and Occupancy</h2>
+<p>The ability of a GPU to hide latency depends directly on
+<strong>occupancy</strong>, which is the ratio of active warps on an SM
+to the maximum number of warps the SM can support.</p>
+<p><span class="math display">\[\text{Occupancy} = \frac{\text{Active
+Warps per SM}}{\text{Maximum Warps per SM}}\]</span></p>
+<p>Because the on-chip register file and shared memory are finite
+resources shared among all resident warps, there is a direct trade-off
+between per-thread resource usage and latency hiding:</p>
+<ul>
+<li>If each thread uses a large number of registers, fewer warps can fit
+on the SM simultaneously, lowering occupancy.</li>
+<li>Lower occupancy reduces the pool of ready warps available to the
+scheduler, making it more likely that all resident warps will stall on
+memory at the same time.</li>
+</ul>
+<p>When occupancy is sufficiently high, the GPU's massive hardware
+multithreading and single-cycle warp scheduling work together to keep
+the arithmetic units saturated, turning a 400-cycle memory bottleneck
+into a negligible detail of overall throughput.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-gp-us-hide-high-memory-access-latency';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

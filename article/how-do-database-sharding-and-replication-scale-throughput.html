@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Database Sharding and Replication Scale Throughput? - classical-computing</title>
+    <meta name="description" content="Database sharding and primary-replica replication are two foundational distributed systems techniques used in classical computing to overcome the hardware limits of a single server. Sharding partitions a dataset horizontally across multiple independent no">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-database-sharding-and-replication-scale-throughput">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Database Sharding and Replication Scale Throughput? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-database-sharding-and-replication-scale-throughput" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Database sharding and primary-replica replication are two foundational distributed systems techniques used in classical computing to overcome the hardware limits of a single server. Sharding partitions a dataset horizontally across multiple independent no" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-database-sharding-and-replication-scale-throughput">How
+Do Database Sharding and Replication Scale Throughput?</h1>
+<p>Database sharding and primary-replica replication are two
+foundational distributed systems techniques used in classical computing
+to overcome the hardware limits of a single server. Sharding partitions
+a dataset horizontally across multiple independent nodes to scale write
+throughput and storage capacity, while primary-replica replication
+copies data from a single primary node to one or more replica nodes to
+scale read throughput and improve read availability. Used together, they
+allow relational and NoSQL databases to handle high-volume workloads
+across clusters of commodity machines.</p>
+<h2 id="scaling-write-throughput-with-database-sharding">Scaling Write
+Throughput with Database Sharding</h2>
+<p>A single database server eventually hits physical bottlenecks in CPU,
+memory, disk I/O, and network bandwidth. Vertical scaling (upgrading to
+a larger machine) has hard hardware ceilings and rapidly diminishing
+returns on cost. Database sharding solves this by splitting a large
+table or dataset into smaller, disjoint subsets called shards, each
+hosted on a separate node.</p>
+<p>When a client issues a write or read query, a routing layer or query
+coordinator determines which shard owns the target record using a
+<strong>shard key</strong> (such as a <code>user_id</code> or
+<code>tenant_id</code>). Common partitioning strategies include:</p>
+<ul>
+<li><strong>Hash-based sharding:</strong> A hash function <span
+class="math inline">\(h(k) \bmod N\)</span> maps a key <span
+class="math inline">\(k\)</span> to one of <span
+class="math inline">\(N\)</span> shards. This distributes writes evenly
+and prevents hotspots, though adding or removing shards requires
+rebalancing data (often mitigated with consistent hashing).</li>
+<li><strong>Range-based sharding:</strong> Records are assigned to
+shards based on contiguous ranges of the shard key (e.g., keys <span
+class="math inline">\(1\)</span> to <span
+class="math inline">\(1{,}000{,}000\)</span> on Shard 1). This supports
+efficient range queries but can create write hotspots if new records
+cluster in the latest range.</li>
+<li><strong>Directory-based sharding:</strong> A lookup service maps
+each key to its corresponding shard, offering flexibility at the cost of
+maintaining and querying the directory.</li>
+</ul>
+<p>Because each shard processes only a fraction <span
+class="math inline">\(\frac{1}{N}\)</span> of the total write
+operations, aggregate write throughput scales nearly linearly with the
+number of shards, provided cross-shard transactions and distributed
+joins are minimized.</p>
+<h2
+id="scaling-read-availability-with-primary-replica-replication">Scaling
+Read Availability with Primary-Replica Replication</h2>
+<p>While sharding divides data across nodes, primary-replica replication
+duplicates data across nodes. In this architecture, one node acts as the
+<strong>primary</strong> (or leader) and accepts all write operations.
+One or more <strong>replicas</strong> (or followers) continuously
+receive a stream of state changes from the primary—typically via
+write-ahead log (WAL) shipping or logical replication—and apply them
+locally.</p>
+<p>Read queries can be distributed across all replicas, which directly
+scales read throughput. If a single node can serve <span
+class="math inline">\(R\)</span> reads per second, a cluster with <span
+class="math inline">\(k\)</span> replicas can theoretically serve up to
+<span class="math inline">\((k + 1)R\)</span> reads per second, assuming
+read traffic is evenly load-balanced.</p>
+<p>Replication also improves <strong>read availability</strong>. If the
+primary node experiences a hardware failure or network partition,
+replicas can continue serving read requests. In high-availability
+configurations, an automated failover mechanism promotes an up-to-date
+replica to become the new primary so that writes can resume.</p>
+<h2 id="consistency-and-latency-trade-offs">Consistency and Latency
+Trade-offs</h2>
+<p>Scaling across nodes introduces trade-offs governed by network
+latency and replication timing:</p>
+<ul>
+<li><strong>Synchronous vs. asynchronous replication:</strong> In
+asynchronous replication, the primary acknowledges a write before
+replicas confirm they have received it. This keeps write latency low but
+creates <strong>replication lag</strong>, meaning a replica may return
+stale data for a brief window. Synchronous replication waits for at
+least one replica to persist the write, guaranteeing strong consistency
+at the cost of higher write latency.</li>
+<li><strong>Cross-shard operations:</strong> Queries that span multiple
+shards require distributed coordination, such as two-phase commit (2PC),
+which increases latency and reduces availability if any participating
+shard is unreachable.</li>
+</ul>
+<h2 id="combining-sharding-and-replication">Combining Sharding and
+Replication</h2>
+<p>In production systems, sharding and primary-replica replication are
+almost always combined. Each shard is deployed as its own replica
+set—consisting of one primary and multiple replicas—rather than a single
+standalone node. This hybrid architecture delivers both horizontal write
+scalability (via sharding) and high read throughput plus fault tolerance
+(via replication) across every partition of the dataset.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-database-sharding-and-replication-scale-throughput';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

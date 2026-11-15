@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Did EEPROM Evolve Into Modern NAND Flash? - classical-computing</title>
+    <meta name="description" content="Electrically erasable programmable read-only memory laid the foundation for modern non-volatile storage by proving that solid-state memory could be erased and rewritten without physical removal or ultraviolet light. Over several decades, engineers overcam">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-did-eeprom-evolve-into-modern-nand-flash">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Did EEPROM Evolve Into Modern NAND Flash? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-did-eeprom-evolve-into-modern-nand-flash" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Electrically erasable programmable read-only memory laid the foundation for modern non-volatile storage by proving that solid-state memory could be erased and rewritten without physical removal or ultraviolet light. Over several decades, engineers overcam" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-did-eeprom-evolve-into-modern-nand-flash">How Did EEPROM
+Evolve Into Modern NAND Flash?</h1>
+<p>Electrically erasable programmable read-only memory laid the
+foundation for modern non-volatile storage by proving that solid-state
+memory could be erased and rewritten without physical removal or
+ultraviolet light. Over several decades, engineers overcame EEPROM's
+density and cost limitations by reorganizing memory cells into
+shared-erase blocks, switching from parallel to series cell
+architectures, and stacking cells vertically in three dimensions to
+create today's high-capacity NAND flash.</p>
+<h2 id="the-foundation-floating-gate-transistors-and-eeprom">The
+Foundation: Floating-Gate Transistors and EEPROM</h2>
+<p>Before EEPROM, non-volatile semiconductor memory relied on EPROM,
+which required exposing a quartz window on the chip to ultraviolet light
+to erase data. In the late 1970s, researchers at Intel and Hughes
+Aircraft developed EEPROM using floating-gate metal-oxide-semiconductor
+(FGMOS) transistors. By applying a controlled electric field across a
+thin oxide layer, electrons could be injected onto or removed from an
+electrically isolated floating gate via Fowler-Nordheim tunneling.</p>
+<p>This breakthrough allowed individual bytes to be erased and
+reprogrammed in-circuit. However, EEPROM required two transistors per
+bit—one storage transistor and one select transistor—along with complex
+on-chip routing for byte-level control. As a result, EEPROM was
+expensive and limited to small capacities, making it suitable for
+configuration data and firmware rather than mass storage.</p>
+<h2 id="the-flash-memory-breakthrough">The Flash Memory
+Breakthrough</h2>
+<p>In the early 1980s, Fujio Masuoka at Toshiba sought a way to
+dramatically increase memory density while retaining electrical
+erasability. His solution was flash memory, which eliminated byte-level
+erasure in favor of erasing entire blocks or sectors simultaneously.</p>
+<p>By removing the individual select circuitry needed for single-byte
+erasure, flash memory reduced the cell size closer to that of a single
+transistor. This architectural shift traded fine-grained write
+flexibility for much higher storage density and lower cost per bit,
+opening the door for solid-state memory to compete with magnetic
+disks.</p>
+<h2 id="from-nor-to-nand-architecture">From NOR to NAND
+Architecture</h2>
+<p>Flash memory initially emerged in two main topologies: NOR and NAND.
+NOR flash, commercialized by Intel in 1988, connected memory cells in
+parallel to the bit line. This provided fast random-access reads, making
+it ideal for executing code directly from memory, but its parallel
+connections kept cell sizes relatively large.</p>
+<p>Toshiba introduced NAND flash in 1989 with a different trade-off.
+Instead of connecting each cell individually to the bit line, NAND
+arranged memory cells in series—typically 8, 16, or more cells strung
+together—resembling a NAND logic gate. Because adjacent cells shared
+contacts, NAND flash eliminated most of the bit-line contact overhead,
+shrinking the cell area by roughly half compared to NOR flash. Although
+NAND could not support fast byte-level random access, its high density
+and fast sequential page writes made it ideal for mass data storage.</p>
+<h2 id="scaling-beyond-planar-limits-mlc-tlc-and-3d-nand">Scaling Beyond
+Planar Limits: MLC, TLC, and 3D NAND</h2>
+<p>As demand for portable electronics, smartphones, and data centers
+grew, manufacturers pushed NAND flash density further through two major
+innovations:</p>
+<ul>
+<li><strong>Multi-level cell storage:</strong> Instead of storing a
+single bit per cell (SLC), engineers developed precise voltage-sensing
+circuits to store 2 bits (MLC), 3 bits (TLC), and 4 bits (QLC) per cell
+by dividing the charge range into <span
+class="math inline">\(2^n\)</span> distinct threshold voltage
+states.</li>
+<li><strong>Charge-trap and 3D vertical stacking:</strong> By the early
+2010s, shrinking planar floating-gate cells below 15 nanometers caused
+severe electron leakage and cell-to-cell interference. The industry
+transitioned to 3D NAND, replacing conductive polysilicon floating gates
+with insulating silicon nitride charge-trap layers and stacking
+dozens—and eventually hundreds—of memory layers vertically.</li>
+</ul>
+<p>Today, modern 3D NAND flash powers solid-state drives (SSDs),
+smartphones, and enterprise storage arrays, achieving terabyte-scale
+capacities on a single die while tracing its core physical principles
+directly back to the floating-gate innovations of early EEPROM.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-did-eeprom-evolve-into-modern-nand-flash';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

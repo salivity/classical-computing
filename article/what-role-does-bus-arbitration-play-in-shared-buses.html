@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Role Does Bus Arbitration Play in Shared Buses? - classical-computing</title>
+    <meta name="description" content="Bus arbitration is the control mechanism that resolves conflicts when multiple bus masters request simultaneous access to a shared communication bus in a classical computer system. Because a shared bus consists of common address, data, and control lines t">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-role-does-bus-arbitration-play-in-shared-buses">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Role Does Bus Arbitration Play in Shared Buses? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-role-does-bus-arbitration-play-in-shared-buses" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Bus arbitration is the control mechanism that resolves conflicts when multiple bus masters request simultaneous access to a shared communication bus in a classical computer system. Because a shared bus consists of common address, data, and control lines t" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-role-does-bus-arbitration-play-in-shared-buses">What Role
+Does Bus Arbitration Play in Shared Buses?</h1>
+<p>Bus arbitration is the control mechanism that resolves conflicts when
+multiple bus masters request simultaneous access to a shared
+communication bus in a classical computer system. Because a shared bus
+consists of common address, data, and control lines that can only carry
+one transaction at a time, allowing two masters to drive the bus
+concurrently would cause electrical contention and data corruption. An
+arbiter evaluates incoming bus requests, grants ownership to a single
+winning master according to a defined priority or fairness policy, and
+ensures orderly handoff once the transaction completes.</p>
+<h2 id="why-shared-buses-require-arbitration">Why Shared Buses Require
+Arbitration</h2>
+<p>In a classical computing architecture, devices such as the central
+processing unit (CPU), direct memory access (DMA) controllers, and
+peripheral I/O controllers often share a single system bus. Any device
+capable of initiating a read or write transaction is called a bus
+master, while devices that only respond to commands, such as main
+memory, are bus slaves.</p>
+<p>When <span class="math inline">\(N\)</span> bus masters operate
+independently, their bus requests can overlap in time. If two masters
+simultaneously assert different logic levels on the same physical
+conductor, a short circuit or bus contention occurs, producing
+indeterminate voltage levels and corrupting the transmitted address or
+data. Bus arbitration enforces mutual exclusion: at any clock cycle
+<span class="math inline">\(t\)</span>, the number of active bus masters
+driving the bus, <span class="math inline">\(M(t)\)</span>, must
+satisfy:</p>
+<p><span class="math display">\[M(t) \le 1\]</span></p>
+<h2 id="core-functions-of-a-bus-arbiter">Core Functions of a Bus
+Arbiter</h2>
+<p>A bus arbiter—whether implemented as a dedicated hardware controller
+or distributed logic—performs three primary tasks:</p>
+<ol type="1">
+<li><strong>Request Collection:</strong> Each bus master asserts a
+dedicated Bus Request (<span class="math inline">\(\text{BR}\)</span>)
+signal when it needs to use the bus.</li>
+<li><strong>Conflict Resolution:</strong> When multiple <span
+class="math inline">\(\text{BR}\)</span> lines are active
+simultaneously, the arbiter selects one winner based on its scheduling
+algorithm.</li>
+<li><strong>Grant and Release:</strong> The arbiter asserts a Bus Grant
+(<span class="math inline">\(\text{BG}\)</span>) signal to the chosen
+master. The master then asserts Bus Busy (<span
+class="math inline">\(\text{BBSY}\)</span>) to claim the bus, executes
+its transfer, and deasserts <span
+class="math inline">\(\text{BBSY}\)</span> upon completion so the next
+arbitration cycle can begin.</li>
+</ol>
+<h2 id="common-arbitration-schemes">Common Arbitration Schemes</h2>
+<p>Classical computing systems use several standard arbitration
+policies, each trading off hardware complexity, latency, and
+fairness.</p>
+<h3 id="centralized-arbitration">Centralized Arbitration</h3>
+<p>In centralized arbitration, a single hardware arbiter receives all
+requests and issues grants.</p>
+<ul>
+<li><strong>Daisy-Chaining:</strong> A single <span
+class="math inline">\(\text{BG}\)</span> line passes sequentially from
+the highest-priority master to the lowest. If a master does not need the
+bus, it forwards the grant to the next device. This is simple to wire,
+but devices near the end of the chain risk starvation under heavy
+load.</li>
+<li><strong>Polling:</strong> The arbiter cycles through device
+addresses on a poll-count line. When the polled address matches a
+requesting master, that master claims the bus.</li>
+<li><strong>Independent Requests:</strong> Each master has its own <span
+class="math inline">\(\text{BR}_i\)</span> and <span
+class="math inline">\(\text{BG}_i\)</span> pair connected directly to
+the arbiter. This allows fast, single-cycle resolution using fixed
+priority or round-robin scheduling.</li>
+</ul>
+<h3 id="distributed-arbitration">Distributed Arbitration</h3>
+<p>In distributed arbitration, there is no central arbiter. Instead, all
+masters observe shared arbitration lines and execute an identical
+resolution protocol. Each master places its unique priority ID onto the
+shared lines; by comparing the wired-OR or wired-AND result against its
+own ID, the master with the highest priority recognizes that it has won
+and takes control of the bus.</p>
+<h2 id="performance-and-fairness-trade-offs">Performance and Fairness
+Trade-Offs</h2>
+<p>Arbitration introduces overhead, typically measured in clock cycles
+required to transfer bus ownership. If an arbitration phase takes <span
+class="math inline">\(A\)</span> cycles and a data transfer takes <span
+class="math inline">\(D\)</span> cycles, the maximum bus utilization
+<span class="math inline">\(U\)</span> for a single transaction is:</p>
+<p><span class="math display">\[U = \frac{D}{A + D}\]</span></p>
+<p>Fixed-priority schemes minimize latency for critical devices like the
+CPU or high-speed DMA channels, but they can starve lower-priority
+peripherals. Round-robin and fair-queuing arbiters rotate priority after
+each grant, guaranteeing that every requesting master eventually
+receives bus access within a bounded wait time.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-role-does-bus-arbitration-play-in-shared-buses';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

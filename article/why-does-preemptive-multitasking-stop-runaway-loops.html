@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Does Preemptive Multitasking Stop Runaway Loops? - classical-computing</title>
+    <meta name="description" content="Preemptive multitasking is essential in classical computing because it gives the operating system the authority to interrupt a running program and reassign the processor to other tasks. Without this mechanism, a single program stuck in an infinite or runa">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-does-preemptive-multitasking-stop-runaway-loops">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Does Preemptive Multitasking Stop Runaway Loops? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-does-preemptive-multitasking-stop-runaway-loops" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Preemptive multitasking is essential in classical computing because it gives the operating system the authority to interrupt a running program and reassign the processor to other tasks. Without this mechanism, a single program stuck in an infinite or runa" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-does-preemptive-multitasking-stop-runaway-loops">Why Does
+Preemptive Multitasking Stop Runaway Loops?</h1>
+<p>Preemptive multitasking is essential in classical computing because
+it gives the operating system the authority to interrupt a running
+program and reassign the processor to other tasks. Without this
+mechanism, a single program stuck in an infinite or runaway loop would
+monopolize the central processing unit indefinitely, freezing the entire
+system and preventing users or other processes from regaining
+control.</p>
+<h2 id="the-problem-with-cooperative-multitasking">The Problem with
+Cooperative Multitasking</h2>
+<p>In early computing environments, systems often relied on cooperative
+multitasking. Under this model, each running program was responsible for
+voluntarily yielding control of the CPU back to the operating system at
+regular intervals or when waiting for input.</p>
+<p>If a program contained a bug—such as a <code>while (true)</code> loop
+with no exit condition—it would never reach a point where it yielded
+control. Because the operating system had no way to forcibly pause the
+misbehaving process, the CPU remained locked inside that loop. The mouse
+cursor would stop moving, the keyboard would become unresponsive, and
+the only way to recover was a hard reboot.</p>
+<h2 id="how-preemptive-multitasking-works">How Preemptive Multitasking
+Works</h2>
+<p>Preemptive multitasking solves this problem by moving scheduling
+authority from individual applications to the operating system kernel,
+supported by hardware timers.</p>
+<ol type="1">
+<li><strong>Hardware Timer Interrupts:</strong> A dedicated hardware
+timer is configured to fire an interrupt at fixed, short intervals
+(often every few milliseconds).</li>
+<li><strong>Forced Context Switching:</strong> When the timer fires, the
+CPU immediately pauses whatever user-space code is currently executing
+and transfers control to the operating system's interrupt handler.</li>
+<li><strong>Time Slicing:</strong> The OS scheduler evaluates which
+process should run next. If the current process has used up its allotted
+time slice (quantum), the scheduler saves its state (registers, program
+counter, and stack pointer) and loads the state of another ready
+process.</li>
+</ol>
+<p>Because the hardware interrupt operates independently of the
+application's logic, a runaway loop cannot block it. Even if a program
+is executing an infinite loop at full speed, the timer will still fire,
+allowing the kernel to step in and give other programs—including the
+user interface and system utilities—a turn on the CPU.</p>
+<h2 id="why-it-remains-essential-today">Why It Remains Essential
+Today</h2>
+<p>Modern classical computers run dozens or hundreds of background
+services alongside user applications. Even on multi-core processors,
+where a single runaway thread might only saturate one core, preemptive
+multitasking remains critical:</p>
+<ul>
+<li><strong>System Responsiveness:</strong> It ensures that the
+graphical user interface and input devices remain responsive, allowing
+you to open a task manager or terminal to terminate the frozen
+application.</li>
+<li><strong>Fair Resource Allocation:</strong> It prevents any single
+process from starving other critical tasks, such as network drivers,
+audio playback, or disk I/O handlers.</li>
+<li><strong>Fault Isolation:</strong> Combined with memory protection,
+preemption ensures that a bug in one application does not bring down the
+entire operating system.</li>
+</ul>
+<p>By enforcing strict time limits through hardware interrupts and
+kernel-level scheduling, preemptive multitasking guarantees that control
+always remains with the operating system rather than individual
+programs.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-does-preemptive-multitasking-stop-runaway-loops';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

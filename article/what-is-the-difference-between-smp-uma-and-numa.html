@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is the Difference Between SMP UMA and NUMA? - classical-computing</title>
+    <meta name="description" content="Symmetric Multiprocessing with Uniform Memory Access and Non-Uniform Memory Access are two foundational shared-memory architectures used in multi-processor classical computing. While both allow multiple processors to share a single physical address space,">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-is-the-difference-between-smp-uma-and-numa">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is the Difference Between SMP UMA and NUMA? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-is-the-difference-between-smp-uma-and-numa" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Symmetric Multiprocessing with Uniform Memory Access and Non-Uniform Memory Access are two foundational shared-memory architectures used in multi-processor classical computing. While both allow multiple processors to share a single physical address space," />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-is-the-difference-between-smp-uma-and-numa">What Is the
+Difference Between SMP UMA and NUMA?</h1>
+<p>Symmetric Multiprocessing with Uniform Memory Access and Non-Uniform
+Memory Access are two foundational shared-memory architectures used in
+multi-processor classical computing. While both allow multiple
+processors to share a single physical address space, they differ in how
+memory is physically organized, how processors connect to it, and how
+access latency scales as core counts grow.</p>
+<h2 id="symmetric-multiprocessing-with-uniform-memory-access">Symmetric
+Multiprocessing with Uniform Memory Access</h2>
+<p>In a Symmetric Multiprocessing (SMP) system with Uniform Memory
+Access (UMA), all processors are treated equally and share a single,
+centralized pool of physical memory. Every processor core connects to
+the memory controller through a shared bus or crossbar interconnect.</p>
+<p>Because every core is equidistant from main memory, the time required
+to read or write any memory address is identical regardless of which
+processor issues the request. If <span
+class="math inline">\(t_{\text{mem}}\)</span> denotes the memory access
+latency, then for any processor <span class="math inline">\(P_i\)</span>
+and any memory address <span class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[t(P_i, A) = t_{\text{mem}}\]</span></p>
+<p>This uniformity simplifies operating system scheduling and
+application development, since thread placement does not affect memory
+latency. However, the shared interconnect becomes a bottleneck as more
+processors are added, limiting scalability due to bus contention and
+cache-coherency traffic.</p>
+<h2 id="non-uniform-memory-access">Non-Uniform Memory Access</h2>
+<p>Non-Uniform Memory Access (NUMA) addresses the scalability limits of
+UMA by dividing physical memory into distinct local nodes, each directly
+attached to a subset of processors (typically a socket). Processors are
+still able to access the entire global address space, but memory
+attached to another socket must be reached over an inter-socket
+interconnect.</p>
+<p>As a result, memory access latency depends on the physical location
+of the data relative to the requesting processor:</p>
+<p><span class="math display">\[t_{\text{local}} &lt;
+t_{\text{remote}}\]</span></p>
+<p>Local memory accesses are fast because they stay within the
+processor's own memory controller, whereas remote accesses incur
+additional latency and bandwidth overhead across the interconnect.</p>
+<h2 id="key-architectural-differences">Key Architectural
+Differences</h2>
+<ul>
+<li><strong>Memory Topology:</strong> UMA uses a single centralized
+memory pool, while NUMA distributes memory across multiple local
+nodes.</li>
+<li><strong>Access Latency:</strong> UMA provides constant latency for
+all addresses; NUMA exhibits lower latency for local memory and higher
+latency for remote memory.</li>
+<li><strong>Scalability:</strong> UMA is constrained by shared-bus or
+crossbar contention at higher core counts, whereas NUMA scales to many
+sockets and hundreds of cores by keeping most traffic local.</li>
+<li><strong>Software Complexity:</strong> UMA requires minimal locality
+awareness from the operating system. NUMA relies on NUMA-aware
+schedulers and memory allocators (such as first-touch policies) to keep
+threads and their data on the same node.</li>
+<li><strong>Cache Coherency:</strong> Both architectures maintain cache
+coherency across all cores, though NUMA systems typically use
+directory-based protocols to avoid broadcasting snoop requests across
+every interconnect link.</li>
+</ul>
+<h2 id="choosing-between-uma-and-numa">Choosing Between UMA and
+NUMA</h2>
+<p>UMA remains the standard for single-socket systems and small-scale
+workstations where core counts are low enough that a single memory
+controller can saturate demand without excessive contention. NUMA is the
+dominant architecture for multi-socket servers and high-performance
+computing systems, where distributing memory bandwidth across sockets is
+essential for scaling performance.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-is-the-difference-between-smp-uma-and-numa';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

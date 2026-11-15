@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is the Purpose of a Branch Target Buffer? - classical-computing</title>
+    <meta name="description" content="A branch target buffer is a specialized cache inside a modern processor that stores the destination addresses of previously taken branch instructions. Its primary purpose is to eliminate the delay caused by waiting for a branch instruction to be decoded a">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-is-the-purpose-of-a-branch-target-buffer">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is the Purpose of a Branch Target Buffer? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-is-the-purpose-of-a-branch-target-buffer" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A branch target buffer is a specialized cache inside a modern processor that stores the destination addresses of previously taken branch instructions. Its primary purpose is to eliminate the delay caused by waiting for a branch instruction to be decoded a" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-is-the-purpose-of-a-branch-target-buffer">What Is the
+Purpose of a Branch Target Buffer?</h1>
+<p>A branch target buffer is a specialized cache inside a modern
+processor that stores the destination addresses of previously taken
+branch instructions. Its primary purpose is to eliminate the delay
+caused by waiting for a branch instruction to be decoded and its target
+address to be calculated, allowing the CPU to fetch the next instruction
+immediately in the very same clock cycle.</p>
+<h2 id="why-branch-target-buffers-are-needed">Why Branch Target Buffers
+Are Needed</h2>
+<p>In a pipelined processor, instructions are fetched, decoded, and
+executed in overlapping stages. When the processor encounters a branch
+instruction, such as a conditional jump or a function call, it faces two
+distinct problems:</p>
+<ol type="1">
+<li><strong>Direction</strong>: Will the branch be taken or not
+taken?</li>
+<li><strong>Target Address</strong>: If the branch is taken, where in
+memory does execution jump?</li>
+</ol>
+<p>Even if a branch predictor correctly guesses that a branch will be
+taken, the processor still needs to know the destination address before
+it can fetch the next instruction. Without a branch target buffer (BTB),
+the CPU must wait until the decode or execute stage to compute the
+target address, creating pipeline bubbles (stalls) that waste clock
+cycles.</p>
+<h2 id="how-a-branch-target-buffer-works">How a Branch Target Buffer
+Works</h2>
+<p>A BTB operates during the <strong>instruction fetch (IF)</strong>
+stage, running in parallel with the instruction cache lookup:</p>
+<ul>
+<li><strong>Indexing</strong>: The processor uses the current Program
+Counter (PC) address—specifically the lower bits of the instruction's
+address—to index into the BTB.</li>
+<li><strong>Tag Matching</strong>: The BTB checks if the stored tag
+matches the upper bits of the PC to confirm a hit.</li>
+<li><strong>Target Retrieval</strong>: On a BTB hit, if the branch is
+predicted as taken, the BTB immediately supplies the predicted target
+address to the PC.</li>
+</ul>
+<p>If the instruction is not in the BTB (a BTB miss), the processor
+assumes the branch is not taken and continues fetching sequentially from
+<span class="math inline">\(\text{PC} + 4\)</span> (assuming 4-byte
+instructions).</p>
+<h2 id="relationship-with-branch-direction-predictors">Relationship with
+Branch Direction Predictors</h2>
+<p>While a BTB stores <em>where</em> a branch goes, it often works
+alongside a branch direction predictor (such as a two-bit saturating
+counter or a global history predictor) that decides <em>whether</em> the
+branch will be taken. In many designs:</p>
+<ul>
+<li>Only taken branches are stored in the BTB, so a BTB hit itself can
+serve as an implicit prediction that the branch is taken.</li>
+<li>More advanced processors pair the BTB with a separate direction
+predictor so that the BTB supplies the target address while the
+direction predictor determines if that address should be used.</li>
+</ul>
+<h2 id="handling-mispredictions">Handling Mispredictions</h2>
+<p>Because a BTB relies on past behavior, it can be wrong. A
+misprediction occurs if:</p>
+<ul>
+<li>The BTB predicts a branch is taken, but it turns out to be not
+taken.</li>
+<li>The target address changes dynamically (for example, in indirect
+branches or virtual function calls) and the BTB supplies a stale
+address.</li>
+<li>The branch was not in the BTB at all, resulting in a miss when the
+branch is actually taken.</li>
+</ul>
+<p>When a misprediction is detected later in the pipeline, the processor
+flushes the incorrectly fetched instructions, updates the BTB with the
+correct target address, and redirects the Program Counter to the right
+location.</p>
+<h2 id="performance-impact">Performance Impact</h2>
+<p>By providing the target address during the fetch stage, a branch
+target buffer reduces the branch penalty from several clock cycles down
+to zero cycles on a correct prediction. This keeps the instruction
+pipeline full and is essential for achieving high instruction-level
+parallelism in classical superscalar processors.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-is-the-purpose-of-a-branch-target-buffer';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Are Analog Computers Returning for Edge AI and ODEs? - classical-computing</title>
+    <meta name="description" content="Continuous-variable analog computers are experiencing a resurgence because modern digital processors face severe energy and memory-bandwidth bottlenecks when running artificial intelligence at the edge or solving complex differential equations. By using p">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-are-analog-computers-returning-for-edge-ai-and-od-es">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Are Analog Computers Returning for Edge AI and ODEs? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-are-analog-computers-returning-for-edge-ai-and-od-es" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Continuous-variable analog computers are experiencing a resurgence because modern digital processors face severe energy and memory-bandwidth bottlenecks when running artificial intelligence at the edge or solving complex differential equations. By using p" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-are-analog-computers-returning-for-edge-ai-and-odes">Why Are
+Analog Computers Returning for Edge AI and ODEs?</h1>
+<p>Continuous-variable analog computers are experiencing a resurgence
+because modern digital processors face severe energy and
+memory-bandwidth bottlenecks when running artificial intelligence at the
+edge or solving complex differential equations. By using physical laws
+such as Ohm's law and Kirchhoff's current law to perform arithmetic
+directly in hardware, analog systems eliminate much of the data movement
+and clock-driven switching that dominate digital power consumption.</p>
+<h2 id="the-end-of-easy-digital-scaling">The End of Easy Digital
+Scaling</h2>
+<p>For decades, digital CMOS scaling delivered exponential gains in
+speed and energy efficiency. As transistor miniaturization slows and the
+von Neumann bottleneck limits how fast data can move between memory and
+processing units, digital chips spend most of their energy shuffling
+bits rather than computing.</p>
+<p>Continuous-variable analog computing sidesteps this overhead by
+representing numbers as physical quantities—such as voltages, currents,
+or charges—rather than discrete binary words. Operations happen
+simultaneously and continuously across a circuit, trading the arbitrary
+precision of digital logic for dramatic gains in energy efficiency.</p>
+<h2 id="low-power-edge-inference">Low-Power Edge Inference</h2>
+<p>Edge devices such as smart sensors, wearables, and autonomous drones
+must run neural network inference under tight power budgets. The core
+operation in most neural networks is the matrix-vector
+multiplication:</p>
+<p><span class="math display">\[y = Wx\]</span></p>
+<p>In a digital processor, computing <span class="math inline">\(y =
+Wx\)</span> requires fetching weights <span
+class="math inline">\(W\)</span> and inputs <span
+class="math inline">\(x\)</span> from memory, multiplying them in
+arithmetic logic units, and writing results back. In an analog crossbar
+array, programmable resistive elements store the weights <span
+class="math inline">\(W\)</span> directly at the intersections of word
+lines and bit lines. Applying input voltages <span
+class="math inline">\(x\)</span> to the rows produces currents
+proportional to <span class="math inline">\(W_{ij}x_j\)</span> at each
+junction, which naturally sum along the columns according to Kirchhoff's
+current law:</p>
+<p><span class="math display">\[I_i = \sum_j G_{ij} V_j\]</span></p>
+<p>Here, <span class="math inline">\(G_{ij}\)</span> represents the
+conductance of each memory cell and <span
+class="math inline">\(V_j\)</span> represents the input voltage. Because
+storage and computation occur in the same physical location, analog
+in-memory computing can achieve orders of magnitude higher energy
+efficiency than digital accelerators for low- to moderate-precision
+inference tasks.</p>
+<h2 id="continuous-time-differential-equation-solving">Continuous-Time
+Differential Equation Solving</h2>
+<p>Solving ordinary differential equations (ODEs) and partial
+differential equations (PDEs) on digital hardware requires discretizing
+time and space into small steps, then iterating through numerical
+methods such as Runge-Kutta. Stiff systems or high-dimensional problems
+demand tiny step sizes, driving up both latency and power
+consumption.</p>
+<p>Analog computers solve differential equations by mapping variables
+directly onto continuous voltages and using operational amplifiers,
+capacitors, and resistors to implement integration in real time. A
+general first-order system:</p>
+<p><span class="math display">\[\frac{dx}{dt} = f(x, t)\]</span></p>
+<p>is solved by feeding the output of a function block <span
+class="math inline">\(f(x, t)\)</span> into an integrator circuit whose
+output voltage naturally evolves as:</p>
+<p><span class="math display">\[x(t) = x(0) + \int_0^t f(x(\tau),
+\tau)\, d\tau\]</span></p>
+<p>Because integration happens continuously in physical time rather than
+through discrete approximations, analog solvers can find solutions to
+nonlinear and stiff systems in microseconds, independent of step-size
+stability limits.</p>
+<h2 id="hybrid-architectures-and-remaining-challenges">Hybrid
+Architectures and Remaining Challenges</h2>
+<p>Purely analog machines historically struggled with thermal noise,
+component drift, and limited programmability. Modern implementations
+address these issues through hybrid digital-analog architectures.
+Digital controllers handle calibration, programming, and high-precision
+control logic, while analog cores accelerate the compute-intensive inner
+loops.</p>
+<p>Advances in non-volatile memory technologies—such as resistive RAM
+(ReRAM), phase-change memory (PCM), and flash-based floating-gate
+arrays—also allow analog weights to be stored densely and retained
+without power. While analog computing will not replace general-purpose
+digital processors, its ability to perform native integration and
+parallel multiply-accumulate operations makes it a compelling
+co-processor for energy-constrained edge AI and real-time scientific
+simulation.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-are-analog-computers-returning-for-edge-ai-and-od-es';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

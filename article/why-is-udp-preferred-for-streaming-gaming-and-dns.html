@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Is UDP Preferred for Streaming, Gaming, and DNS? - classical-computing</title>
+    <meta name="description" content="The User Datagram Protocol, commonly known as UDP, is a connectionless transport layer protocol that prioritizes speed and low overhead over guaranteed delivery. Unlike the Transmission Control Protocol, UDP sends data packets called datagrams without est">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-is-udp-preferred-for-streaming-gaming-and-dns">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Is UDP Preferred for Streaming, Gaming, and DNS? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-is-udp-preferred-for-streaming-gaming-and-dns" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The User Datagram Protocol, commonly known as UDP, is a connectionless transport layer protocol that prioritizes speed and low overhead over guaranteed delivery. Unlike the Transmission Control Protocol, UDP sends data packets called datagrams without est" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-is-udp-preferred-for-streaming-gaming-and-dns">Why Is UDP
+Preferred for Streaming, Gaming, and DNS?</h1>
+<p>The User Datagram Protocol, commonly known as UDP, is a
+connectionless transport layer protocol that prioritizes speed and low
+overhead over guaranteed delivery. Unlike the Transmission Control
+Protocol, UDP sends data packets called datagrams without establishing a
+formal connection, tracking packet order, or retransmitting lost data.
+These characteristics make UDP the preferred choice for real-time media
+streaming, online gaming, and Domain Name System queries, where low
+latency is more critical than perfect reliability.</p>
+<h2 id="how-connectionless-communication-reduces-latency">How
+Connectionless Communication Reduces Latency</h2>
+<p>To understand why UDP excels in time-sensitive applications, it helps
+to compare its behavior with TCP. TCP requires a three-way handshake
+before any application data can be sent, and it maintains state for
+every connection. It also uses acknowledgments, sequence numbers, and
+congestion control to guarantee that every byte arrives in order.</p>
+<p>UDP eliminates these steps. An application using UDP simply wraps its
+payload in a minimal 8-byte header—containing only source port,
+destination port, length, and checksum—and hands it to the network
+layer. Because there is no handshake, data transmission begins
+immediately, saving at least one round-trip time (<span
+class="math inline">\(RTT\)</span>) before the first byte of payload is
+delivered.</p>
+<h2 id="real-time-media-streaming">Real-Time Media Streaming</h2>
+<p>In live video and audio streaming, timeliness matters more than
+completeness. If a few packets are dropped due to network congestion,
+waiting for TCP to detect the loss and retransmit the missing data would
+cause noticeable buffering, stuttering, or audio dropouts.</p>
+<p>With UDP, the media player simply skips the missing frame or
+interpolates the audio and continues playing the incoming stream. A
+brief visual artifact or a fraction of a second of silence is far less
+disruptive to the viewer than pausing the entire broadcast to wait for
+old data. Protocols like RTP (Real-time Transport Protocol) and WebRTC
+are built on top of UDP for this exact reason.</p>
+<h2 id="online-multiplayer-gaming">Online Multiplayer Gaming</h2>
+<p>Fast-paced multiplayer games, such as first-person shooters or racing
+games, rely on rapid state updates between the client and the game
+server. Players' positions, actions, and inputs change many times per
+second.</p>
+<p>If a packet containing a player's position from 100 milliseconds ago
+is lost, retransmitting it is pointless because newer position data has
+already been generated. Using TCP would introduce head-of-line blocking,
+where all subsequent packets are held up until the lost packet is
+recovered, resulting in lag spikes. UDP allows the game engine to
+process the latest state immediately and discard outdated packets.</p>
+<h2 id="domain-name-system-dns-queries">Domain Name System (DNS)
+Queries</h2>
+<p>DNS translates human-readable domain names into IP addresses. A
+typical DNS lookup consists of a single small request packet from the
+client and a single small response packet from the DNS server.</p>
+<p>Using TCP for such a brief exchange would add significant overhead:
+three packets for the handshake, two for the query and response, and
+four to close the connection. With UDP, the entire transaction takes
+just two packets—one out and one back—completing in a single <span
+class="math inline">\(RTT\)</span>. If a DNS response is lost, the
+client simply times out and retries the query, which is still faster and
+less resource-intensive for DNS servers handling millions of requests
+per second.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>UDP is preferred for real-time media streaming, online gaming, and
+DNS queries because it removes the latency and overhead of connection
+management and guaranteed delivery. By allowing applications to handle
+packet loss on their own terms—or ignore it when newer data is already
+available—UDP delivers the responsiveness that modern interactive and
+real-time systems depend on.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-is-udp-preferred-for-streaming-gaming-and-dns';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

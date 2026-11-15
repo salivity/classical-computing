@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Causes Priority Inversion in Classical Computing? - classical-computing</title>
+    <meta name="description" content="Priority inversion occurs when a high-priority task is forced to wait because a low-priority task holds a shared resource lock that the high-priority task needs. Even though the scheduler prefers the high-priority task, it cannot run until the low-priorit">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-causes-priority-inversion-in-classical-computing">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Causes Priority Inversion in Classical Computing? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-causes-priority-inversion-in-classical-computing" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Priority inversion occurs when a high-priority task is forced to wait because a low-priority task holds a shared resource lock that the high-priority task needs. Even though the scheduler prefers the high-priority task, it cannot run until the low-priorit" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-causes-priority-inversion-in-classical-computing">What
+Causes Priority Inversion in Classical Computing?</h1>
+<p>Priority inversion occurs when a high-priority task is forced to wait
+because a low-priority task holds a shared resource lock that the
+high-priority task needs. Even though the scheduler prefers the
+high-priority task, it cannot run until the low-priority task finishes
+using the resource and releases the lock. This situation becomes
+especially problematic when medium-priority tasks preempt the
+low-priority task, delaying the lock release indefinitely.</p>
+<h2 id="how-resource-locks-trigger-priority-inversion">How Resource
+Locks Trigger Priority Inversion</h2>
+<p>In preemptive, priority-based operating systems, the scheduler always
+runs the highest-priority task that is ready to execute. However, tasks
+often share resources such as memory buffers, hardware devices, or data
+structures. To prevent data corruption, a task must acquire a mutual
+exclusion lock (mutex) before accessing the shared resource.</p>
+<p>If a low-priority task <span class="math inline">\(T_L\)</span>
+acquires a lock <span class="math inline">\(M\)</span> and is then
+preempted by a high-priority task <span
+class="math inline">\(T_H\)</span>, <span
+class="math inline">\(T_H\)</span> will run until it also attempts to
+acquire <span class="math inline">\(M\)</span>. Because <span
+class="math inline">\(T_L\)</span> still holds <span
+class="math inline">\(M\)</span>, <span
+class="math inline">\(T_H\)</span> is blocked and moved to a waiting
+state. The scheduler then allows <span
+class="math inline">\(T_L\)</span> to resume so it can finish its
+critical section and release <span class="math inline">\(M\)</span>.
+During this window, <span class="math inline">\(T_L\)</span> is
+effectively running ahead of <span class="math inline">\(T_H\)</span>,
+which is a brief, bounded form of priority inversion.</p>
+<h2
+id="unbounded-priority-inversion-with-medium-priority-tasks">Unbounded
+Priority Inversion With Medium-Priority Tasks</h2>
+<p>Priority inversion becomes severe when one or more medium-priority
+tasks enter the system. Suppose <span class="math inline">\(T_H\)</span>
+is blocked waiting for <span class="math inline">\(M\)</span> held by
+<span class="math inline">\(T_L\)</span>, and a medium-priority task
+<span class="math inline">\(T_M\)</span> becomes ready to run.</p>
+<p>Because <span class="math inline">\(T_M\)</span> has a higher
+priority than <span class="math inline">\(T_L\)</span> and does not need
+lock <span class="math inline">\(M\)</span>, the scheduler preempts
+<span class="math inline">\(T_L\)</span> in favor of <span
+class="math inline">\(T_M\)</span>. As a result:</p>
+<ul>
+<li><span class="math inline">\(T_H\)</span> cannot run because it is
+waiting for <span class="math inline">\(M\)</span>.</li>
+<li><span class="math inline">\(T_L\)</span> cannot run to release <span
+class="math inline">\(M\)</span> because <span
+class="math inline">\(T_M\)</span> has higher priority.</li>
+<li><span class="math inline">\(T_M\)</span> runs freely, effectively
+delaying <span class="math inline">\(T_H\)</span> for an unpredictable
+amount of time.</li>
+</ul>
+<p>If multiple medium-priority tasks arrive, <span
+class="math inline">\(T_H\)</span> can be delayed indefinitely, a
+condition known as unbounded priority inversion.</p>
+<h2 id="why-scheduling-alone-cannot-prevent-it">Why Scheduling Alone
+Cannot Prevent It</h2>
+<p>A priority scheduler only evaluates which ready tasks can use the
+CPU; it does not inherently understand the dependency graph created by
+locks. From the scheduler's perspective, <span
+class="math inline">\(T_H\)</span> is blocked and <span
+class="math inline">\(T_M\)</span> is the highest-priority runnable
+task, so running <span class="math inline">\(T_M\)</span> appears
+correct. Without a mechanism that links lock ownership to scheduling
+priority, the scheduler cannot see that running <span
+class="math inline">\(T_L\)</span> is necessary to unblock <span
+class="math inline">\(T_H\)</span>.</p>
+<h2 id="common-solutions">Common Solutions</h2>
+<p>Operating systems and real-time kernels use several protocols to
+bound or prevent priority inversion:</p>
+<ul>
+<li><strong>Priority Inheritance Protocol (PIP):</strong> When <span
+class="math inline">\(T_H\)</span> blocks on a lock held by <span
+class="math inline">\(T_L\)</span>, <span
+class="math inline">\(T_L\)</span> temporarily inherits <span
+class="math inline">\(T_H\)</span>'s priority. This prevents <span
+class="math inline">\(T_M\)</span> from preempting <span
+class="math inline">\(T_L\)</span>, allowing <span
+class="math inline">\(T_L\)</span> to finish its critical section
+quickly and release the lock.</li>
+<li><strong>Priority Ceiling Protocol (PCP):</strong> Each lock is
+assigned a priority ceiling equal to the highest priority of any task
+that may acquire it. When a task acquires the lock, its priority is
+raised to the ceiling, preventing both unbounded priority inversion and
+deadlocks.</li>
+<li><strong>Non-blocking Data Structures:</strong> Using atomic hardware
+instructions (such as compare-and-swap) avoids locks altogether,
+eliminating lock-based priority inversion.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-causes-priority-inversion-in-classical-computing';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

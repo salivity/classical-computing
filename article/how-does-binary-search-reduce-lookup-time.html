@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Binary Search Reduce Lookup Time? - classical-computing</title>
+    <meta name="description" content="Binary search reduces lookup time in a sorted array to logarithmic complexity by repeatedly dividing the search interval in half. Instead of checking every element one by one, the algorithm compares the target value to the middle element of the current ra">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-binary-search-reduce-lookup-time">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Binary Search Reduce Lookup Time? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-binary-search-reduce-lookup-time" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Binary search reduces lookup time in a sorted array to logarithmic complexity by repeatedly dividing the search interval in half. Instead of checking every element one by one, the algorithm compares the target value to the middle element of the current ra" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-binary-search-reduce-lookup-time">How Does Binary
+Search Reduce Lookup Time?</h1>
+<p>Binary search reduces lookup time in a sorted array to logarithmic
+complexity by repeatedly dividing the search interval in half. Instead
+of checking every element one by one, the algorithm compares the target
+value to the middle element of the current range and eliminates half of
+the remaining elements at each step. This divide-and-conquer strategy
+allows classical computers to locate an item in very large datasets
+using only a small number of comparisons.</p>
+<h2 id="the-requirement-of-a-sorted-array">The Requirement of a Sorted
+Array</h2>
+<p>In an unsorted array, there is no predictable relationship between an
+element's value and its position. Finding a specific value requires a
+linear search, which inspects elements sequentially from start to finish
+and takes <span class="math inline">\(O(n)\)</span> time in the worst
+case for an array of <span class="math inline">\(n\)</span>
+elements.</p>
+<p>When an array is sorted in ascending or descending order, the
+ordering provides structural information. If a value at index <span
+class="math inline">\(m\)</span> is smaller than the target value, every
+element at an index less than <span class="math inline">\(m\)</span> is
+also guaranteed to be smaller than the target. This property makes it
+safe to discard entire sections of the array without examining them.</p>
+<h2 id="how-the-divide-and-conquer-process-works">How the
+Divide-and-Conquer Process Works</h2>
+<p>Binary search maintains two pointers, <code>low</code> and
+<code>high</code>, representing the inclusive bounds of the current
+search interval. Initially, <code>low = 0</code> and
+<code>high = n - 1</code>.</p>
+<p>At each step, the algorithm performs the following operations:</p>
+<ol type="1">
+<li>Compute the middle index: <span class="math inline">\(m = \lfloor
+(\text{low} + \text{high}) / 2 \rfloor\)</span>.</li>
+<li>Compare the middle element <span class="math inline">\(A[m]\)</span>
+with the target <span class="math inline">\(T\)</span>.</li>
+<li>If <span class="math inline">\(A[m] = T\)</span>, the search
+succeeds and returns <span class="math inline">\(m\)</span>.</li>
+<li>If <span class="math inline">\(A[m] &lt; T\)</span>, the target
+cannot be in the left half, so update <span
+class="math inline">\(\text{low} = m + 1\)</span>.</li>
+<li>If <span class="math inline">\(A[m] &gt; T\)</span>, the target
+cannot be in the right half, so update <span
+class="math inline">\(\text{high} = m - 1\)</span>.</li>
+</ol>
+<p>This loop continues until the target is found or <span
+class="math inline">\(\text{low} &gt; \text{high}\)</span>, which
+indicates that the target is not in the array.</p>
+<h2 id="deriving-the-logarithmic-complexity">Deriving the Logarithmic
+Complexity</h2>
+<p>Because each comparison cuts the remaining search space in half, the
+size of the interval shrinks exponentially with each step. Starting with
+<span class="math inline">\(n\)</span> elements:</p>
+<ul>
+<li>After 1 comparison, at most <span class="math inline">\(n /
+2\)</span> elements remain.</li>
+<li>After 2 comparisons, at most <span class="math inline">\(n /
+4\)</span> elements remain.</li>
+<li>After <span class="math inline">\(k\)</span> comparisons, at most
+<span class="math inline">\(n / 2^k\)</span> elements remain.</li>
+</ul>
+<p>In the worst case, the search terminates when the interval is reduced
+to <span class="math inline">\(1\)</span> element:</p>
+<p><span class="math display">\[\frac{n}{2^k} = 1 \implies n =
+2^k\]</span></p>
+<p>Taking the base-2 logarithm of both sides gives the maximum number of
+steps <span class="math inline">\(k\)</span>:</p>
+<p><span class="math display">\[k = \log_2(n)\]</span></p>
+<p>Thus, the worst-case and average-case time complexity of binary
+search is <span class="math inline">\(O(\log n)\)</span>. The best-case
+complexity is <span class="math inline">\(O(1)\)</span>, which occurs
+when the middle element on the first comparison matches the target.</p>
+<h2 id="practical-impact-in-classical-computing">Practical Impact in
+Classical Computing</h2>
+<p>In classical computing, where memory access and comparisons are
+performed sequentially on a single processor, <span
+class="math inline">\(O(\log n)\)</span> scaling is dramatically faster
+than <span class="math inline">\(O(n)\)</span> scaling. For an array
+containing <span class="math inline">\(1,000,000\)</span> elements,
+linear search may require up to <span
+class="math inline">\(1,000,000\)</span> comparisons, whereas binary
+search requires at most <span class="math inline">\(\lceil
+\log_2(1,000,000) \rceil = 20\)</span> comparisons. Even if the dataset
+grows to <span class="math inline">\(1,000,000,000\)</span> elements,
+binary search needs at most <span class="math inline">\(30\)</span>
+comparisons.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-binary-search-reduce-lookup-time';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

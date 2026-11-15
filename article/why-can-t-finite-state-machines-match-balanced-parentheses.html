@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Can&#39;t Finite State Machines Match Balanced Parentheses? - classical-computing</title>
+    <meta name="description" content="The pumping lemma for regular languages proves that finite state machines cannot match balanced parentheses because they lack unbounded memory. By assuming a finite state machine can recognize balanced parentheses, the pumping lemma forces a contradiction">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-can-t-finite-state-machines-match-balanced-parentheses">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Can&#39;t Finite State Machines Match Balanced Parentheses? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-can-t-finite-state-machines-match-balanced-parentheses" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The pumping lemma for regular languages proves that finite state machines cannot match balanced parentheses because they lack unbounded memory. By assuming a finite state machine can recognize balanced parentheses, the pumping lemma forces a contradiction" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-cant-finite-state-machines-match-balanced-parentheses">Why
+Can't Finite State Machines Match Balanced Parentheses?</h1>
+<p>The pumping lemma for regular languages proves that finite state
+machines cannot match balanced parentheses because they lack unbounded
+memory. By assuming a finite state machine can recognize balanced
+parentheses, the pumping lemma forces a contradiction where repeating
+part of an input string creates an unbalanced result. This demonstrates
+that matching nested structures requires a computational model with more
+power, such as a pushdown automaton.</p>
+<h2
+id="understanding-finite-state-machines-and-regular-languages">Understanding
+Finite State Machines and Regular Languages</h2>
+<p>In classical computing, a finite state machine (FSM), or finite
+automaton, is a mathematical model of computation with a strictly
+limited number of states. It reads an input string one symbol at a time
+and transitions between states based on the current symbol. The set of
+all languages that can be recognized by a finite state machine is called
+the class of regular languages.</p>
+<p>Because an FSM has a fixed, finite number of states, it cannot count
+arbitrarily high. If an input string requires the machine to remember an
+unbounded number of previous symbols, the machine will eventually run
+out of unique states and be forced to repeat one.</p>
+<h2 id="the-pumping-lemma-for-regular-languages">The Pumping Lemma for
+Regular Languages</h2>
+<p>The pumping lemma is a formal property of all regular languages. It
+states that if a language <span class="math inline">\(L\)</span> is
+regular, then there exists a constant <span class="math inline">\(p \ge
+1\)</span> (called the pumping length) such that any string <span
+class="math inline">\(s \in L\)</span> with length <span
+class="math inline">\(|s| \ge p\)</span> can be divided into three
+parts, <span class="math inline">\(s = xyz\)</span>, satisfying three
+conditions:</p>
+<ol type="1">
+<li><span class="math inline">\(|y| \ge 1\)</span> (the middle section
+<span class="math inline">\(y\)</span> is not empty).</li>
+<li><span class="math inline">\(|xy| \le p\)</span> (the first two
+sections together fit within the pumping length).</li>
+<li>For all integers <span class="math inline">\(i \ge 0\)</span>, the
+string <span class="math inline">\(xy^i z \in L\)</span> (repeating
+<span class="math inline">\(y\)</span> any number of times, including
+zero, keeps the string in the language).</li>
+</ol>
+<p>Intuitively, if a string is at least as long as the number of states
+<span class="math inline">\(p\)</span> in the FSM, the pigeonhole
+principle guarantees that the machine must visit at least one state more
+than once. The loop between those repeated visits corresponds to the
+substring <span class="math inline">\(y\)</span>, which can be repeated
+("pumped") any number of times without changing the machine's acceptance
+of the string.</p>
+<h2 id="proving-balanced-parentheses-are-not-regular">Proving Balanced
+Parentheses Are Not Regular</h2>
+<p>To prove that balanced parentheses cannot be matched by a finite
+state machine, we use a proof by contradiction. Consider the language of
+balanced parentheses <span class="math inline">\(L\)</span>, or a
+simplified subset of it:</p>
+<p><span class="math display">\[L = \{ (^n )^n \mid n \ge 0
+\}\]</span></p>
+<p>This language consists of <span class="math inline">\(n\)</span>
+opening parentheses followed by <span class="math inline">\(n\)</span>
+closing parentheses. Assume, for the sake of contradiction, that <span
+class="math inline">\(L\)</span> is regular. By the pumping lemma, there
+must be a pumping length <span class="math inline">\(p\)</span>.</p>
+<p>Now, choose the specific string <span class="math inline">\(s = (^p
+)^p\)</span>. Clearly, <span class="math inline">\(s \in L\)</span>, and
+its length is <span class="math inline">\(|s| = 2p \ge p\)</span>.
+According to the pumping lemma, <span class="math inline">\(s\)</span>
+can be split into <span class="math inline">\(s = xyz\)</span> such that
+<span class="math inline">\(|xy| \le p\)</span> and <span
+class="math inline">\(|y| \ge 1\)</span>.</p>
+<p>Because <span class="math inline">\(|xy| \le p\)</span> and the first
+<span class="math inline">\(p\)</span> characters of <span
+class="math inline">\(s\)</span> are all opening parentheses, both <span
+class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span> must consist exclusively of opening
+parentheses. Let <span class="math inline">\(k = |y|\)</span>, where
+<span class="math inline">\(k \ge 1\)</span>.</p>
+<p>Now, consider what happens when we pump <span
+class="math inline">\(y\)</span> by setting <span
+class="math inline">\(i = 2\)</span> (or <span class="math inline">\(i =
+0\)</span>). The resulting string is:</p>
+<p><span class="math display">\[xy^2 z = (^{p+k} )^p\]</span></p>
+<p>Since <span class="math inline">\(k \ge 1\)</span>, the number of
+opening parentheses <span class="math inline">\(p + k\)</span> is
+strictly greater than the number of closing parentheses <span
+class="math inline">\(p\)</span>. Therefore, <span
+class="math inline">\(xy^2 z \notin L\)</span>.</p>
+<p>This directly contradicts the third condition of the pumping lemma,
+which requires <span class="math inline">\(xy^i z \in L\)</span> for all
+<span class="math inline">\(i \ge 0\)</span>. Because our assumption
+that <span class="math inline">\(L\)</span> is regular led to a
+contradiction, the language of balanced parentheses cannot be regular,
+and no finite state machine can recognize it.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-can-t-finite-state-machines-match-balanced-parentheses';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

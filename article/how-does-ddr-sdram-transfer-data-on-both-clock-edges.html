@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does DDR SDRAM Transfer Data on Both Clock Edges? - classical-computing</title>
+    <meta name="description" content="Double Data Rate synchronous dynamic random-access memory (DDR SDRAM) doubles data transfer rates compared to single data rate memory by transmitting data on both the rising and falling edges of the clock signal. Rather than speeding up the internal memor">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-ddr-sdram-transfer-data-on-both-clock-edges">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does DDR SDRAM Transfer Data on Both Clock Edges? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-ddr-sdram-transfer-data-on-both-clock-edges" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Double Data Rate synchronous dynamic random-access memory (DDR SDRAM) doubles data transfer rates compared to single data rate memory by transmitting data on both the rising and falling edges of the clock signal. Rather than speeding up the internal memor" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-ddr-sdram-transfer-data-on-both-clock-edges">How Does
+DDR SDRAM Transfer Data on Both Clock Edges?</h1>
+<p>Double Data Rate synchronous dynamic random-access memory (DDR SDRAM)
+doubles data transfer rates compared to single data rate memory by
+transmitting data on both the rising and falling edges of the clock
+signal. Rather than speeding up the internal memory array itself, DDR
+SDRAM relies on a prefetch architecture, differential clocking, a
+dedicated data strobe signal, and a delay-locked loop to synchronize
+high-speed transfers between the memory chip and the memory
+controller.</p>
+<h2 id="from-single-data-rate-to-double-data-rate">From Single Data Rate
+to Double Data Rate</h2>
+<p>In classical synchronous DRAM (SDR SDRAM), data is sampled only once
+per clock cycle, typically on the rising edge of the system clock. If
+the clock frequency is <span class="math inline">\(f\)</span>, the data
+transfer rate per pin is <span class="math inline">\(f\)</span>
+transfers per second.</p>
+<p>DDR SDRAM keeps the same clock frequency <span
+class="math inline">\(f\)</span> for commands and addresses, but
+transfers data on both the rising and falling edges of the clock. This
+yields a data rate of <span class="math inline">\(2f\)</span> transfers
+per second per pin, often expressed in megatransfers per second (<span
+class="math inline">\(\text{MT/s}\)</span>).</p>
+<h2 id="the-prefetch-architecture">The Prefetch Architecture</h2>
+<p>The internal DRAM cell array cannot easily switch twice as fast as
+the external bus. To bridge this gap, DDR SDRAM uses a prefetch buffer
+that reads or writes multiple bits in parallel from the internal array
+during each internal clock cycle, then serializes them onto the external
+data pins (<span class="math inline">\(DQ\)</span>) at twice the clock
+rate.</p>
+<p>In the original DDR specification, a <span
+class="math inline">\(2n\)</span> prefetch architecture is used:</p>
+<ol type="1">
+<li>During a read operation, the memory array fetches <span
+class="math inline">\(2\)</span> bits of data per <span
+class="math inline">\(DQ\)</span> pin in a single internal clock
+cycle.</li>
+<li>Those <span class="math inline">\(2\)</span> bits are loaded into a
+multiplexer.</li>
+<li>The multiplexer outputs the first bit on the rising edge of the
+clock and the second bit on the falling edge.</li>
+</ol>
+<p>Later generations increased the prefetch depth—<span
+class="math inline">\(4n\)</span> for DDR2, <span
+class="math inline">\(8n\)</span> for DDR3 and DDR4, and <span
+class="math inline">\(16n\)</span> for DDR5—allowing the external I/O
+bus to run much faster than the internal memory core.</p>
+<h2 id="differential-clocking-and-timing-precision">Differential
+Clocking and Timing Precision</h2>
+<p>At high frequencies, single-ended clock signals suffer from noise and
+duty-cycle distortion, where the rising and falling edges are not spaced
+exactly <span class="math inline">\(180^\circ\)</span> apart. DDR SDRAM
+solves this by using a differential clock pair, <span
+class="math inline">\(CK\)</span> and <span
+class="math inline">\(\overline{CK}\)</span> (often written <span
+class="math inline">\(CK\#\)</span>).</p>
+<p>The memory device determines the exact timing of the rising edge
+where <span class="math inline">\(CK\)</span> crosses above <span
+class="math inline">\(\overline{CK}\)</span>, and the falling edge where
+<span class="math inline">\(CK\)</span> crosses below <span
+class="math inline">\(\overline{CK}\)</span>. Using the crossing point
+of two complementary signals reduces sensitivity to common-mode noise
+and ensures that both edges are accurately defined.</p>
+<h2 id="the-role-of-the-data-strobe-dqs">The Role of the Data Strobe
+(<span class="math inline">\(DQS\)</span>)</h2>
+<p>Simply clocking data on both edges of <span
+class="math inline">\(CK\)</span> is not enough at high speeds because
+signal propagation delays across the motherboard can cause skew between
+the clock and the data lines. DDR SDRAM introduces a bidirectional data
+strobe signal, <span class="math inline">\(DQS\)</span> (and its
+complement <span class="math inline">\(\overline{DQS}\)</span> in newer
+generations), which travels alongside the <span
+class="math inline">\(DQ\)</span> data lines.</p>
+<ul>
+<li><strong>During a read:</strong> The DRAM drives <span
+class="math inline">\(DQS\)</span> edge-aligned with the <span
+class="math inline">\(DQ\)</span> data bits. The memory controller
+delays <span class="math inline">\(DQS\)</span> internally by <span
+class="math inline">\(90^\circ\)</span> (a quarter clock cycle) so that
+its edges land in the center of the data valid window, ensuring reliable
+sampling.</li>
+<li><strong>During a write:</strong> The memory controller drives <span
+class="math inline">\(DQS\)</span> center-aligned with the <span
+class="math inline">\(DQ\)</span> data bits, allowing the DRAM to sample
+the incoming data directly on both the rising and falling edges of <span
+class="math inline">\(DQS\)</span>.</li>
+</ul>
+<h2 id="delay-locked-loop-dll-synchronization">Delay-Locked Loop (DLL)
+Synchronization</h2>
+<p>To keep the outgoing <span class="math inline">\(DQS\)</span> and
+<span class="math inline">\(DQ\)</span> signals tightly aligned with the
+external <span class="math inline">\(CK\)</span> and <span
+class="math inline">\(\overline{CK}\)</span> inputs despite temperature
+and voltage variations, DDR SDRAM includes an on-die Delay-Locked Loop
+(DLL). The DLL continuously measures the phase difference between the
+internal clock and the external clock, adjusting internal delay lines so
+that data transitions occur precisely at the expected clock edges.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-ddr-sdram-transfer-data-on-both-clock-edges';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

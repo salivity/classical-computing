@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Huffman Coding Build an Optimal Prefix-Free Tree? - classical-computing</title>
+    <meta name="description" content="Huffman coding constructs an optimal prefix-free variable-length binary tree by using a greedy bottom-up algorithm driven by symbol frequencies. Starting with each symbol as a leaf node weighted by its frequency or probability, the algorithm repeatedly me">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-huffman-coding-build-an-optimal-prefix-free-tree">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Huffman Coding Build an Optimal Prefix-Free Tree? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-huffman-coding-build-an-optimal-prefix-free-tree" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Huffman coding constructs an optimal prefix-free variable-length binary tree by using a greedy bottom-up algorithm driven by symbol frequencies. Starting with each symbol as a leaf node weighted by its frequency or probability, the algorithm repeatedly me" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-huffman-coding-build-an-optimal-prefix-free-tree">How
+Does Huffman Coding Build an Optimal Prefix-Free Tree?</h1>
+<p>Huffman coding constructs an optimal prefix-free variable-length
+binary tree by using a greedy bottom-up algorithm driven by symbol
+frequencies. Starting with each symbol as a leaf node weighted by its
+frequency or probability, the algorithm repeatedly merges the two nodes
+with the smallest weights into a new parent node until only a single
+root node remains. Assigning binary digits to the left and right
+branches of this tree produces codewords that minimize the average code
+length while ensuring no codeword is a prefix of another.</p>
+<h2 id="symbol-frequencies-and-prefix-free-codes">Symbol Frequencies and
+Prefix-Free Codes</h2>
+<p>In classical data compression, a source emits symbols from an
+alphabet <span class="math inline">\(S = \{s_1, s_2, \dots,
+s_n\}\)</span> with corresponding frequencies or probabilities <span
+class="math inline">\(p_1, p_2, \dots, p_n\)</span>. Fixed-length
+encodings assign <span class="math inline">\(\lceil \log_2 n
+\rceil\)</span> bits to every symbol, which wastes space when some
+symbols occur much more frequently than others. Variable-length
+encodings assign shorter bit strings to frequent symbols and longer bit
+strings to rare symbols.</p>
+<p>For a variable-length code to be uniquely decodable without
+delimiters, it must be prefix-free. A code is prefix-free if no codeword
+is the leading substring of any other codeword. This property maps
+directly to a binary tree where every encoded symbol resides at a leaf
+node, and internal nodes represent prefixes shared by their
+descendants.</p>
+<h2 id="the-greedy-bottom-up-construction-algorithm">The Greedy
+Bottom-Up Construction Algorithm</h2>
+<p>Huffman's algorithm builds the binary tree from the leaves up using a
+min-priority queue (typically implemented as a binary min-heap) keyed by
+node weight:</p>
+<ol type="1">
+<li>Create a leaf node for each symbol <span class="math inline">\(s_i
+\in S\)</span> with weight <span class="math inline">\(w_i =
+p_i\)</span> (or its raw frequency count) and insert all <span
+class="math inline">\(n\)</span> leaf nodes into the min-priority
+queue.</li>
+<li>While the priority queue contains more than one node:
+<ul>
+<li>Extract the two nodes <span class="math inline">\(u\)</span> and
+<span class="math inline">\(v\)</span> with the smallest weights.</li>
+<li>Create a new internal node <span class="math inline">\(z\)</span>
+whose weight is <span class="math inline">\(w_z = w_u +
+w_v\)</span>.</li>
+<li>Set <span class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> as the left and right children of <span
+class="math inline">\(z\)</span>.</li>
+<li>Insert <span class="math inline">\(z\)</span> back into the priority
+queue.</li>
+</ul></li>
+<li>When only one node remains in the queue, that node is the root of
+the completed Huffman tree.</li>
+</ol>
+<p>Because each merge reduces the number of nodes in the queue by one,
+the loop executes exactly <span class="math inline">\(n - 1\)</span>
+times. Using a binary min-heap, each extraction and insertion takes
+<span class="math inline">\(O(\log n)\)</span> time, giving the overall
+construction a time complexity of <span class="math inline">\(O(n \log
+n)\)</span>.</p>
+<h2 id="assigning-binary-codewords">Assigning Binary Codewords</h2>
+<p>Once the tree is constructed, codewords are generated by traversing
+from the root to each leaf. A standard convention assigns a
+<code>0</code> bit when moving to a left child and a <code>1</code> bit
+when moving to a right child. The codeword for a symbol <span
+class="math inline">\(s_i\)</span> is the sequence of bits along the
+path from the root to its leaf, and its length <span
+class="math inline">\(l_i\)</span> equals the depth of that leaf.</p>
+<p>Because symbols only appear at leaves, no path to a symbol can be a
+prefix of the path to another symbol. Consequently, a decoder can read
+an incoming bitstream one bit at a time, traversing the tree from the
+root until it reaches a leaf, outputting that symbol, and immediately
+resetting to the root for the next bit.</p>
+<h2 id="why-the-resulting-tree-is-optimal">Why the Resulting Tree Is
+Optimal</h2>
+<p>The goal of Huffman coding is to minimize the expected codeword
+length:</p>
+<p><span class="math display">\[L = \sum_{i=1}^{n} p_i l_i\]</span></p>
+<p>Huffman coding achieves this minimum through two properties:</p>
+<ul>
+<li><strong>Greedy choice property</strong>: The two symbols with the
+lowest probabilities can always be placed at the maximum depth of an
+optimal tree as siblings. If they were not, swapping them with the
+deepest nodes would not increase—and could only decrease—the weighted
+path length <span class="math inline">\(L\)</span>.</li>
+<li><strong>Optimal substructure</strong>: Merging the two lowest-weight
+nodes <span class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> into a single node <span
+class="math inline">\(z\)</span> with weight <span
+class="math inline">\(p_u + p_v\)</span> reduces the problem to finding
+an optimal tree for <span class="math inline">\(n - 1\)</span> symbols.
+The cost of the original tree equals the cost of the reduced tree plus
+<span class="math inline">\(p_u + p_v\)</span>.</li>
+</ul>
+<p>By induction over the <span class="math inline">\(n - 1\)</span>
+merges, the final binary tree is guaranteed to achieve the minimum
+possible expected codeword length among all prefix-free binary codes for
+the given symbol frequencies.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-huffman-coding-build-an-optimal-prefix-free-tree';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

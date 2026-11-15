@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Hash Tables Achieve O(1) Expected Lookup Time? - classical-computing</title>
+    <meta name="description" content="Hash tables achieve constant expected lookup time by mapping keys directly to array indices using a deterministic hash function, allowing immediate access to stored values without searching through every element. When two different keys map to the same in">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-hash-tables-achieve-o-1-expected-lookup-time">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Hash Tables Achieve O(1) Expected Lookup Time? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-hash-tables-achieve-o-1-expected-lookup-time" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Hash tables achieve constant expected lookup time by mapping keys directly to array indices using a deterministic hash function, allowing immediate access to stored values without searching through every element. When two different keys map to the same in" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-hash-tables-achieve-o1-expected-lookup-time">How Do Hash
+Tables Achieve O(1) Expected Lookup Time?</h1>
+<p>Hash tables achieve constant expected lookup time by mapping keys
+directly to array indices using a deterministic hash function, allowing
+immediate access to stored values without searching through every
+element. When two different keys map to the same index, collision
+resolution strategies such as separate chaining or open addressing
+manage the overlap while keeping average operations fast as long as the
+table maintains a low load factor.</p>
+<h2 id="mapping-keys-with-hash-functions">Mapping Keys with Hash
+Functions</h2>
+<p>In classical computing, an array provides <span
+class="math inline">\(O(1)\)</span> random access because the memory
+address of any element at index <span class="math inline">\(i\)</span>
+can be computed directly from the base address and element size. A hash
+table leverages this property by passing a key <span
+class="math inline">\(k\)</span> through a hash function <span
+class="math inline">\(h(k)\)</span> that produces an integer, which is
+then reduced modulo the table size <span
+class="math inline">\(m\)</span>:</p>
+<p><span class="math display">\[\text{index} = h(k) \bmod m\]</span></p>
+<p>For <span class="math inline">\(O(1)\)</span> expected performance,
+the hash function must satisfy two properties:</p>
+<ul>
+<li><strong>Deterministic:</strong> The same key must always produce the
+same index.</li>
+<li><strong>Uniformity:</strong> Keys should be distributed as evenly as
+possible across all <span class="math inline">\(m\)</span> buckets,
+approximating a uniform random distribution.</li>
+</ul>
+<p>Computing <span class="math inline">\(h(k)\)</span> typically takes
+<span class="math inline">\(O(1)\)</span> time (or <span
+class="math inline">\(O(|k|)\)</span> for variable-length keys like
+strings, which is treated as constant for bounded key lengths).</p>
+<h2 id="handling-collisions">Handling Collisions</h2>
+<p>Because the space of possible keys is usually much larger than the
+array size <span class="math inline">\(m\)</span>, collisions—where
+<span class="math inline">\(h(k_1) \equiv h(k_2) \pmod m\)</span> for
+<span class="math inline">\(k_1 \neq k_2\)</span>—are inevitable. Hash
+tables use two primary strategies to resolve them.</p>
+<h3 id="separate-chaining">Separate Chaining</h3>
+<p>In separate chaining, each slot in the array holds a pointer to a
+secondary data structure, most commonly a linked list, containing all
+key-value pairs that hash to that index.</p>
+<ul>
+<li><strong>Lookup:</strong> Compute <span class="math inline">\(i =
+h(k) \bmod m\)</span>, then traverse the list at slot <span
+class="math inline">\(i\)</span> until the matching key is found.</li>
+<li><strong>Expected Cost:</strong> If <span
+class="math inline">\(n\)</span> elements are stored in a table of size
+<span class="math inline">\(m\)</span>, the load factor is <span
+class="math inline">\(\alpha = \frac{n}{m}\)</span>. Under the
+assumption of simple uniform hashing, the expected length of any chain
+is <span class="math inline">\(\alpha\)</span>, giving an expected
+lookup time of <span class="math inline">\(O(1 + \alpha)\)</span>.</li>
+</ul>
+<h3 id="open-addressing">Open Addressing</h3>
+<p>In open addressing, all elements are stored directly within the array
+itself. When a collision occurs at index <span
+class="math inline">\(i\)</span>, the table probes a sequence of
+alternative slots <span class="math inline">\(h(k, 0), h(k, 1), h(k, 2),
+\dots\)</span> until an empty slot or the target key is found. Common
+probing methods include:</p>
+<ul>
+<li><strong>Linear probing:</strong> <span class="math inline">\(h(k, j)
+= (h(k) + j) \bmod m\)</span></li>
+<li><strong>Quadratic probing:</strong> <span class="math inline">\(h(k,
+j) = (h(k) + c_1 j + c_2 j^2) \bmod m\)</span></li>
+<li><strong>Double hashing:</strong> <span class="math inline">\(h(k, j)
+= (h_1(k) + j \cdot h_2(k)) \bmod m\)</span></li>
+</ul>
+<p>Under uniform hashing assumptions with <span
+class="math inline">\(\alpha &lt; 1\)</span>, the expected number of
+probes for an unsuccessful search is at most <span
+class="math inline">\(\frac{1}{1 - \alpha}\)</span>, and for a
+successful search is at most <span
+class="math inline">\(\frac{1}{\alpha} \ln\left(\frac{1}{1 -
+\alpha}\right)\)</span>, both of which are <span
+class="math inline">\(O(1)\)</span> when <span
+class="math inline">\(\alpha\)</span> is bounded away from <span
+class="math inline">\(1\)</span>.</p>
+<h2 id="maintaining-constant-time-via-dynamic-resizing">Maintaining
+Constant Time via Dynamic Resizing</h2>
+<p>If <span class="math inline">\(n\)</span> grows without bound while
+<span class="math inline">\(m\)</span> stays fixed, the load factor
+<span class="math inline">\(\alpha\)</span> increases and lookup time
+degrades toward <span class="math inline">\(O(n)\)</span>. To prevent
+this, hash tables monitor <span class="math inline">\(\alpha\)</span>
+and resize the underlying array (typically doubling <span
+class="math inline">\(m\)</span>) whenever <span
+class="math inline">\(\alpha\)</span> exceeds a chosen threshold, such
+as <span class="math inline">\(0.75\)</span>.</p>
+<p>Although rehashing all <span class="math inline">\(n\)</span>
+existing elements into a larger array takes <span
+class="math inline">\(O(n)\)</span> time, doubling the capacity ensures
+that this cost is spread across <span
+class="math inline">\(\Omega(n)\)</span> insertions. As a result, the
+amortized cost of insertion remains <span
+class="math inline">\(O(1)\)</span>, and the expected lookup time stays
+<span class="math inline">\(O(1)\)</span>.</p>
+<h2 id="worst-case-caveats">Worst-Case Caveats</h2>
+<p>While the expected lookup time is <span
+class="math inline">\(O(1)\)</span>, the worst-case lookup time is <span
+class="math inline">\(O(n)\)</span> if all keys collide into the same
+bucket or probe sequence. This can happen with poorly chosen hash
+functions or adversarial inputs. Using cryptographic hash functions or
+randomized universal hashing—where the hash function is chosen randomly
+from a family <span class="math inline">\(\mathcal{H}\)</span> at
+runtime—prevents attackers from engineering collisions and guarantees
+<span class="math inline">\(O(1)\)</span> expected time regardless of
+the input distribution.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-hash-tables-achieve-o-1-expected-lookup-time';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

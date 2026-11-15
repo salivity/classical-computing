@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does the ABA Problem Arise in Compare-and-Swap? - classical-computing</title>
+    <meta name="description" content="The ABA problem is a concurrency anomaly that occurs in lock-free algorithms using compare-and-swap operations when a shared memory location changes from value A to value B and then back to value A between a thread&#39;s read and its atomic update. Because co">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-the-aba-problem-arise-in-compare-and-swap">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does the ABA Problem Arise in Compare-and-Swap? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-the-aba-problem-arise-in-compare-and-swap" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The ABA problem is a concurrency anomaly that occurs in lock-free algorithms using compare-and-swap operations when a shared memory location changes from value A to value B and then back to value A between a thread&#39;s read and its atomic update. Because co" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-the-aba-problem-arise-in-compare-and-swap">How Does the
+ABA Problem Arise in Compare-and-Swap?</h1>
+<p>The ABA problem is a concurrency anomaly that occurs in lock-free
+algorithms using compare-and-swap operations when a shared memory
+location changes from value A to value B and then back to value A
+between a thread's read and its atomic update. Because compare-and-swap
+only checks whether the current value matches the expected value A, the
+thread mistakenly concludes that nothing has changed and proceeds with
+an operation that may corrupt the data structure.</p>
+<h2 id="understanding-compare-and-swap">Understanding
+Compare-and-Swap</h2>
+<p>Compare-and-swap (CAS) is an atomic hardware instruction that forms
+the foundation of many lock-free data structures, such as stacks,
+queues, and linked lists. It takes three arguments: a memory address
+<span class="math inline">\(M\)</span>, an expected old value <span
+class="math inline">\(E\)</span>, and a new value <span
+class="math inline">\(N\)</span>.</p>
+<p><span class="math display">\[\text{CAS}(M, E, N)\]</span></p>
+<p>Atomically, the processor checks whether the value currently stored
+at <span class="math inline">\(M\)</span> equals <span
+class="math inline">\(E\)</span>. If it does, the processor writes <span
+class="math inline">\(N\)</span> to <span
+class="math inline">\(M\)</span> and returns true. Otherwise, it leaves
+<span class="math inline">\(M\)</span> unchanged and returns false.</p>
+<p>In a typical lock-free algorithm, a thread reads the current state
+from <span class="math inline">\(M\)</span> into a local variable <span
+class="math inline">\(E\)</span>, computes a new state <span
+class="math inline">\(N\)</span> based on <span
+class="math inline">\(E\)</span>, and then attempts <span
+class="math inline">\(\text{CAS}(M, E, N)\)</span>. If the CAS fails,
+another thread modified <span class="math inline">\(M\)</span> in the
+meantime, so the thread retries.</p>
+<h2 id="how-memory-reuse-triggers-the-aba-problem">How Memory Reuse
+Triggers the ABA Problem</h2>
+<p>The core limitation of CAS is that it tests for value equality, not
+history. It cannot distinguish between a memory location that has never
+changed and one that was modified and later restored to its original
+value.</p>
+<p>Consider a lock-free stack implemented as a singly linked list with a
+shared <code>top</code> pointer. Suppose the stack initially contains
+nodes <span class="math inline">\(A \rightarrow B \rightarrow
+C\)</span>, where <code>top</code> points to <span
+class="math inline">\(A\)</span>.</p>
+<ol type="1">
+<li>Thread 1 begins a <code>pop</code> operation. It reads
+<code>top</code> (which is <span class="math inline">\(A\)</span>) and
+reads <code>A.next</code> (which is <span
+class="math inline">\(B\)</span>). Before Thread 1 can execute <span
+class="math inline">\(\text{CAS}(\text{top}, A, B)\)</span>, the
+operating system preempts it.</li>
+<li>Thread 2 runs and pops <span class="math inline">\(A\)</span> from
+the stack, leaving <code>top</code> pointing to <span
+class="math inline">\(B\)</span>.</li>
+<li>Thread 2 then pops <span class="math inline">\(B\)</span> from the
+stack, leaving <code>top</code> pointing to <span
+class="math inline">\(C\)</span>.</li>
+<li>Thread 2 frees the memory for node <span
+class="math inline">\(A\)</span> (or returns it to a memory pool) and
+later allocates a new node, which happens to reuse the exact same memory
+address <span class="math inline">\(A\)</span>.</li>
+<li>Thread 2 pushes this reused node <span
+class="math inline">\(A\)</span> back onto the stack, so the stack is
+now <span class="math inline">\(A \rightarrow C\)</span>, and
+<code>top</code> points to <span class="math inline">\(A\)</span>
+again.</li>
+<li>Thread 1 resumes and executes <span
+class="math inline">\(\text{CAS}(\text{top}, A, B)\)</span>. Because
+<code>top</code> currently holds the address <span
+class="math inline">\(A\)</span>, the CAS succeeds!</li>
+</ol>
+<p>As a result, <code>top</code> is updated to <span
+class="math inline">\(B\)</span>, even though <span
+class="math inline">\(B\)</span> was already popped and potentially
+freed. The stack is now corrupted, pointing to invalid or reclaimed
+memory, and node <span class="math inline">\(C\)</span> is lost.</p>
+<h2 id="why-it-matters-in-classical-computing">Why It Matters in
+Classical Computing</h2>
+<p>In garbage-collected languages, a node cannot be freed and reused
+while Thread 1 still holds a reference to <span
+class="math inline">\(A\)</span>, which prevents address reuse from
+causing this specific pointer-based failure. However, in languages with
+manual memory management like C and C++, or in systems using custom
+memory allocators and object pools, freed memory addresses are
+frequently recycled for performance.</p>
+<p>The ABA problem can also occur without pointers. If a shared integer
+counter wraps around or is incremented and decremented back to its
+original value <span class="math inline">\(A\)</span>, a CAS checking
+only that integer will still succeed.</p>
+<h2 id="common-mitigations">Common Mitigations</h2>
+<p>Several techniques exist to prevent the ABA problem:</p>
+<ul>
+<li><strong>Tagged Pointers (Version Counters):</strong> Pair the
+pointer with a monotonically increasing version number or tag, often
+packed into unused bits of a 64-bit pointer or using a double-width CAS
+(<span class="math inline">\(\text{DCAS}\)</span>). Each modification
+increments the tag, turning <span class="math inline">\((A,
+v_1)\)</span> into <span class="math inline">\((B, v_2)\)</span> and
+then <span class="math inline">\((A, v_3)\)</span>, so <span
+class="math inline">\(\text{CAS}\)</span> against <span
+class="math inline">\((A, v_1)\)</span> fails.</li>
+<li><strong>Hazard Pointers:</strong> Threads publish the memory
+addresses they are currently reading in a shared list. A thread cannot
+free or reuse a node while its address appears in any thread's hazard
+pointer list.</li>
+<li><strong>Epoch-Based Reclamation (EBR):</strong> Memory reclamation
+is deferred until all threads that were active during the epoch in which
+the node was removed have finished their operations.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-the-aba-problem-arise-in-compare-and-swap';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

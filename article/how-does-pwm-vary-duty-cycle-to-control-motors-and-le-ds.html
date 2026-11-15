@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does PWM Vary Duty Cycle to Control Motors and LEDs? - classical-computing</title>
+    <meta name="description" content="Pulse-Width Modulation (PWM) is a technique used in classical computing and digital electronics to control analog devices using purely digital signals. By rapidly switching a digital square wave between its high and low states, a microcontroller can vary">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-pwm-vary-duty-cycle-to-control-motors-and-le-ds">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does PWM Vary Duty Cycle to Control Motors and LEDs? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-pwm-vary-duty-cycle-to-control-motors-and-le-ds" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Pulse-Width Modulation (PWM) is a technique used in classical computing and digital electronics to control analog devices using purely digital signals. By rapidly switching a digital square wave between its high and low states, a microcontroller can vary" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-pwm-vary-duty-cycle-to-control-motors-and-leds">How
+Does PWM Vary Duty Cycle to Control Motors and LEDs?</h1>
+<p>Pulse-Width Modulation (PWM) is a technique used in classical
+computing and digital electronics to control analog devices using purely
+digital signals. By rapidly switching a digital square wave between its
+high and low states, a microcontroller can vary the proportion of time
+the signal stays on, known as the duty cycle. This rapid switching
+alters the average power delivered to a load, allowing precise control
+over motor speed and LED brightness without needing a true analog
+voltage output.</p>
+<h2 id="understanding-digital-square-waves-and-duty-cycle">Understanding
+Digital Square Waves and Duty Cycle</h2>
+<p>A digital output pin on a microcontroller or processor typically
+operates at two discrete voltage levels: a high state (such as <span
+class="math inline">\(5\text{ V}\)</span> or <span
+class="math inline">\(3.3\text{ V}\)</span>) and a low state (<span
+class="math inline">\(0\text{ V}\)</span>). Unlike a digital-to-analog
+converter (DAC), which can output intermediate voltages, a standard
+digital pin can only switch fully on or fully off.</p>
+<p>PWM overcomes this limitation by generating a periodic square wave
+with a fixed frequency <span class="math inline">\(f\)</span> and period
+<span class="math inline">\(T = \frac{1}{f}\)</span>. Within each
+period, the signal remains high for a duration <span
+class="math inline">\(T_{\text{on}}\)</span> and low for the remaining
+duration <span class="math inline">\(T_{\text{off}}\)</span>, where
+<span class="math inline">\(T = T_{\text{on}} +
+T_{\text{off}}\)</span>.</p>
+<p>The duty cycle <span class="math inline">\(D\)</span> is the
+percentage of one period in which the signal is active:</p>
+<p><span class="math display">\[D = \frac{T_{\text{on}}}{T} \times
+100\%\]</span></p>
+<p>By adjusting <span class="math inline">\(T_{\text{on}}\)</span>
+relative to <span class="math inline">\(T\)</span>, the average voltage
+<span class="math inline">\(V_{\text{avg}}\)</span> delivered over time
+scales linearly with the duty cycle:</p>
+<p><span class="math display">\[V_{\text{avg}} = V_{\text{high}} \times
+\frac{T_{\text{on}}}{T}\]</span></p>
+<p>For example, a <span class="math inline">\(5\text{ V}\)</span> signal
+with a <span class="math inline">\(50\%\)</span> duty cycle delivers an
+average voltage of <span class="math inline">\(2.5\text{ V}\)</span>,
+while a <span class="math inline">\(25\%\)</span> duty cycle delivers
+<span class="math inline">\(1.25\text{ V}\)</span>.</p>
+<h2 id="controlling-analog-motor-speed">Controlling Analog Motor
+Speed</h2>
+<p>Direct current (DC) motors respond to the average voltage applied
+across their terminals, which determines their rotational speed. Because
+a motor has mechanical inertia and electrical inductance, it cannot
+instantaneously start and stop in response to high-frequency digital
+pulses.</p>
+<p>When a PWM signal drives a motor (typically through a transistor or
+motor driver circuit), the motor's windings smooth out the rapid on-off
+pulses into a steady average current. Increasing the duty cycle
+increases <span class="math inline">\(V_{\text{avg}}\)</span>, causing
+the motor to spin faster. Decreasing the duty cycle reduces <span
+class="math inline">\(V_{\text{avg}}\)</span> and slows the motor down.
+Because the switching transistor is either fully on (low resistance) or
+fully off (zero current), very little energy is wasted as heat compared
+to using a variable resistor.</p>
+<h2 id="controlling-led-brightness">Controlling LED Brightness</h2>
+<p>Light-emitting diodes (LEDs) turn on and off almost instantaneously,
+but human vision cannot perceive individual flashes above a certain
+frequency (typically around <span class="math inline">\(60\text{
+Hz}\)</span> to <span class="math inline">\(100\text{ Hz}\)</span>). PWM
+exploits this persistence of vision by switching the LED at frequencies
+of several hundred hertz or kilohertz.</p>
+<p>At a <span class="math inline">\(10\%\)</span> duty cycle, the LED is
+illuminated for only a tenth of each period, appearing dim to the human
+eye. At a <span class="math inline">\(90\%\)</span> duty cycle, it is on
+for most of the period, appearing nearly at full brightness. Varying the
+duty cycle provides smooth, linear-looking dimming while keeping the
+LED's forward current at its optimal operating level during each
+pulse.</p>
+<h2 id="generating-pwm-in-classical-computing">Generating PWM in
+Classical Computing</h2>
+<p>In classical computing hardware, PWM signals are usually generated by
+dedicated hardware timers inside a microcontroller or system-on-chip
+rather than by the main CPU loop. A counter increments at a fixed clock
+rate until it reaches a top value that defines the period <span
+class="math inline">\(T\)</span>. A compare register holds a threshold
+value corresponding to <span
+class="math inline">\(T_{\text{on}}\)</span>. Whenever the counter is
+below the threshold, the output pin stays high; once the counter exceeds
+the threshold, the pin drops low until the counter resets. Updating the
+compare register in software changes the duty cycle immediately without
+interrupting the processor's other tasks.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-pwm-vary-duty-cycle-to-control-motors-and-le-ds';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

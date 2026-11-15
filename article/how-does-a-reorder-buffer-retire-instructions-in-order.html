@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a Reorder Buffer Retire Instructions in Order? - classical-computing</title>
+    <meta name="description" content="The reorder buffer is a hardware structure inside modern out-of-order processors that ensures instructions commit their results in strict program order, even when they execute out of order. By tracking every in-flight instruction in a circular queue and h">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-reorder-buffer-retire-instructions-in-order">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a Reorder Buffer Retire Instructions in Order? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-reorder-buffer-retire-instructions-in-order" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The reorder buffer is a hardware structure inside modern out-of-order processors that ensures instructions commit their results in strict program order, even when they execute out of order. By tracking every in-flight instruction in a circular queue and h" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-reorder-buffer-retire-instructions-in-order">How Does
+a Reorder Buffer Retire Instructions in Order?</h1>
+<p>The reorder buffer is a hardware structure inside modern out-of-order
+processors that ensures instructions commit their results in strict
+program order, even when they execute out of order. By tracking every
+in-flight instruction in a circular queue and holding speculative
+results until all earlier instructions finish, the reorder buffer
+preserves precise exceptions, maintains sequential consistency, and
+allows aggressive parallel execution without corrupting architectural
+state.</p>
+<h2 id="why-out-of-order-execution-needs-in-order-retirement">Why
+Out-of-Order Execution Needs In-Order Retirement</h2>
+<p>Modern CPUs use out-of-order execution to keep execution units busy
+whenever earlier instructions stall on cache misses or long-latency
+operations. If an instruction completes early and immediately overwrites
+an architectural register or memory location, a subsequent exception or
+branch misprediction from an older instruction would leave the machine
+in an inconsistent state. To prevent this, processors separate
+instruction completion (finishing execution) from instruction retirement
+(committing results to architectural state).</p>
+<h2 id="how-the-reorder-buffer-works">How the Reorder Buffer Works</h2>
+<p>The reorder buffer (ROB) operates as a FIFO circular queue managed by
+two pointers: a head pointer for the oldest instruction and a tail
+pointer for the newest instruction.</p>
+<ol type="1">
+<li><strong>Dispatch:</strong> When instructions are decoded and
+renamed, they are allocated entries at the tail of the ROB in strict
+program order. Each entry records the instruction type, destination
+register, speculative result, and status flags (such as whether
+execution is complete or an exception occurred).</li>
+<li><strong>Out-of-Order Execution:</strong> Instructions wait in
+reservation stations until their operands are ready, then execute on
+functional units in any order. When an instruction finishes, it writes
+its result and completion status into its assigned ROB entry rather than
+the architectural register file.</li>
+<li><strong>In-Order Retirement (Commit):</strong> At every clock cycle,
+the processor inspects the entry at the head of the ROB. If the oldest
+instruction has finished executing without raising an exception, its
+result is written to the architectural register file (or store buffer
+for memory writes), and the head pointer advances. If the head
+instruction is not yet complete, retirement stalls, even if newer
+instructions behind it are already finished.</li>
+</ol>
+<h2 id="handling-exceptions-and-branch-mispredictions">Handling
+Exceptions and Branch Mispredictions</h2>
+<p>Because the ROB retires instructions strictly from the head, it
+naturally supports precise exceptions. If an instruction encounters a
+fault—such as a page fault or division by zero—it marks its ROB entry
+with an exception flag instead of immediately trapping. The processor
+only handles the exception when that instruction reaches the head of the
+ROB. At that point, all older instructions have already committed, and
+all younger instructions in the ROB are flushed, leaving a clean
+architectural state.</p>
+<p>The same mechanism handles branch mispredictions. When a branch
+resolves as mispredicted, the processor discards all ROB entries younger
+than the branch, restores the register rename map, and resumes fetching
+from the correct target address.</p>
+<h2 id="performance-trade-offs">Performance Trade-offs</h2>
+<p>The size of the reorder buffer directly affects how much
+instruction-level parallelism a processor can extract. A larger ROB
+allows the CPU to look further ahead in the instruction stream to find
+independent work while older instructions are stalled. However, larger
+buffers require more chip area, power, and complex associative lookup
+logic, so designers balance ROB capacity against clock speed and energy
+efficiency.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-reorder-buffer-retire-instructions-in-order';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

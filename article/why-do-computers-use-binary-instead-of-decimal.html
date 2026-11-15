@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Do Computers Use Binary Instead of Decimal? - classical-computing</title>
+    <meta name="description" content="Modern electronic computers use the base-2 binary numeral system instead of the base-10 decimal system because binary is far more reliable, simpler to build in hardware, and easier to process with electronic switches. While humans naturally count in tens,">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-do-computers-use-binary-instead-of-decimal">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Do Computers Use Binary Instead of Decimal? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-do-computers-use-binary-instead-of-decimal" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern electronic computers use the base-2 binary numeral system instead of the base-10 decimal system because binary is far more reliable, simpler to build in hardware, and easier to process with electronic switches. While humans naturally count in tens," />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-do-computers-use-binary-instead-of-decimal">Why Do Computers
+Use Binary Instead of Decimal?</h1>
+<p>Modern electronic computers use the base-2 binary numeral system
+instead of the base-10 decimal system because binary is far more
+reliable, simpler to build in hardware, and easier to process with
+electronic switches. While humans naturally count in tens, electronic
+circuits operate most dependably when they only need to distinguish
+between two distinct physical states, such as on and off or high and low
+voltage.</p>
+<h2 id="physical-reliability-and-noise-margin">Physical Reliability and
+Noise Margin</h2>
+<p>Electronic components are constantly subject to electrical noise,
+temperature fluctuations, and minor voltage drops. In a binary system, a
+circuit only needs to recognize two states: <span
+class="math inline">\(0\)</span> (low voltage) and <span
+class="math inline">\(1\)</span> (high voltage). Because there is a wide
+gap between these two thresholds, small fluctuations in voltage rarely
+cause a <span class="math inline">\(0\)</span> to be mistaken for a
+<span class="math inline">\(1\)</span> or vice versa.</p>
+<p>If a computer used a decimal system, a single wire would need to
+reliably distinguish between ten different voltage levels, representing
+the digits <span class="math inline">\(0\)</span> through <span
+class="math inline">\(9\)</span>. On a standard <span
+class="math inline">\(3.3\text{ V}\)</span> or <span
+class="math inline">\(5\text{ V}\)</span> circuit, dividing the voltage
+range into ten narrow bands would leave almost no room for electrical
+noise. Even a tiny voltage spike could corrupt data by shifting a signal
+into an adjacent digit's range.</p>
+<h2 id="simplicity-of-hardware-and-logic-gates">Simplicity of Hardware
+and Logic Gates</h2>
+<p>Binary maps directly to Boolean algebra, a branch of mathematics that
+deals with true and false values. This correspondence allows engineers
+to build complex computing systems out of simple electronic switches
+called transistors. A transistor naturally acts like a switch that is
+either open (conducting) or closed (non-conducting).</p>
+<p>Using binary, basic logic gates such as AND, OR, and NOT can be
+constructed with just a few transistors. Performing arithmetic in binary
+is also straightforward: addition, subtraction, multiplication, and
+division follow simple rules that require minimal circuitry. Building
+equivalent logic gates and arithmetic units for ten distinct states
+would require vastly more complex, expensive, and power-hungry
+hardware.</p>
+<h2 id="historical-precedent-and-early-experiments">Historical Precedent
+and Early Experiments</h2>
+<p>Early computing pioneers did experiment with decimal machines. For
+example, the ENIAC, completed in 1945, used base-10 ring counters to
+represent numbers. However, it required nearly 18,000 vacuum tubes and
+was notoriously difficult to maintain.</p>
+<p>Mathematicians and engineers such as Claude Shannon and John von
+Neumann demonstrated that binary was mathematically and practically
+superior for electronic switching circuits. By adopting base-2,
+subsequent computer architectures achieved dramatically higher speeds,
+smaller footprints, and greater reliability, establishing binary as the
+universal standard for classical computing.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-do-computers-use-binary-instead-of-decimal';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Does Reference Counting Fail on Cyclic Data Structures? - classical-computing</title>
+    <meta name="description" content="Simple reference counting fails to reclaim cyclic data structures because objects in a reference cycle keep each other&#39;s reference counts above zero even when no external variables point to them. This article explains how reference counting tracks memory,">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-does-reference-counting-fail-on-cyclic-data-structures">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Does Reference Counting Fail on Cyclic Data Structures? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-does-reference-counting-fail-on-cyclic-data-structures" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Simple reference counting fails to reclaim cyclic data structures because objects in a reference cycle keep each other&#39;s reference counts above zero even when no external variables point to them. This article explains how reference counting tracks memory," />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-does-reference-counting-fail-on-cyclic-data-structures">Why
+Does Reference Counting Fail on Cyclic Data Structures?</h1>
+<p>Simple reference counting fails to reclaim cyclic data structures
+because objects in a reference cycle keep each other's reference counts
+above zero even when no external variables point to them. This article
+explains how reference counting tracks memory, why cycles break its core
+assumption, and how weak references or cycle detectors are used to solve
+the problem.</p>
+<h2 id="how-simple-reference-counting-works">How Simple Reference
+Counting Works</h2>
+<p>In classical memory management, simple reference counting assigns an
+integer counter <span class="math inline">\(c(o)\)</span> to every
+allocated object <span class="math inline">\(o\)</span>. This counter
+tracks how many active references currently point to <span
+class="math inline">\(o\)</span>.</p>
+<ul>
+<li>When a new reference to <span class="math inline">\(o\)</span> is
+created, <span class="math inline">\(c(o)\)</span> is incremented by
+<span class="math inline">\(1\)</span>.</li>
+<li>When an existing reference to <span class="math inline">\(o\)</span>
+is overwritten or goes out of scope, <span
+class="math inline">\(c(o)\)</span> is decremented by <span
+class="math inline">\(1\)</span>.</li>
+<li>When <span class="math inline">\(c(o) = 0\)</span>, the runtime
+knows no part of the program can reach <span
+class="math inline">\(o\)</span> anymore, so <span
+class="math inline">\(o\)</span> is immediately deallocated and the
+reference counts of any objects <span class="math inline">\(o\)</span>
+points to are decremented in turn.</li>
+</ul>
+<p>This local, incremental approach is attractive because memory is
+reclaimed deterministically as soon as an object becomes unreachable,
+without needing to pause the program to scan the entire heap.</p>
+<h2 id="why-cycles-break-reference-counting">Why Cycles Break Reference
+Counting</h2>
+<p>The fundamental flaw of simple reference counting is that it tracks
+<strong>incoming pointers</strong> rather than <strong>reachability from
+program roots</strong> (such as stack variables and global
+pointers).</p>
+<p>Consider two objects, <span class="math inline">\(A\)</span> and
+<span class="math inline">\(B\)</span>, that reference each other:</p>
+<ol type="1">
+<li>A root variable <span class="math inline">\(r\)</span> points to
+<span class="math inline">\(A\)</span>, so <span
+class="math inline">\(c(A) = 1\)</span>.</li>
+<li><span class="math inline">\(A\)</span> points to <span
+class="math inline">\(B\)</span>, so <span class="math inline">\(c(B) =
+1\)</span>.</li>
+<li><span class="math inline">\(B\)</span> points back to <span
+class="math inline">\(A\)</span>, so <span
+class="math inline">\(c(A)\)</span> becomes <span
+class="math inline">\(2\)</span>.</li>
+</ol>
+<p>Now suppose the root variable <span class="math inline">\(r\)</span>
+is reassigned or goes out of scope. The reference from <span
+class="math inline">\(r\)</span> to <span
+class="math inline">\(A\)</span> is removed, so <span
+class="math inline">\(c(A)\)</span> is decremented from <span
+class="math inline">\(2\)</span> to <span
+class="math inline">\(1\)</span>. At this point:</p>
+<p><span class="math display">\[c(A) = 1 \quad \text{and} \quad c(B) =
+1\]</span></p>
+<p>Neither <span class="math inline">\(A\)</span> nor <span
+class="math inline">\(B\)</span> is reachable from any root in the
+program. However, because <span class="math inline">\(c(A) &gt;
+0\)</span> and <span class="math inline">\(c(B) &gt; 0\)</span>, the
+reference counting mechanism never triggers deallocation for either
+object. In general, for any directed cycle of <span
+class="math inline">\(k\)</span> objects <span class="math inline">\(o_1
+\to o_2 \to \dots \to o_k \to o_1\)</span> with no external references,
+every object maintains <span class="math inline">\(c(o_i) \ge
+1\)</span>, creating a permanent memory leak.</p>
+<h2 id="why-local-decisions-cannot-detect-cycles">Why Local Decisions
+Cannot Detect Cycles</h2>
+<p>Reference counting operates purely on local state: each object only
+knows <em>how many</em> references point to it, not <em>where</em> those
+references originate. From <span class="math inline">\(A\)</span>'s
+perspective, <span class="math inline">\(c(A) = 1\)</span> looks
+identical whether that single reference comes from an active stack
+variable or from an unreachable object <span
+class="math inline">\(B\)</span>. Determining whether an object is truly
+reachable from the roots requires global graph traversal, which simple
+reference counting deliberately avoids.</p>
+<h2 id="how-systems-solve-the-cycle-problem">How Systems Solve the Cycle
+Problem</h2>
+<p>Because simple reference counting cannot break cycles on its own,
+classical runtimes rely on two main strategies:</p>
+<ul>
+<li><strong>Weak References:</strong> A weak reference points to an
+object without incrementing its reference count. By making at least one
+link in a potential cycle weak (for example, a child-to-parent pointer
+in a tree), the cycle of strong references is broken, allowing counts to
+drop to zero normally.</li>
+<li><strong>Cycle Detectors:</strong> Languages such as Python pair
+reference counting with a periodic tracing garbage collector. This
+detector inspects container objects that could form cycles, identifies
+isolated groups whose internal references account for all their counts,
+and reclaims them.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-does-reference-counting-fail-on-cyclic-data-structures';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

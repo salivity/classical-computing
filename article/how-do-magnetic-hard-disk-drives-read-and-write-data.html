@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Magnetic Hard Disk Drives Read and Write Data? - classical-computing</title>
+    <meta name="description" content="Magnetic hard disk drives store and retrieve digital information by magnetizing microscopic regions on spinning platters and detecting those magnetic fields with specialized read and write heads. In classical computing, these drives rely on electromagneti">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-magnetic-hard-disk-drives-read-and-write-data">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Magnetic Hard Disk Drives Read and Write Data? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-magnetic-hard-disk-drives-read-and-write-data" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Magnetic hard disk drives store and retrieve digital information by magnetizing microscopic regions on spinning platters and detecting those magnetic fields with specialized read and write heads. In classical computing, these drives rely on electromagneti" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-magnetic-hard-disk-drives-read-and-write-data">How Do
+Magnetic Hard Disk Drives Read and Write Data?</h1>
+<p>Magnetic hard disk drives store and retrieve digital information by
+magnetizing microscopic regions on spinning platters and detecting those
+magnetic fields with specialized read and write heads. In classical
+computing, these drives rely on electromagnetism to record binary data
+and magnetoresistive sensors to translate tiny magnetic variations back
+into electrical signals.</p>
+<h2 id="structure-of-a-magnetic-hard-disk-drive">Structure of a Magnetic
+Hard Disk Drive</h2>
+<p>A hard disk drive (HDD) consists of one or more rigid, circular
+platters coated with a thin ferromagnetic film, typically a
+cobalt-chromium-platinum alloy. These platters are mounted on a central
+spindle and spun at high speeds, commonly <span
+class="math inline">\(5400\)</span> or <span
+class="math inline">\(7200\)</span> revolutions per minute (RPM).</p>
+<p>Positioned just nanometers above each platter surface is a read/write
+head mounted at the tip of an actuator arm. As the platters spin, they
+drag a thin cushion of air beneath the head, creating an aerodynamic air
+bearing that keeps the head floating without physically touching the
+disk surface.</p>
+<h2 id="writing-data-with-inductive-coils">Writing Data with Inductive
+Coils</h2>
+<p>To write data, the drive uses a tiny electromagnet known as an
+inductive write head. The write head consists of a magnetic core wrapped
+with a microscopic copper coil.</p>
+<p>When electrical current flows through the coil, it generates a
+magnetic field across a narrow gap in the core:</p>
+<p><span class="math display">\[B = \mu_0 \frac{N I}{L}\]</span></p>
+<p>Here, <span class="math inline">\(B\)</span> is the magnetic flux
+density, <span class="math inline">\(\mu_0\)</span> is the permeability
+of free space, <span class="math inline">\(N\)</span> is the number of
+coil turns, <span class="math inline">\(I\)</span> is the current, and
+<span class="math inline">\(L\)</span> is the effective length of the
+magnetic path.</p>
+<p>By reversing the direction of the current <span
+class="math inline">\(I\)</span>, the drive flips the polarity of the
+magnetic field. As the platter spins beneath the write head, this
+localized field aligns the magnetic domains in the ferromagnetic coating
+along specific tracks, encoding binary <span
+class="math inline">\(1\)</span>s and <span
+class="math inline">\(0\)</span>s as transitions in magnetic
+orientation.</p>
+<h2 id="reading-data-with-magnetoresistive-heads">Reading Data with
+Magnetoresistive Heads</h2>
+<p>Modern hard drives do not use the inductive coil to read data back.
+Instead, they rely on a separate magnetoresistive (MR) sensor, typically
+based on giant magnetoresistance (GMR) or tunneling magnetoresistance
+(TMR).</p>
+<p>A magnetoresistive head is built from alternating ultrathin layers of
+ferromagnetic and non-magnetic (or insulating) materials. Its electrical
+resistance changes depending on the relative alignment of the magnetic
+moments in its layers.</p>
+<ol type="1">
+<li><strong>Reference Layer:</strong> One ferromagnetic layer has a
+fixed magnetic orientation.</li>
+<li><strong>Free Layer:</strong> Another ferromagnetic layer changes its
+magnetic orientation when exposed to an external magnetic field from the
+spinning platter.</li>
+<li><strong>Resistance Change:</strong> When the free layer aligns
+parallel to the reference layer, electrical resistance is low. When it
+aligns antiparallel, resistance is high.</li>
+</ol>
+<p>A constant sense current passes through the MR sensor. According to
+Ohm's law, <span class="math inline">\(V = I R\)</span>, changes in
+resistance <span class="math inline">\(R\)</span> produce corresponding
+fluctuations in voltage <span class="math inline">\(V\)</span>.</p>
+<h2 id="signal-processing-and-error-correction">Signal Processing and
+Error Correction</h2>
+<p>The raw analog voltage waveform produced by the magnetoresistive head
+is weak and noisy. A preamplifier mounted near the actuator arm boosts
+this signal before sending it to the drive's read channel.</p>
+<p>The read channel uses analog-to-digital converters and digital signal
+processing algorithms, such as partial-response maximum-likelihood
+(PRML) detection, to interpret the voltage transitions as a stream of
+binary bits. Finally, error-correcting codes (ECC) verify data integrity
+and correct any bit errors caused by thermal noise or media
+imperfections before delivering the data to the computer.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-magnetic-hard-disk-drives-read-and-write-data';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

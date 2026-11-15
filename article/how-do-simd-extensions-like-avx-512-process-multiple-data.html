@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do SIMD Extensions Like AVX-512 Process Multiple Data? - classical-computing</title>
+    <meta name="description" content="SIMD vector extensions like AVX-512 process multiple data elements simultaneously by packing several values into a single wide register and executing one instruction across all of them in parallel. Instead of fetching, decoding, and executing a separate i">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-simd-extensions-like-avx-512-process-multiple-data">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do SIMD Extensions Like AVX-512 Process Multiple Data? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-simd-extensions-like-avx-512-process-multiple-data" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="SIMD vector extensions like AVX-512 process multiple data elements simultaneously by packing several values into a single wide register and executing one instruction across all of them in parallel. Instead of fetching, decoding, and executing a separate i" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-simd-extensions-like-avx-512-process-multiple-data">How
+Do SIMD Extensions Like AVX-512 Process Multiple Data?</h1>
+<p>SIMD vector extensions like AVX-512 process multiple data elements
+simultaneously by packing several values into a single wide register and
+executing one instruction across all of them in parallel. Instead of
+fetching, decoding, and executing a separate instruction for each number
+in an array, a classical processor uses specialized vector hardware to
+apply the same operation to every element in the register during the
+same clock cycle. This approach increases data throughput for workloads
+such as scientific computing, graphics, and machine learning without
+requiring additional CPU cores.</p>
+<h2 id="what-is-simd-in-classical-computing">What Is SIMD in Classical
+Computing?</h2>
+<p>Single Instruction, Multiple Data (SIMD) is a parallel computing
+paradigm defined in Flynn's taxonomy. In traditional scalar processing,
+a CPU executes one instruction on one piece of data at a time. For
+example, adding two arrays of 16-element single-precision floating-point
+numbers requires 16 separate addition instructions in a scalar loop.</p>
+<p>With SIMD, the processor groups multiple data elements into a single
+vector. A single instruction then operates on the entire vector at once.
+If a vector register holds 16 floating-point numbers, the CPU performs
+all 16 additions with one instruction, reducing instruction fetch and
+decode overhead while maximizing the use of arithmetic logic units
+(ALUs).</p>
+<h2 id="wide-vector-registers-and-data-packing">Wide Vector Registers
+and Data Packing</h2>
+<p>The foundation of any SIMD extension is the width of its vector
+registers. Over time, x86 processors have expanded these registers to
+hold more data per instruction:</p>
+<ul>
+<li><strong>SSE (Streaming SIMD Extensions):</strong> Uses 128-bit
+registers (<code>XMM</code>), holding four 32-bit floats or two 64-bit
+doubles.</li>
+<li><strong>AVX and AVX2 (Advanced Vector Extensions):</strong> Doubles
+the width to 256-bit registers (<code>YMM</code>), holding eight 32-bit
+floats or four 64-bit doubles.</li>
+<li><strong>AVX-512:</strong> Doubles the width again to 512-bit
+registers (<code>ZMM</code>), holding sixteen 32-bit floats, eight
+64-bit doubles, or sixty-four 8-bit integers.</li>
+</ul>
+<p>For a 512-bit register, the number of elements <span
+class="math inline">\(N\)</span> that can be packed depends on the bit
+width <span class="math inline">\(w\)</span> of each element:</p>
+<p><span class="math display">\[N = \frac{512}{w}\]</span></p>
+<p>When data is loaded from memory into a <code>ZMM</code> register, the
+bits are partitioned into independent lanes. Each lane acts as an
+isolated slot for one data element, preventing carries or overflows from
+spilling into adjacent elements during arithmetic operations.</p>
+<h2 id="parallel-execution-lanes-and-hardware-units">Parallel Execution
+Lanes and Hardware Units</h2>
+<p>Inside the CPU, the execution engine contains wide vector ALUs
+divided into parallel lanes matching the register width. When an
+instruction such as <code>VADDPS</code> (vector add packed
+single-precision) is decoded, the control unit broadcasts the operation
+to all 16 lanes simultaneously.</p>
+<p>Each lane reads its corresponding pair of 32-bit values from two
+source <code>ZMM</code> registers, computes the sum, and writes the
+result to the matching lane in the destination <code>ZMM</code>
+register. Because all lanes share the same instruction stream and
+control logic, the hardware avoids duplicating instruction decoders for
+each data element.</p>
+<h2 id="masking-and-conditional-execution-with-opmask-registers">Masking
+and Conditional Execution with Opmask Registers</h2>
+<p>A common challenge in vector processing is handling conditional
+branches, such as <code>if</code> statements inside a loop, where
+different elements require different operations. AVX-512 solves this
+with eight dedicated 64-bit opmask registers (<code>k0</code> through
+<code>k7</code>).</p>
+<p>Each bit in an opmask register corresponds to one lane in a
+<code>ZMM</code> vector. Before executing a vector operation, a
+comparison instruction sets the bits in an opmask register to
+<code>1</code> (active) or <code>0</code> (inactive). Subsequent
+instructions reference this mask to control which lanes update their
+results:</p>
+<ul>
+<li><strong>Zero-masking:</strong> Inactive lanes are zeroed out in the
+destination register.</li>
+<li><strong>Merge-masking:</strong> Inactive lanes retain their previous
+values in the destination register.</li>
+</ul>
+<p>This predication mechanism allows the CPU to execute conditional
+logic across a vector without branching, avoiding pipeline stalls caused
+by branch mispredictions.</p>
+<h2 id="memory-alignment-gather-and-scatter">Memory Alignment, Gather,
+and Scatter</h2>
+<p>To feed wide vector registers efficiently, data must move quickly
+between memory and the <code>ZMM</code> registers. Contiguous data in
+memory can be loaded in a single operation using aligned or unaligned
+vector load instructions.</p>
+<p>When data is not stored contiguously—such as elements accessed
+through an index array—AVX-512 provides <strong>gather</strong> and
+<strong>scatter</strong> instructions. A gather instruction reads a
+vector of memory addresses and loads the corresponding elements into a
+single <code>ZMM</code> register. A scatter instruction performs the
+reverse, writing elements from a <code>ZMM</code> register to
+non-contiguous memory locations. While slower than contiguous loads,
+gather and scatter enable vectorization of sparse or irregular data
+structures.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-simd-extensions-like-avx-512-process-multiple-data';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

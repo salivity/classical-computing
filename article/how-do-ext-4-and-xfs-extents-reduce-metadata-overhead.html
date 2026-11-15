@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How do ext4 and XFS extents reduce metadata overhead? - classical-computing</title>
+    <meta name="description" content="Extent-based file systems like ext4 and XFS reduce metadata overhead by replacing individual block-by-block pointers with compact descriptors called extents. Instead of storing a separate address for every single data block in a large contiguous file, an">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-ext-4-and-xfs-extents-reduce-metadata-overhead">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How do ext4 and XFS extents reduce metadata overhead? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-ext-4-and-xfs-extents-reduce-metadata-overhead" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Extent-based file systems like ext4 and XFS reduce metadata overhead by replacing individual block-by-block pointers with compact descriptors called extents. Instead of storing a separate address for every single data block in a large contiguous file, an" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-ext4-and-xfs-extents-reduce-metadata-overhead">How do
+ext4 and XFS extents reduce metadata overhead?</h1>
+<p>Extent-based file systems like ext4 and XFS reduce metadata overhead
+by replacing individual block-by-block pointers with compact descriptors
+called extents. Instead of storing a separate address for every single
+data block in a large contiguous file, an extent records only the
+starting block, the logical offset, and the total length of the
+contiguous run. This approach dramatically shrinks the amount of
+metadata required on disk, accelerates file lookups, and minimizes the
+I/O operations needed to read or write large files.</p>
+<h2 id="traditional-block-mapping-vs-extents">Traditional Block Mapping
+vs. Extents</h2>
+<p>Older file systems, such as ext2 and ext3, rely on direct and
+indirect block mapping. An inode stores a small number of direct block
+pointers, followed by pointers to single, double, and triple indirect
+blocks. Each indirect block is a metadata block filled with pointers to
+other blocks.</p>
+<p>For a large file of size <span class="math inline">\(S\)</span> with
+a block size <span class="math inline">\(B\)</span> and pointer size
+<span class="math inline">\(P\)</span>, the number of data blocks
+is:</p>
+<p><span class="math display">\[N_{\text{blocks}} = \left\lceil
+\frac{S}{B} \right\rceil\]</span></p>
+<p>With a standard <span class="math inline">\(4\text{ KiB}\)</span>
+block size (<span class="math inline">\(B = 4096\text{ bytes}\)</span>)
+and <span class="math inline">\(4\text{-byte}\)</span> pointers (<span
+class="math inline">\(P = 4\text{ bytes}\)</span>), a single indirect
+block holds <span class="math inline">\(1024\)</span> pointers. A <span
+class="math inline">\(1\text{ GiB}\)</span> file requires <span
+class="math inline">\(262,144\)</span> data blocks, which translates to
+over <span class="math inline">\(256\)</span> indirect metadata blocks
+just to map the file's layout. Every time the file is accessed or
+deleted, the file system must traverse and update these pointer
+trees.</p>
+<h2 id="how-extents-work-in-ext4-and-xfs">How Extents Work in ext4 and
+XFS</h2>
+<p>An extent represents a contiguous range of physical blocks using a
+single metadata structure. Rather than listing blocks <span
+class="math inline">\(100, 101, 102, \dots, 5000\)</span>, the file
+system stores one entry: "start at logical block <span
+class="math inline">\(0\)</span>, map to physical block <span
+class="math inline">\(100\)</span>, for a length of <span
+class="math inline">\(4901\)</span> blocks."</p>
+<h3 id="ext4-extent-trees">ext4 Extent Trees</h3>
+<p>In ext4, each extent is a <span
+class="math inline">\(12\text{-byte}\)</span> structure
+(<code>struct ext4_extent</code>) that contains:</p>
+<ul>
+<li>Logical block offset (<span class="math inline">\(32\text{
+bits}\)</span>)</li>
+<li>Length in blocks (<span class="math inline">\(16\text{
+bits}\)</span>, allowing up to <span
+class="math inline">\(32,768\)</span> contiguous blocks, or <span
+class="math inline">\(128\text{ MiB}\)</span> with <span
+class="math inline">\(4\text{ KiB}\)</span> blocks)</li>
+<li>Physical starting block (<span class="math inline">\(48\text{
+bits}\)</span>)</li>
+</ul>
+<p>An ext4 inode has <span class="math inline">\(60\text{
+bytes}\)</span> of space for block mapping, which can hold up to <span
+class="math inline">\(4\)</span> extents directly inside the inode. If a
+file is contiguous or has very few fragments, no external metadata
+blocks are needed at all. When a file grows beyond <span
+class="math inline">\(4\)</span> extents, ext4 converts the inline list
+into a shallow B+ tree of extent blocks.</p>
+<h3 id="xfs-b-tree-extents">XFS B+ Tree Extents</h3>
+<p>XFS was designed around extents from the ground up. Each XFS extent
+record is <span class="math inline">\(128\text{ bits}\)</span> (<span
+class="math inline">\(16\text{ bytes}\)</span>) and encodes:</p>
+<ul>
+<li>An unwritten extent flag (<span class="math inline">\(1\text{
+bit}\)</span>)</li>
+<li>Logical file offset (<span class="math inline">\(54\text{
+bits}\)</span>)</li>
+<li>Physical starting block (<span class="math inline">\(52\text{
+bits}\)</span>)</li>
+<li>Length in blocks (<span class="math inline">\(21\text{
+bits}\)</span>, supporting up to <span class="math inline">\(2^{21} -
+1\)</span> blocks, or nearly <span class="math inline">\(8\text{
+GiB}\)</span> per extent with <span class="math inline">\(4\text{
+KiB}\)</span> blocks)</li>
+</ul>
+<p>Like ext4, XFS stores small extent lists directly inside the inode's
+data fork. For larger or more fragmented files, XFS organizes extents
+into a B+ tree indexed by logical file offset, allowing logarithmic-time
+lookups even for files with millions of extents.</p>
+<h2 id="key-performance-and-space-benefits">Key Performance and Space
+Benefits</h2>
+<ol type="1">
+<li><strong>Reduced Metadata Footprint</strong>: A <span
+class="math inline">\(1\text{ GiB}\)</span> contiguous file that
+requires hundreds of indirect blocks in ext3 can be described by just
+<span class="math inline">\(8\)</span> extents in ext4 or a single
+extent in XFS, fitting entirely within the inode.</li>
+<li><strong>Faster Sequential I/O and Deletion</strong>: Because fewer
+metadata blocks need to be read from disk to locate data, sequential
+reads and writes experience lower latency. Deleting a large file is also
+much faster, as the file system frees large contiguous ranges at once
+rather than walking thousands of individual block pointers.</li>
+<li><strong>Improved Disk Cache Efficiency</strong>: Smaller metadata
+trees occupy less space in the kernel's page cache and buffer cache,
+leaving more memory available for actual file data.</li>
+<li><strong>Synergy with Delayed Allocation</strong>: Both ext4 and XFS
+use delayed allocation, buffering writes in memory before assigning
+physical blocks. This allows the allocator to see the full size of a
+write operation and assign a single large contiguous extent, preventing
+fragmentation before it occurs.</li>
+</ol></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-ext-4-and-xfs-extents-reduce-metadata-overhead';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

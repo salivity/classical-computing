@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Neuromorphic Computing Mimic Biological Brains? - classical-computing</title>
+    <meta name="description" content="Neuromorphic computing mimics biological brains by replacing the rigid, globally synchronized clock of classical computers with asynchronous, event-driven spiking neural networks. Instead of continuously fetching data from separate memory and processing u">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-neuromorphic-computing-mimic-biological-brains">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Neuromorphic Computing Mimic Biological Brains? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-neuromorphic-computing-mimic-biological-brains" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Neuromorphic computing mimics biological brains by replacing the rigid, globally synchronized clock of classical computers with asynchronous, event-driven spiking neural networks. Instead of continuously fetching data from separate memory and processing u" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-neuromorphic-computing-mimic-biological-brains">How
+Does Neuromorphic Computing Mimic Biological Brains?</h1>
+<p>Neuromorphic computing mimics biological brains by replacing the
+rigid, globally synchronized clock of classical computers with
+asynchronous, event-driven spiking neural networks. Instead of
+continuously fetching data from separate memory and processing units at
+fixed intervals, neuromorphic hardware processes information only when
+discrete electrical events called spikes occur, dramatically reducing
+power consumption and enabling real-time, brain-like computation.</p>
+<h2 id="the-limits-of-clocked-classical-computing">The Limits of Clocked
+Classical Computing</h2>
+<p>Traditional computers rely on the von Neumann architecture, which
+separates the central processing unit (CPU) from main memory. A global
+system clock coordinates every operation, forcing millions or billions
+of transistors to switch states at a fixed frequency, even when no
+useful data is being processed.</p>
+<p>This design creates two major bottlenecks:</p>
+<ul>
+<li><strong>The von Neumann bottleneck:</strong> Constantly shuttling
+data back and forth between memory and the processor consumes
+significant time and energy.</li>
+<li><strong>Clocked overhead:</strong> Maintaining a global clock signal
+across a chip generates heat and wastes power on idle circuits.</li>
+</ul>
+<p>Biological brains operate differently. They do not have a central
+clock, and they do not separate memory from computation.</p>
+<h2 id="asynchronous-event-driven-processing">Asynchronous Event-Driven
+Processing</h2>
+<p>Neuromorphic systems eliminate the global clock in favor of
+asynchronous, event-driven communication. In this model, individual
+artificial neurons remain idle until they receive incoming signals from
+other neurons.</p>
+<p>Because computation happens only when an event occurs, power
+consumption scales directly with activity. If a sensor or network region
+is quiet, the corresponding hardware consumes almost no dynamic power.
+This sparse activity mirrors how biological neurons fire only when
+necessary, allowing the human brain to perform complex cognitive tasks
+on roughly 20 watts of power.</p>
+<h2 id="spiking-neural-networks-and-biological-mimicry">Spiking Neural
+Networks and Biological Mimicry</h2>
+<p>At the core of neuromorphic computing are spiking neural networks
+(SNNs). Unlike traditional artificial neural networks that pass
+continuous numerical values between layers, SNNs communicate using
+discrete, timed pulses called spikes.</p>
+<p>Each artificial neuron maintains an internal state known as its
+membrane potential. When incoming spikes arrive through weighted
+connections (synapses), they either increase or decrease this potential.
+In a standard leaky integrate-and-fire (LIF) model, the membrane
+potential <span class="math inline">\(V(t)\)</span> evolves over time
+according to:</p>
+<p><span class="math display">\[\tau_m \frac{dV(t)}{dt} = -(V(t) -
+V_{\text{rest}}) + R I(t)\]</span></p>
+<p>Here, <span class="math inline">\(\tau_m\)</span> is the membrane
+time constant, <span class="math inline">\(V_{\text{rest}}\)</span> is
+the resting potential, <span class="math inline">\(R\)</span> is
+membrane resistance, and <span class="math inline">\(I(t)\)</span>
+represents the total incoming synaptic current. When <span
+class="math inline">\(V(t)\)</span> reaches a specific threshold <span
+class="math inline">\(V_{\text{th}}\)</span>, the neuron fires a spike
+to downstream neurons and resets its potential.</p>
+<p>Because information is encoded not just in whether a neuron fires,
+but also in the exact timing and frequency of its spikes, SNNs naturally
+capture temporal dynamics.</p>
+<h2 id="co-located-memory-and-compute">Co-Located Memory and
+Compute</h2>
+<p>To further mirror biological synapses, neuromorphic chips co-locate
+memory and processing. Each artificial neuron has local access to its
+synaptic weights, eliminating the need to fetch parameters from external
+memory.</p>
+<p>Learning in these systems often relies on local rules such as
+spike-timing-dependent plasticity (STDP). Under STDP, the strength of a
+synapse is adjusted based on the relative timing of pre-synaptic and
+post-synaptic spikes: if a pre-synaptic neuron fires just before a
+post-synaptic neuron, the connection strengthens; if it fires just
+after, the connection weakens. This localized, unsupervised adaptation
+allows neuromorphic hardware to learn continuously without requiring
+massive, centralized backpropagation passes.</p>
+<h2 id="real-world-applications">Real-World Applications</h2>
+<p>By combining event-driven execution, spiking neural networks, and
+co-located memory, neuromorphic computing excels at tasks that demand
+low latency and ultra-low power. Key applications include edge robotics,
+autonomous drone navigation, always-on keyword spotting, and processing
+data from event-based cameras that report only pixel-level brightness
+changes rather than full video frames.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-neuromorphic-computing-mimic-biological-brains';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

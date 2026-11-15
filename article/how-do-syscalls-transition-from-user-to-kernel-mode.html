@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Syscalls Transition From User to Kernel Mode? - classical-computing</title>
+    <meta name="description" content="A software trap or dedicated syscall instruction transitions execution from user mode to kernel mode by triggering a controlled hardware mechanism that raises the processor privilege level, saves the current user execution state, and jumps to a predefined">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-syscalls-transition-from-user-to-kernel-mode">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Syscalls Transition From User to Kernel Mode? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-syscalls-transition-from-user-to-kernel-mode" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A software trap or dedicated syscall instruction transitions execution from user mode to kernel mode by triggering a controlled hardware mechanism that raises the processor privilege level, saves the current user execution state, and jumps to a predefined" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-syscalls-transition-from-user-to-kernel-mode">How Do
+Syscalls Transition From User to Kernel Mode?</h1>
+<p>A software trap or dedicated syscall instruction transitions
+execution from user mode to kernel mode by triggering a controlled
+hardware mechanism that raises the processor privilege level, saves the
+current user execution state, and jumps to a predefined kernel entry
+point. Because user-space programs cannot directly access hardware or
+privileged memory, they rely on these instructions to safely request
+operating system services such as file I/O, process creation, and memory
+allocation.</p>
+<h2 id="privilege-levels-and-execution-modes">Privilege Levels and
+Execution Modes</h2>
+<p>Modern processors enforce isolation between applications and the
+operating system using hardware privilege levels, often called
+protection rings. On x86 architectures, user applications run in Ring 3
+(user mode) with restricted access to instructions and memory, while the
+operating system kernel runs in Ring 0 (kernel mode) with full hardware
+control. A dedicated status register—such as <code>CS</code> (Code
+Segment) on x86 or <code>CPSR</code>/<code>PSTATE</code> on ARM—stores
+the Current Privilege Level (CPL). A transition to kernel mode requires
+the CPU hardware itself to update this privilege state, ensuring user
+code cannot arbitrarily elevate its own permissions.</p>
+<h2 id="software-traps-and-interrupt-based-transitions">Software Traps
+and Interrupt-Based Transitions</h2>
+<p>Historically, systems used software interrupt instructions—such as
+<code>int 0x80</code> on 32-bit x86—to enter the kernel. When the CPU
+executes a software trap, it treats the instruction similarly to a
+hardware interrupt:</p>
+<ol type="1">
+<li>The processor looks up the interrupt vector (e.g., entry
+<code>0x80</code>) in the Interrupt Descriptor Table (IDT), which is
+configured by the kernel during boot.</li>
+<li>The CPU checks that the descriptor allows invocation from user mode
+(Descriptor Privilege Level 3).</li>
+<li>The hardware automatically pushes the user-mode stack pointer, flags
+register, code segment, and return instruction pointer onto the kernel
+stack.</li>
+<li>The CPU updates the privilege level to Ring 0 and jumps to the
+kernel's interrupt handler address specified in the IDT.</li>
+</ol>
+<p>While reliable, software traps incur overhead because the CPU must
+perform full IDT lookups, segment checks, and stack pushes on every
+call.</p>
+<h2 id="dedicated-syscall-instructions">Dedicated Syscall
+Instructions</h2>
+<p>To reduce the latency of frequent system calls, modern architectures
+introduced dedicated instructions such as <code>syscall</code> (x86-64),
+<code>sysenter</code> (32-bit x86), and <code>svc</code> (ARM). Instead
+of consulting an interrupt table in memory, these instructions rely on
+preconfigured Model-Specific Registers (MSRs) or system registers that
+already hold the kernel entry point and segment selectors.</p>
+<p>When <code>syscall</code> executes on x86-64:</p>
+<ol type="1">
+<li>The CPU saves the user-mode return address (<code>RIP</code>) into
+the <code>RCX</code> register and the user flags (<code>RFLAGS</code>)
+into <code>R11</code>.</li>
+<li>It masks specific bits in <code>RFLAGS</code> using the
+<code>IA32_FMASK</code> MSR (for example, disabling interrupts during
+the initial entry).</li>
+<li>It loads the kernel code segment and privilege level from
+<code>IA32_STAR</code>, and jumps directly to the kernel handler address
+stored in <code>IA32_LSTAR</code>.</li>
+</ol>
+<p>Because this avoids memory-based table lookups and minimizes
+automatic stack writes, dedicated syscall instructions are significantly
+faster than legacy software traps.</p>
+<h2 id="stack-switching-and-context-preservation">Stack Switching and
+Context Preservation</h2>
+<p>A critical part of the transition is switching from the user stack to
+a trusted kernel stack. The kernel cannot safely use the user-space
+stack because user code could have corrupted the stack pointer or mapped
+it to invalid memory.</p>
+<p>With <code>int 0x80</code>, the CPU automatically loads the kernel
+stack pointer from the Task State Segment (TSS). With
+<code>syscall</code>, the hardware does not automatically switch stacks;
+instead, the kernel entry stub immediately executes <code>swapgs</code>
+to access per-CPU kernel data, saves the user stack pointer
+(<code>RSP</code>), and loads the kernel stack pointer before pushing
+the remaining general-purpose registers onto the kernel stack.</p>
+<h2 id="dispatching-and-returning-to-user-mode">Dispatching and
+Returning to User Mode</h2>
+<p>Once in kernel mode with a valid kernel stack and saved user context,
+the kernel inspects the system call number—typically passed in a
+designated register such as <code>RAX</code> on x86-64 or
+<code>X8</code> on AArch64—and uses it to index into a system call
+table. After validating arguments and executing the requested service,
+the kernel restores the saved user registers, switches back to the user
+stack, and executes a privileged return instruction (<code>iretq</code>
+for traps, <code>sysretq</code> for <code>syscall</code>, or
+<code>eret</code> on ARM). This atomically lowers the privilege level
+back to user mode and resumes execution at the instruction immediately
+following the system call.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-syscalls-transition-from-user-to-kernel-mode';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

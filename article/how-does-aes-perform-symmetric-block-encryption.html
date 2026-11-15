@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does AES Perform Symmetric Block Encryption? - classical-computing</title>
+    <meta name="description" content="The Advanced Encryption Standard (AES) is a symmetric block cipher that encrypts fixed-size blocks of data using a substitution-permutation network. It operates on a 128-bit data block arranged as a 4 by 4 byte matrix called the state, transforming plaint">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-aes-perform-symmetric-block-encryption">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does AES Perform Symmetric Block Encryption? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-aes-perform-symmetric-block-encryption" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Advanced Encryption Standard (AES) is a symmetric block cipher that encrypts fixed-size blocks of data using a substitution-permutation network. It operates on a 128-bit data block arranged as a 4 by 4 byte matrix called the state, transforming plaint" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-aes-perform-symmetric-block-encryption">How Does AES
+Perform Symmetric Block Encryption?</h1>
+<p>The Advanced Encryption Standard (AES) is a symmetric block cipher
+that encrypts fixed-size blocks of data using a substitution-permutation
+network. It operates on a 128-bit data block arranged as a 4 by 4 byte
+matrix called the state, transforming plaintext into ciphertext through
+multiple rounds of byte substitution, row shifting, column mixing, and
+round key addition. Depending on the key length, AES executes 10, 12, or
+14 rounds to achieve strong confusion and diffusion in classical
+computing systems.</p>
+<h2 id="the-structure-of-aes-and-the-state-matrix">The Structure of AES
+and the State Matrix</h2>
+<p>AES processes plaintext in fixed blocks of <span
+class="math inline">\(128\)</span> bits (<span
+class="math inline">\(16\)</span> bytes), regardless of whether the
+secret key is <span class="math inline">\(128\)</span>, <span
+class="math inline">\(192\)</span>, or <span
+class="math inline">\(256\)</span> bits long. Before encryption begins,
+the <span class="math inline">\(16\)</span> input bytes <span
+class="math inline">\(b_0, b_1, \dots, b_{15}\)</span> are arranged
+column-wise into a <span class="math inline">\(4 \times 4\)</span> state
+matrix <span class="math inline">\(S\)</span>:</p>
+<p><span class="math display">\[S = \begin{bmatrix} b_0 &amp; b_4 &amp;
+b_8 &amp; b_{12} \\ b_1 &amp; b_5 &amp; b_9 &amp; b_{13} \\ b_2 &amp;
+b_6 &amp; b_{10} &amp; b_{14} \\ b_3 &amp; b_7 &amp; b_{11} &amp; b_{15}
+\end{bmatrix}\]</span></p>
+<p>The number of encryption rounds <span
+class="math inline">\(N_r\)</span> depends on the key size:</p>
+<ul>
+<li><span class="math inline">\(N_r = 10\)</span> for a <span
+class="math inline">\(128\)</span>-bit key</li>
+<li><span class="math inline">\(N_r = 12\)</span> for a <span
+class="math inline">\(192\)</span>-bit key</li>
+<li><span class="math inline">\(N_r = 14\)</span> for a <span
+class="math inline">\(256\)</span>-bit key</li>
+</ul>
+<p>Each round applies a sequence of invertible transformations to the
+state matrix. Unlike Feistel networks, which only modify half of the
+data block per round, a substitution-permutation network (SPN)
+transforms the entire <span class="math inline">\(128\)</span>-bit state
+in every round.</p>
+<h2 id="key-expansion">Key Expansion</h2>
+<p>Before the rounds begin, the initial secret key is expanded into a
+key schedule consisting of <span class="math inline">\(N_r + 1\)</span>
+round keys, each <span class="math inline">\(128\)</span> bits (<span
+class="math inline">\(16\)</span> bytes) long. The key expansion
+algorithm uses word rotation, byte substitution via the AES S-box, and
+round constants (<span class="math inline">\(\text{Rcon}\)</span>) to
+ensure that each round key is cryptographically distinct and resistant
+to related-key attacks.</p>
+<h2 id="the-four-round-transformations">The Four Round
+Transformations</h2>
+<p>AES begins with an initial <code>AddRoundKey</code> step using the
+first round key. It then executes <span class="math inline">\(N_r -
+1\)</span> standard rounds, each consisting of four operations:
+<code>SubBytes</code>, <code>ShiftRows</code>, <code>MixColumns</code>,
+and <code>AddRoundKey</code>. The final round omits
+<code>MixColumns</code>.</p>
+<h3 id="subbytes">SubBytes</h3>
+<p><code>SubBytes</code> is the non-linear substitution layer that
+provides confusion. Each byte <span
+class="math inline">\(s_{i,j}\)</span> in the state matrix is
+independently replaced using a fixed <span
+class="math inline">\(8\)</span>-bit lookup table called the S-box.
+Mathematically, the S-box computes the multiplicative inverse of the
+byte in the finite field <span
+class="math inline">\(\text{GF}(2^8)\)</span> defined by the irreducible
+polynomial:</p>
+<p><span class="math display">\[m(x) = x^8 + x^4 + x^3 + x +
+1\]</span></p>
+<p>The zero byte <span class="math inline">\(0\text{x}00\)</span> is
+mapped to itself. This is followed by an affine transformation over
+<span class="math inline">\(\text{GF}(2)\)</span> to eliminate algebraic
+simplicity and protect against linear and differential
+cryptanalysis.</p>
+<h3 id="shiftrows">ShiftRows</h3>
+<p><code>ShiftRows</code> is a transposition step that provides
+diffusion across columns. Each row of the <span class="math inline">\(4
+\times 4\)</span> state matrix is cyclically shifted to the left by an
+offset equal to its row index <span class="math inline">\(i \in \{0, 1,
+2, 3\}\)</span>:</p>
+<ul>
+<li>Row <span class="math inline">\(0\)</span> is not shifted (<span
+class="math inline">\(0\)</span> bytes).</li>
+<li>Row <span class="math inline">\(1\)</span> is shifted left by <span
+class="math inline">\(1\)</span> byte.</li>
+<li>Row <span class="math inline">\(2\)</span> is shifted left by <span
+class="math inline">\(2\)</span> bytes.</li>
+<li>Row <span class="math inline">\(3\)</span> is shifted left by <span
+class="math inline">\(3\)</span> bytes.</li>
+</ul>
+<p>This ensures that bytes from each column are distributed into all
+four columns before the next step.</p>
+<h3 id="mixcolumns">MixColumns</h3>
+<p><code>MixColumns</code> provides diffusion within each column by
+treating each <span class="math inline">\(4\)</span>-byte column as a
+polynomial over <span class="math inline">\(\text{GF}(2^8)\)</span> and
+multiplying it modulo <span class="math inline">\(x^4 + 1\)</span> by a
+fixed polynomial. In matrix form, each column <span
+class="math inline">\(\mathbf{c} = [c_0, c_1, c_2, c_3]^T\)</span> is
+transformed into <span class="math inline">\(\mathbf{c}&#39;\)</span>
+via:</p>
+<p><span class="math display">\[\begin{bmatrix} c&#39;_0 \\ c&#39;_1 \\
+c&#39;_2 \\ c&#39;_3 \end{bmatrix} = \begin{bmatrix} 02 &amp; 03 &amp;
+01 &amp; 01 \\ 01 &amp; 02 &amp; 03 &amp; 01 \\ 01 &amp; 01 &amp; 02
+&amp; 03 \\ 03 &amp; 01 &amp; 01 &amp; 02 \end{bmatrix} \begin{bmatrix}
+c_0 \\ c_1 \\ c_2 \\ c_3 \end{bmatrix}\]</span></p>
+<p>All additions and multiplications in this matrix product are
+performed in <span class="math inline">\(\text{GF}(2^8)\)</span>, where
+addition corresponds to bitwise XOR. Combined with
+<code>ShiftRows</code>, <code>MixColumns</code> guarantees that after
+just two rounds, every output byte depends on every input byte.</p>
+<h3 id="addroundkey">AddRoundKey</h3>
+<p><code>AddRoundKey</code> combines the current state matrix <span
+class="math inline">\(S\)</span> with the <span
+class="math inline">\(128\)</span>-bit round key <span
+class="math inline">\(K_r\)</span> for round <span
+class="math inline">\(r\)</span> using a bitwise XOR operation:</p>
+<p><span class="math display">\[S&#39; = S \oplus K_r\]</span></p>
+<p>Because XOR is its own inverse, this step is both fast in classical
+hardware and trivial to reverse during decryption.</p>
+<h2 id="decryption-in-classical-computing">Decryption in Classical
+Computing</h2>
+<p>Because every transformation in AES is invertible, decryption
+reverses the encryption process using the inverse operations
+<code>InvShiftRows</code>, <code>InvSubBytes</code>,
+<code>InvMixColumns</code>, and <code>AddRoundKey</code> with the round
+keys applied in reverse order. In classical computing, AES is highly
+efficient because its operations map directly to byte-level table
+lookups, bitwise XORs, and dedicated CPU instructions such as
+AES-NI.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-aes-perform-symmetric-block-encryption';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

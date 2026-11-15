@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Link-Time Optimization Inline Functions? - classical-computing</title>
+    <meta name="description" content="Link-time optimization is a compiler technique that optimizes a program across multiple source files during the linking stage. In traditional compilation, each source file is compiled independently into machine code, which prevents the compiler from seein">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-link-time-optimization-inline-functions">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Link-Time Optimization Inline Functions? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-link-time-optimization-inline-functions" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Link-time optimization is a compiler technique that optimizes a program across multiple source files during the linking stage. In traditional compilation, each source file is compiled independently into machine code, which prevents the compiler from seein" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-link-time-optimization-inline-functions">How Does
+Link-Time Optimization Inline Functions?</h1>
+<p>Link-time optimization is a compiler technique that optimizes a
+program across multiple source files during the linking stage. In
+traditional compilation, each source file is compiled independently into
+machine code, which prevents the compiler from seeing function
+definitions in other files. Link-time optimization solves this by
+deferring final code generation until all compilation units are
+combined, allowing the optimizer to inline functions and remove unused
+code across the entire program.</p>
+<h2 id="the-limit-of-separate-compilation">The Limit of Separate
+Compilation</h2>
+<p>In classical computing, large programs are split into separate
+compilation units, such as individual C or C++ source files. During
+standard compilation, the compiler translates each file into an object
+file containing machine code and a symbol table. Because the compiler
+only sees one file at a time, a call to a function defined in another
+file appears as an opaque external reference.</p>
+<p>Without visibility into the target function's body, the compiler
+cannot inline it at the call site. It also cannot prove whether a
+function or global variable is actually used elsewhere in the program,
+so it must conservatively keep exported symbols in the final binary.</p>
+<h2 id="how-intermediate-representation-enables-lto">How Intermediate
+Representation Enables LTO</h2>
+<p>When link-time optimization is enabled, the compiler changes what it
+stores in each object file. Instead of emitting final machine code, it
+writes an intermediate representation (IR), such as LLVM bitcode or GCC
+GIMPLE, into the object file.</p>
+<p>During the linking phase, the linker invokes a compiler plugin or an
+integrated LTO driver. This driver reads the IR from all object files
+and merges them into a single, unified module. With the entire program's
+IR available in one place, the optimizer can perform whole-program
+analysis before generating the final machine code.</p>
+<h2 id="cross-module-function-inlining">Cross-Module Function
+Inlining</h2>
+<p>Once the IR modules are merged, the optimizer builds a complete call
+graph of the program. Every function call now has a visible target body,
+regardless of which source file originally contained it.</p>
+<p>The inliner evaluates call sites using cost heuristics, such as
+function size, call frequency, and register pressure. If inlining a
+function from another compilation unit is beneficial, the optimizer
+replaces the call instruction with a copy of the function's IR body.
+This eliminates call overhead and exposes new optimization
+opportunities, such as constant propagation and loop unrolling, across
+the former file boundary.</p>
+<h2 id="whole-program-dead-code-elimination">Whole-Program Dead Code
+Elimination</h2>
+<p>With a complete view of the program, the linker and optimizer can
+accurately determine which functions and variables are reachable from
+the program's entry point, such as <code>main</code>, or from exported
+library symbols.</p>
+<p>Any function or global variable that is never called or referenced is
+marked as unreachable. Dead code elimination (DCE) then removes these
+unused definitions from the unified IR. Furthermore, if inlining a
+function removes its last remaining call site, the original function
+definition itself becomes dead code and is stripped from the final
+binary, reducing executable size and improving instruction cache
+locality.</p>
+<h2 id="scaling-lto-with-thinlto">Scaling LTO with ThinLTO</h2>
+<p>Full link-time optimization can be slow and memory-intensive for very
+large codebases because it merges all IR into a single process. To
+address this, modern compilers offer incremental approaches like
+ThinLTO.</p>
+<p>ThinLTO stores a compact summary of each module's functions and call
+graph alongside its IR. During linking, the compiler performs fast,
+whole-program analysis using only these summaries to decide which
+functions to inline and which symbols are dead. It then imports only the
+necessary function bodies into each module in parallel, achieving most
+of the performance and size benefits of full LTO at a fraction of the
+build time.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-link-time-optimization-inline-functions';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

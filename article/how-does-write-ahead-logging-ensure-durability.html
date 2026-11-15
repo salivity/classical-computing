@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Write-Ahead Logging Ensure Durability? - classical-computing</title>
+    <meta name="description" content="Write-Ahead Logging is a fundamental database technique that guarantees durability and atomicity without requiring dirty data pages to be written to disk on every commit. By recording changes sequentially in an append-only log before modifying the actual">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-write-ahead-logging-ensure-durability">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Write-Ahead Logging Ensure Durability? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-write-ahead-logging-ensure-durability" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Write-Ahead Logging is a fundamental database technique that guarantees durability and atomicity without requiring dirty data pages to be written to disk on every commit. By recording changes sequentially in an append-only log before modifying the actual" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-write-ahead-logging-ensure-durability">How Does
+Write-Ahead Logging Ensure Durability?</h1>
+<p>Write-Ahead Logging is a fundamental database technique that
+guarantees durability and atomicity without requiring dirty data pages
+to be written to disk on every commit. By recording changes sequentially
+in an append-only log before modifying the actual data pages, databases
+can recover from crashes quickly and safely while keeping normal
+transaction processing fast.</p>
+<h2 id="the-problem-with-flushing-data-pages-on-commit">The Problem with
+Flushing Data Pages on Commit</h2>
+<p>In a database management system, data is stored in fixed-size blocks
+called pages. When a transaction modifies a record, the database loads
+the corresponding page into memory, updates it, and marks it as dirty.
+Flushing every dirty page to disk at commit time would cause severe
+performance bottlenecks because data pages are scattered across storage,
+leading to slow random disk I/O.</p>
+<p>On the other hand, keeping dirty pages only in memory risks losing
+committed data if a power failure or system crash occurs. Write-Ahead
+Logging (WAL) solves this dilemma by separating the durability of the
+transaction from the physical writing of the data pages.</p>
+<h2 id="how-write-ahead-logging-works">How Write-Ahead Logging
+Works</h2>
+<p>WAL relies on a strict ordering rule: every modification to a data
+page must first be recorded in a persistent log file on disk before the
+modified page itself is allowed to be written to disk, and before the
+transaction is considered committed.</p>
+<p>Each log record typically contains:</p>
+<ul>
+<li>A unique Log Sequence Number (LSN) that monotonically increases,
+such that <span class="math inline">\(LSN_{i} &lt;
+LSN_{i+1}\)</span>.</li>
+<li>The transaction ID.</li>
+<li>The type of operation (insert, update, delete, commit, or
+abort).</li>
+<li>The before-image (undo information) and after-image (redo
+information) of the modified data.</li>
+</ul>
+<p>Because log records are appended sequentially to the end of the log
+file, writing them to disk is much faster than performing random writes
+to scattered data pages. When a transaction commits, the database only
+needs to flush the log buffer up to the commit record's LSN. Once that
+sequential write succeeds, the transaction is durable, even if the dirty
+data pages remain in memory.</p>
+<h2 id="ensuring-atomicity-and-durability">Ensuring Atomicity and
+Durability</h2>
+<p>WAL supports two key buffer-management policies that maximize
+performance:</p>
+<ul>
+<li><strong>Steal:</strong> The buffer manager is allowed to write dirty
+pages to disk before a transaction commits, freeing up memory for other
+operations.</li>
+<li><strong>No-Force:</strong> The buffer manager is not required to
+flush dirty pages to disk when a transaction commits.</li>
+</ul>
+<p>Because of the WAL rule, if a dirty page is stolen and written to
+disk early, its undo information is already safely in the log. If a
+committed transaction's dirty pages are not forced to disk at commit
+time, its redo information is already safely in the log.</p>
+<h2 id="crash-recovery-with-aries">Crash Recovery with ARIES</h2>
+<p>When a system crashes and restarts, the database uses the WAL to
+restore a consistent state. Most modern databases use a recovery
+algorithm based on ARIES (Algorithms for Recovery and Isolation
+Exploiting Semantics), which operates in three phases:</p>
+<ol type="1">
+<li><strong>Analysis:</strong> The database scans the log forward from
+the last checkpoint to identify which transactions were active at the
+time of the crash and which dirty pages were in memory.</li>
+<li><strong>Redo:</strong> The database replays all logged changes from
+the earliest relevant LSN forward, bringing the database back to its
+exact state at the moment of the crash. This ensures durability for all
+committed transactions whose dirty pages had not yet been flushed.</li>
+<li><strong>Undo:</strong> The database scans backward through the log
+for any transactions that were active (uncommitted) at the time of the
+crash and reverses their changes using the before-images. This ensures
+atomicity.</li>
+</ol>
+<h2 id="checkpoints-and-log-truncation">Checkpoints and Log
+Truncation</h2>
+<p>Without periodic maintenance, the WAL would grow indefinitely, and
+crash recovery would take too long. To prevent this, databases
+periodically create checkpoints. During a checkpoint, the database
+flushes dirty pages to disk and records the checkpoint in the log. Once
+a checkpoint completes, log records prior to the oldest active
+transaction or dirty page can be safely truncated or archived, keeping
+recovery times bounded.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-write-ahead-logging-ensure-durability';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

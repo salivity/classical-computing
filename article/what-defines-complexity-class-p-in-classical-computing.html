@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Defines Complexity Class P in Classical Computing? - classical-computing</title>
+    <meta name="description" content="Complexity class P is the set of all decision problems that can be solved by a deterministic Turing machine in polynomial time relative to the size of the input. In classical computing and computational complexity theory, P serves as the standard mathemat">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-defines-complexity-class-p-in-classical-computing">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Defines Complexity Class P in Classical Computing? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-defines-complexity-class-p-in-classical-computing" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Complexity class P is the set of all decision problems that can be solved by a deterministic Turing machine in polynomial time relative to the size of the input. In classical computing and computational complexity theory, P serves as the standard mathemat" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-defines-complexity-class-p-in-classical-computing">What
+Defines Complexity Class P in Classical Computing?</h1>
+<p>Complexity class P is the set of all decision problems that can be
+solved by a deterministic Turing machine in polynomial time relative to
+the size of the input. In classical computing and computational
+complexity theory, P serves as the standard mathematical formalization
+of problems that are considered efficiently solvable or tractable.</p>
+<h2 id="formal-definition-of-class-p">Formal Definition of Class P</h2>
+<p>A decision problem is a computational problem with a yes-or-no
+answer, formally represented as a formal language <span
+class="math inline">\(L \subseteq \{0, 1\}^*\)</span> over a binary
+alphabet. A deterministic Turing machine <span
+class="math inline">\(M\)</span> decides a language <span
+class="math inline">\(L\)</span> in time <span
+class="math inline">\(T(n)\)</span> if, for every input string <span
+class="math inline">\(x\)</span> of length <span class="math inline">\(n
+= |x|\)</span>, <span class="math inline">\(M\)</span> halts after at
+most <span class="math inline">\(T(n)\)</span> steps and outputs whether
+<span class="math inline">\(x \in L\)</span>.</p>
+<p>Using deterministic time complexity classes <span
+class="math inline">\(\text{DTIME}(T(n))\)</span>, the class <span
+class="math inline">\(\mathbf{P}\)</span> is defined as the union over
+all polynomial time bounds:</p>
+<p><span class="math display">\[\mathbf{P} = \bigcup_{k \ge 1}
+\text{DTIME}(n^k)\]</span></p>
+<p>This means a problem belongs to <span
+class="math inline">\(\mathbf{P}\)</span> if there exists a
+deterministic algorithm and a constant <span class="math inline">\(k \ge
+1\)</span> such that the algorithm solves every instance of size <span
+class="math inline">\(n\)</span> in <span
+class="math inline">\(O(n^k)\)</span> steps.</p>
+<h2 id="key-characteristics">Key Characteristics</h2>
+<ul>
+<li><strong>Deterministic execution</strong>: Every step of the
+computation is uniquely determined by the current state and the symbol
+being read, with no branching or guessing.</li>
+<li><strong>Polynomial time bound</strong>: The worst-case running time
+grows no faster than a polynomial function of the input length <span
+class="math inline">\(n\)</span>, such as <span
+class="math inline">\(O(n)\)</span>, <span class="math inline">\(O(n
+\log n)\)</span>, or <span class="math inline">\(O(n^3)\)</span>, rather
+than exponentially like <span
+class="math inline">\(O(2^n)\)</span>.</li>
+<li><strong>Machine independence</strong>: By the Church-Turing thesis
+and its extended polynomial-time variant, any reasonable deterministic
+classical model of computation (such as a multi-tape Turing machine or a
+random-access machine) can simulate another with at most a polynomial
+slowdown. Consequently, <span class="math inline">\(\mathbf{P}\)</span>
+is invariant across standard classical computing models.</li>
+<li><strong>Closure properties</strong>: The class <span
+class="math inline">\(\mathbf{P}\)</span> is closed under complement,
+union, intersection, and polynomial-time reductions.</li>
+</ul>
+<h2 id="examples-of-problems-in-p">Examples of Problems in P</h2>
+<p>Many foundational problems in computer science belong to <span
+class="math inline">\(\mathbf{P}\)</span>:</p>
+<ul>
+<li><strong>Shortest path</strong>: Finding the shortest path between
+two vertices in a weighted graph with non-negative weights using
+Dijkstra's algorithm.</li>
+<li><strong>Linear programming</strong>: Solving systems of linear
+inequalities to optimize a linear objective function.</li>
+<li><strong>Primality testing</strong>: Determining whether an integer
+<span class="math inline">\(N\)</span> is prime, proven to be in <span
+class="math inline">\(\mathbf{P}\)</span> by the AKS primality test in
+<span class="math inline">\(O((\log N)^k)\)</span> time, where <span
+class="math inline">\(\log N\)</span> is the bit-length of the
+input.</li>
+<li><strong>Sorting and searching</strong>: Sorting a list of <span
+class="math inline">\(n\)</span> elements in <span
+class="math inline">\(O(n \log n)\)</span> time or finding a greatest
+common divisor using the Euclidean algorithm.</li>
+</ul>
+<h2 id="role-in-complexity-theory">Role in Complexity Theory</h2>
+<p>Class <span class="math inline">\(\mathbf{P}\)</span> sits at the
+foundation of the complexity hierarchy. It is a subset of <span
+class="math inline">\(\mathbf{NP}\)</span> (nondeterministic polynomial
+time), because any deterministic polynomial-time machine is a special
+case of a nondeterministic one. Whether <span
+class="math inline">\(\mathbf{P} = \mathbf{NP}\)</span> remains the most
+famous open problem in computer science. Additionally, <span
+class="math inline">\(\mathbf{P}\)</span> is contained within <span
+class="math inline">\(\mathbf{PSPACE}\)</span> (problems solvable using
+polynomial space) and <span class="math inline">\(\mathbf{EXP}\)</span>
+(problems solvable in exponential time).</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-defines-complexity-class-p-in-classical-computing';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

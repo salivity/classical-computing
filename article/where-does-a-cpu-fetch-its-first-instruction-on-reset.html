@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where Does a CPU Fetch Its First Instruction on Reset? - classical-computing</title>
+    <meta name="description" content="When a classical computer receives a power-good signal and releases the processor from reset, the CPU does not start by reading from RAM or a hard drive. Instead, its internal hardware forces the instruction pointer to a predetermined memory address known">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/where-does-a-cpu-fetch-its-first-instruction-on-reset">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Where Does a CPU Fetch Its First Instruction on Reset? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/where-does-a-cpu-fetch-its-first-instruction-on-reset" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="When a classical computer receives a power-good signal and releases the processor from reset, the CPU does not start by reading from RAM or a hard drive. Instead, its internal hardware forces the instruction pointer to a predetermined memory address known" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="where-does-a-cpu-fetch-its-first-instruction-on-reset">Where
+Does a CPU Fetch Its First Instruction on Reset?</h1>
+<p>When a classical computer receives a power-good signal and releases
+the processor from reset, the CPU does not start by reading from RAM or
+a hard drive. Instead, its internal hardware forces the instruction
+pointer to a predetermined memory address known as the reset vector.
+This address points to non-volatile firmware stored in read-only memory
+or flash memory, which contains the very first instructions needed to
+initialize the system.</p>
+<h2 id="the-role-of-the-reset-vector">The Role of the Reset Vector</h2>
+<p>Before any operating system or software can run, a processor needs a
+reliable starting point. Because system RAM is empty and uninitialized
+when power is first applied, the CPU cannot fetch instructions from it.
+To solve this, processor designers hardwire a specific starting
+address—the reset vector—into the CPU's silicon.</p>
+<p>Upon receiving a power-good signal, the CPU's control unit clears its
+internal registers, sets the instruction pointer (or program counter) to
+the reset vector, and issues its first memory read request. The system
+chipset or memory controller intercepts this specific address range and
+routes it to the motherboard's non-volatile firmware chip, typically a
+Serial Peripheral Interface (SPI) flash chip holding the BIOS or
+UEFI.</p>
+<h2 id="how-different-architectures-handle-reset">How Different
+Architectures Handle Reset</h2>
+<p>While the concept of a reset vector is universal in classical
+computing, the exact address and mechanism vary by processor
+architecture:</p>
+<ul>
+<li><strong>x86 and x86-64:</strong> On modern Intel and AMD processors,
+the CPU starts in a legacy 16-bit compatibility mode called real mode.
+The instruction pointer (<code>EIP</code>) is set to
+<code>0x0000FFF0</code>, and the code segment (<code>CS</code>) base is
+set to <code>0xFFFF0000</code>, resulting in a physical starting address
+of <code>0xFFFFFFF0</code>—just 16 bytes below the 4 GB boundary.
+Because 16 bytes is too small for a full firmware program, the
+instruction at <code>0xFFFFFFF0</code> is almost always a
+<code>JMP</code> (jump) instruction that redirects execution to the main
+BIOS or UEFI initialization code.</li>
+<li><strong>ARM (Cortex-M):</strong> Microcontroller-class ARM cores use
+a vector table located at address <code>0x00000000</code> by default.
+Rather than executing an instruction directly at that address, the CPU
+reads the initial stack pointer value from <code>0x00000000</code> and
+the address of the reset handler from <code>0x00000004</code>, then
+branches to that handler.</li>
+<li><strong>ARM (Cortex-A / ARMv8-A):</strong> Application-class ARM
+processors typically start execution at a hardware-defined reset address
+(often <code>0x00000000</code> or a configurable base address via the
+<code>RVBAR_EL3</code> register) in the highest privilege level, jumping
+directly into the first-stage bootloader stored in on-chip Boot
+ROM.</li>
+<li><strong>RISC-V:</strong> The RISC-V specification leaves the exact
+reset vector address implementation-defined, allowing chip designers to
+point it to an internal Boot ROM or external flash memory.</li>
+</ul>
+<h2 id="from-firmware-to-operating-system">From Firmware to Operating
+System</h2>
+<p>The first instructions fetched from the reset vector are responsible
+for basic hardwarebring-up. The firmware configures the CPU caches,
+initializes the memory controller so that DRAM becomes usable, and
+performs a Power-On Self-Test (POST). Once RAM is ready, the firmware
+copies itself or a bootloader into memory and hands off control,
+eventually loading the operating system kernel.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/where-does-a-cpu-fetch-its-first-instruction-on-reset';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

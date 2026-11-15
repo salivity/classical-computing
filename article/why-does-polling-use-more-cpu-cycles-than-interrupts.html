@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Does Polling Use More CPU Cycles Than Interrupts? - classical-computing</title>
+    <meta name="description" content="Polling consumes excessive processor cycles because it forces the central processing unit to repeatedly check the status of an input or output device in a tight loop, even when no data is ready. In contrast, interrupt-driven I/O allows the processor to ex">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-does-polling-use-more-cpu-cycles-than-interrupts">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Does Polling Use More CPU Cycles Than Interrupts? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-does-polling-use-more-cpu-cycles-than-interrupts" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Polling consumes excessive processor cycles because it forces the central processing unit to repeatedly check the status of an input or output device in a tight loop, even when no data is ready. In contrast, interrupt-driven I/O allows the processor to ex" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-does-polling-use-more-cpu-cycles-than-interrupts">Why Does
+Polling Use More CPU Cycles Than Interrupts?</h1>
+<p>Polling consumes excessive processor cycles because it forces the
+central processing unit to repeatedly check the status of an input or
+output device in a tight loop, even when no data is ready. In contrast,
+interrupt-driven I/O allows the processor to execute other useful
+instructions or enter a low-power state until the hardware explicitly
+signals that it requires attention. This fundamental difference in how
+waiting time is managed determines overall system efficiency,
+responsiveness, and energy consumption.</p>
+<h2 id="how-polling-works">How Polling Works</h2>
+<p>In a polling-based system, the CPU takes an active role in monitoring
+peripheral devices such as keyboards, network cards, or storage
+controllers. The processor executes a loop—often called a busy-wait
+loop—that continuously reads a status register on the device.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="op">((</span>device_status_register <span class="op">&amp;</span> READY_BIT<span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Do nothing; keep checking</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>process_data<span class="op">(</span>device_data_register<span class="op">);</span></span></code></pre></div>
+<p>Every iteration of this loop consumes instruction cycles, memory bus
+bandwidth, and power. If a device takes <span
+class="math inline">\(10\text{ ms}\)</span> to respond and a processor
+operates at <span class="math inline">\(3\text{ GHz}\)</span>, the CPU
+can waste tens of millions of cycles just asking whether the device is
+ready:</p>
+<p><span class="math display">\[\text{Wasted Cycles} = f_{\text{CPU}}
+\times t_{\text{wait}} = (3 \times 10^9\text{ Hz}) \times (10 \times
+10^{-3}\text{ s}) = 3 \times 10^7\text{ cycles}\]</span></p>
+<p>During this entire waiting period, the CPU cannot perform meaningful
+computation for other tasks unless the operating system preempts the
+thread, which still incurs scheduling overhead.</p>
+<h2 id="how-interrupt-driven-io-works">How Interrupt-Driven I/O
+Works</h2>
+<p>Interrupt-driven I/O reverses this relationship by shifting the
+responsibility of notification from the CPU to the hardware device. When
+the processor initiates an I/O operation, it does not wait for
+completion. Instead, it immediately moves on to execute other programs
+or enters an idle sleep state.</p>
+<p>When the peripheral finishes its task—such as receiving a network
+packet or completing a disk read—it asserts an electrical signal on an
+interrupt request (IRQ) line connected to the interrupt controller. The
+controller then notifies the CPU, which pauses its current execution,
+saves its state, runs a brief Interrupt Service Routine (ISR) to handle
+the data, and resumes its previous work.</p>
+<h2 id="key-reasons-polling-wastes-more-cycles">Key Reasons Polling
+Wastes More Cycles</h2>
+<h3 id="1-continuous-busy-waiting">1. Continuous Busy-Waiting</h3>
+<p>Polling ties up the execution pipeline with status-check
+instructions. Even if a device is idle <span
+class="math inline">\(99\%\)</span> of the time, the CPU spends its
+cycles repeatedly reading the same unchanged register.</p>
+<h3 id="2-poor-scalability-with-multiple-devices">2. Poor Scalability
+with Multiple Devices</h3>
+<p>If a system must monitor <span class="math inline">\(N\)</span>
+devices via polling, the CPU must cycle through all <span
+class="math inline">\(N\)</span> status registers sequentially. As <span
+class="math inline">\(N\)</span> grows, the time spent checking idle
+devices increases linearly, reducing the time available for actual
+application logic. Interrupts scale much better because idle devices
+generate zero CPU overhead.</p>
+<h3 id="3-inability-to-enter-low-power-states">3. Inability to Enter
+Low-Power States</h3>
+<p>Modern processors save energy by entering deep sleep states (such as
+C-states) when no work is available. Because polling keeps the CPU
+actively executing instructions in a loop, the processor cannot enter
+these low-power states, leading to higher power draw and thermal
+output.</p>
+<h2 id="when-polling-is-still-used">When Polling Is Still Used</h2>
+<p>Despite its cycle overhead, polling is not obsolete. In
+high-throughput, low-latency environments—such as high-speed network
+interfaces handling millions of packets per second—interrupts can become
+a bottleneck due to the overhead of context switching and saving CPU
+state on every event. In these scenarios, hybrid approaches like NAPI
+(New API) in the Linux kernel use interrupts when traffic is low and
+switch to polling during heavy bursts to maximize throughput.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-does-polling-use-more-cpu-cycles-than-interrupts';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

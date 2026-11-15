@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Does Landauer&#39;s Principle State About Erasing One Bit? - classical-computing</title>
+    <meta name="description" content="Landauer&#39;s principle establishes a fundamental physical limit in classical computing by stating that erasing one bit of information inevitably dissipates a minimum amount of thermodynamic heat into the environment. This minimum energy cost is proportional">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-does-landauer-s-principle-state-about-erasing-one-bit">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Does Landauer&#39;s Principle State About Erasing One Bit? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-does-landauer-s-principle-state-about-erasing-one-bit" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Landauer&#39;s principle establishes a fundamental physical limit in classical computing by stating that erasing one bit of information inevitably dissipates a minimum amount of thermodynamic heat into the environment. This minimum energy cost is proportional" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-does-landauers-principle-state-about-erasing-one-bit">What
+Does Landauer's Principle State About Erasing One Bit?</h1>
+<p>Landauer's principle establishes a fundamental physical limit in
+classical computing by stating that erasing one bit of information
+inevitably dissipates a minimum amount of thermodynamic heat into the
+environment. This minimum energy cost is proportional to the temperature
+of the system and arises from the connection between information entropy
+and thermodynamic entropy. Understanding this principle explains why
+irreversible computation generates heat and sets a lower bound on the
+energy efficiency of modern computers.</p>
+<h2 id="the-core-statement-of-landauers-principle">The Core Statement of
+Landauer's Principle</h2>
+<p>Formulated by Rolf Landauer in 1961, the principle addresses
+logically irreversible operations—processes where the input cannot be
+uniquely reconstructed from the output. Erasing a bit (for example,
+resetting a memory cell to <span class="math inline">\(0\)</span>
+regardless of whether its prior state was <span
+class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>) is a classic irreversible
+operation.</p>
+<p>Landauer's principle states that erasing one bit of information in a
+system at temperature <span class="math inline">\(T\)</span> requires
+the dissipation of at least:</p>
+<p><span class="math display">\[Q \ge k_B T \ln 2\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(Q\)</span> is the heat dissipated into
+the thermal reservoir (environment).</li>
+<li><span class="math inline">\(k_B\)</span> is the Boltzmann constant,
+approximately <span class="math inline">\(1.380649 \times 10^{-23}\
+\text{J/K}\)</span>.</li>
+<li><span class="math inline">\(T\)</span> is the absolute temperature
+of the environment in Kelvin.</li>
+<li><span class="math inline">\(\ln 2 \approx 0.6931\)</span> is the
+natural logarithm of <span class="math inline">\(2\)</span>.</li>
+</ul>
+<h2 id="why-information-erasure-generates-heat">Why Information Erasure
+Generates Heat</h2>
+<p>The physical reason behind this limit lies in the second law of
+thermodynamics and phase space volume. Before erasure, a single bit can
+occupy two possible states (<span class="math inline">\(0\)</span> or
+<span class="math inline">\(1\)</span>), each with equal probability
+<span class="math inline">\(p = 1/2\)</span>. The Shannon entropy of
+this bit is <span class="math inline">\(H = 1\ \text{bit}\)</span>,
+which corresponds to a thermodynamic entropy of:</p>
+<p><span class="math display">\[S = k_B \ln 2\]</span></p>
+<p>When the bit is reset to a single known state (such as <span
+class="math inline">\(0\)</span>), the number of accessible microstates
+in the memory's phase space is reduced by half, decreasing the entropy
+of the information-bearing degrees of freedom by <span
+class="math inline">\(\Delta S_{\text{sys}} = -k_B \ln 2\)</span>.</p>
+<p>Because the second law of thermodynamics requires that the total
+entropy of the universe (system plus environment) cannot decrease:</p>
+<p><span class="math display">\[\Delta S_{\text{total}} = \Delta
+S_{\text{sys}} + \Delta S_{\text{env}} \ge 0\]</span></p>
+<p>the environment must absorb at least <span
+class="math inline">\(\Delta S_{\text{env}} \ge k_B \ln 2\)</span> of
+entropy. At constant temperature <span class="math inline">\(T\)</span>,
+this entropy increase corresponds to a minimum heat transfer of <span
+class="math inline">\(Q = T \Delta S_{\text{env}} \ge k_B T \ln
+2\)</span> into the surroundings.</p>
+<h2 id="practical-significance-in-classical-computing">Practical
+Significance in Classical Computing</h2>
+<p>At room temperature (<span class="math inline">\(T \approx 300\
+\text{K}\)</span>), the Landauer limit is:</p>
+<p><span class="math display">\[k_B T \ln 2 \approx (1.38 \times
+10^{-23}\ \text{J/K})(300\ \text{K})(0.6931) \approx 2.87 \times
+10^{-21}\ \text{J}\]</span></p>
+<p>While this value is orders of magnitude smaller than the energy
+currently consumed per logic operation in silicon transistors, it
+represents a hard physical boundary. Reversible computing
+architectures—which avoid erasing information by using one-to-one
+logical mappings—can in theory bypass this limit, whereas any classical
+computer performing irreversible bit erasure must pay at least the <span
+class="math inline">\(k_B T \ln 2\)</span> thermodynamic cost.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-does-landauer-s-principle-state-about-erasing-one-bit';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

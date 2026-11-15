@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Tensor Networks Simulate Quantum Circuits? - classical-computing</title>
+    <meta name="description" content="Tensor network contraction algorithms enable classical supercomputers to simulate shallow or noisy quantum circuits by representing quantum states and gates as interconnected multidimensional arrays rather than a single exponentially large state vector. I">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-tensor-networks-simulate-quantum-circuits">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Tensor Networks Simulate Quantum Circuits? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-tensor-networks-simulate-quantum-circuits" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Tensor network contraction algorithms enable classical supercomputers to simulate shallow or noisy quantum circuits by representing quantum states and gates as interconnected multidimensional arrays rather than a single exponentially large state vector. I" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-tensor-networks-simulate-quantum-circuits">How Do Tensor
+Networks Simulate Quantum Circuits?</h1>
+<p>Tensor network contraction algorithms enable classical supercomputers
+to simulate shallow or noisy quantum circuits by representing quantum
+states and gates as interconnected multidimensional arrays rather than a
+single exponentially large state vector. Instead of tracking every
+possible quantum state simultaneously, these algorithms exploit the
+limited entanglement present in shallow or noisy circuits to compress
+the computation and contract the network in an optimized order.</p>
+<h2 id="the-exponential-bottleneck-of-classical-simulation">The
+Exponential Bottleneck of Classical Simulation</h2>
+<p>A quantum system of <span class="math inline">\(n\)</span> qubits is
+described by a state vector in a <span
+class="math inline">\(2^n\)</span>-dimensional Hilbert space. Storing
+this vector directly on a classical computer requires memory that scales
+as <span class="math inline">\(O(2^n)\)</span>. For <span
+class="math inline">\(n = 50\)</span> qubits, even storing a single
+state vector with double-precision complex numbers demands over <span
+class="math inline">\(16\)</span> petabytes of memory, quickly
+exhausting the capacity of modern supercomputers.</p>
+<p>However, most quantum algorithms—especially those run on near-term
+noisy intermediate-scale quantum (NISQ) hardware—do not explore the
+entire Hilbert space uniformly. When a circuit is shallow (having few
+layers of gates) or noisy (suffering from decoherence and gate errors),
+the amount of quantum entanglement between distant qubits remains
+bounded. Tensor network methods take advantage of this structure.</p>
+<h2 id="representing-quantum-circuits-as-tensor-networks">Representing
+Quantum Circuits as Tensor Networks</h2>
+<p>In a tensor network, every component of a quantum circuit is mapped
+to a tensor—a generalization of scalars, vectors, and matrices to higher
+dimensions:</p>
+<ul>
+<li><strong>Qubit initializations</strong> (such as <span
+class="math inline">\(|0\rangle\)</span>) are rank-1 tensors
+(vectors).</li>
+<li><strong>Single-qubit gates</strong> are rank-2 tensors (matrices)
+with one input index and one output index.</li>
+<li><strong>Two-qubit gates</strong> (such as CNOT or CZ) are rank-4
+tensors with two input indices and two output indices.</li>
+<li><strong>Measurements</strong> are rank-1 tensors that project onto a
+basis state.</li>
+</ul>
+<p>When gates are applied sequentially to qubits, the corresponding
+tensors are connected along shared indices, forming a graph. Computing a
+specific measurement probability or amplitude <span
+class="math inline">\(\langle x | U | 0 \rangle^{\otimes n}\)</span>
+corresponds to <strong>contracting</strong> all internal indices of this
+tensor network—summing over all shared indices until only a single
+scalar remains.</p>
+<h2 id="why-contraction-order-matters">Why Contraction Order
+Matters</h2>
+<p>The computational cost of contracting a tensor network depends
+heavily on the order in which tensors are multiplied together. If two
+tensors share an index of dimension <span
+class="math inline">\(d\)</span> (for qubits, <span
+class="math inline">\(d = 2\)</span>), contracting them eliminates that
+index and produces a new tensor whose rank is the sum of the remaining
+uncontracted indices.</p>
+<p>Finding the optimal contraction order is equivalent to finding a
+contraction tree with the minimum <strong>treewidth</strong> (or minimum
+maximum intermediate tensor size). A poor contraction order can cause
+intermediate tensors to grow to size <span
+class="math inline">\(2^n\)</span>, recovering the exponential
+bottleneck. An optimized contraction order, by contrast, keeps
+intermediate tensors small by contracting along directions with low
+entanglement—such as contracting across time (circuit depth) rather than
+space (number of qubits) when the circuit is shallow.</p>
+<p>Supercomputers use heuristic graph-partitioning and dynamic
+programming algorithms to discover near-optimal contraction paths before
+executing the actual floating-point operations.</p>
+<h2 id="exploiting-shallow-depth-and-noise">Exploiting Shallow Depth and
+Noise</h2>
+<p>Tensor network contraction excels in two regimes common to current
+quantum hardware:</p>
+<ol type="1">
+<li><strong>Shallow circuits:</strong> If a circuit has depth <span
+class="math inline">\(D\)</span> on a 2D grid of qubits, the
+entanglement across any cut grows at most proportionally to <span
+class="math inline">\(D\)</span>. By contracting the network along the
+spatial dimensions first or slicing over a small number of indices, the
+memory footprint scales roughly as <span class="math inline">\(O(2^{c
+\cdot D})\)</span> for a small constant <span
+class="math inline">\(c\)</span>, rather than <span
+class="math inline">\(O(2^n)\)</span>.</li>
+<li><strong>Noisy circuits:</strong> Quantum noise (such as depolarizing
+or amplitude-damping channels) degrades long-range entanglement. In
+tensor network representations like Matrix Product States (MPS) or
+Projected Entangled Pair States (PEPS), noise allows algorithms to
+truncate small singular values during Singular Value Decomposition
+(SVD). Dropping singular values below a threshold <span
+class="math inline">\(\epsilon\)</span> introduces a controlled
+approximation error while drastically reducing the bond dimension <span
+class="math inline">\(\chi\)</span> needed to represent the state.</li>
+</ol>
+<h2 id="scaling-across-supercomputers">Scaling Across
+Supercomputers</h2>
+<p>Once an efficient contraction path is found, the workload maps
+naturally onto distributed supercomputing architectures:</p>
+<ul>
+<li><strong>Index slicing:</strong> To fit intermediate tensors into the
+memory of individual GPUs or compute nodes, large indices are "sliced"
+(split into independent sums). Each slice can be contracted
+independently in parallel without inter-node communication, and the
+final results are summed at the end.</li>
+<li><strong>Tensor-core acceleration:</strong> Modern supercomputers
+equipped with GPUs perform tensor contractions as batched matrix
+multiplications (GEMM), achieving high utilization of specialized
+hardware like Tensor Cores.</li>
+</ul>
+<p>By combining optimal contraction ordering, index slicing, and
+entanglement truncation, tensor network algorithms allow classical
+supercomputers to simulate quantum circuits with dozens or even hundreds
+of qubits—provided the circuits remain sufficiently shallow or
+noisy.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-tensor-networks-simulate-quantum-circuits';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Do ACID Properties Guarantee in Databases? - classical-computing</title>
+    <meta name="description" content="In classical computing, Atomicity, Consistency, Isolation, and Durability—collectively known as ACID—are four foundational properties that guarantee reliable processing of concurrent database transactions. Together, they ensure that data remains accurate,">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-do-acid-properties-guarantee-in-databases">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Do ACID Properties Guarantee in Databases? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-do-acid-properties-guarantee-in-databases" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In classical computing, Atomicity, Consistency, Isolation, and Durability—collectively known as ACID—are four foundational properties that guarantee reliable processing of concurrent database transactions. Together, they ensure that data remains accurate," />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-do-acid-properties-guarantee-in-databases">What Do ACID
+Properties Guarantee in Databases?</h1>
+<p>In classical computing, Atomicity, Consistency, Isolation, and
+Durability—collectively known as ACID—are four foundational properties
+that guarantee reliable processing of concurrent database transactions.
+Together, they ensure that data remains accurate, valid, and recoverable
+even when multiple operations execute simultaneously or when hardware
+and software failures occur.</p>
+<h2 id="atomicity">Atomicity</h2>
+<p>Atomicity guarantees that each transaction is treated as a single,
+indivisible unit of work. Either every operation within the transaction
+succeeds and is permanently applied to the database, or none of them
+take effect. If any step fails—due to a system crash, power loss, or
+constraint violation—the database rolls back all partial changes,
+leaving the system in the exact state it was in before the transaction
+began.</p>
+<h2 id="consistency">Consistency</h2>
+<p>Consistency ensures that a transaction only transitions the database
+from one valid state to another. Every transaction must obey all defined
+rules, including data types, primary and foreign key constraints,
+triggers, and application-level invariants. If a transaction would leave
+the database in a state that violates any of these rules, the
+transaction is aborted and rolled back.</p>
+<h2 id="isolation">Isolation</h2>
+<p>Isolation guarantees that concurrent transactions execute as if they
+were running sequentially, without interfering with one another. When
+multiple transactions read and write shared data at the same time,
+isolation prevents concurrency anomalies such as dirty reads,
+non-repeatable reads, and phantom reads. Database systems implement
+isolation using mechanisms like locking or multi-version concurrency
+control, often offering configurable isolation levels that balance
+strict correctness against throughput.</p>
+<h2 id="durability">Durability</h2>
+<p>Durability ensures that once a transaction has been committed, its
+changes are permanent and will survive subsequent system failures, such
+as crashes or power outages. Databases achieve durability by writing
+committed changes to non-volatile storage, typically using write-ahead
+logging (WAL), before acknowledging the commit to the client. Even if
+the system restarts immediately after a commit, the database can replay
+the log to restore the committed state.</p>
+<h2 id="why-acid-matters-for-concurrent-systems">Why ACID Matters for
+Concurrent Systems</h2>
+<p>In classical computing environments where many users and processes
+access shared data simultaneously, ACID properties provide a strict
+contract between the database and the application. By combining
+atomicity, consistency, isolation, and durability, databases prevent
+data corruption, race conditions, and partial updates, allowing
+developers to reason about concurrent operations safely.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-do-acid-properties-guarantee-in-databases';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

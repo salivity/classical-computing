@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does the Fork and Exec Model Spawn Child Processes? - classical-computing</title>
+    <meta name="description" content="In Unix-like operating systems, the fork-and-exec model is the standard mechanism for creating and running new programs. Rather than launching a new program in a single step, the operating system splits the task into two distinct system calls: fork, which">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-the-fork-and-exec-model-spawn-child-processes">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does the Fork and Exec Model Spawn Child Processes? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-the-fork-and-exec-model-spawn-child-processes" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In Unix-like operating systems, the fork-and-exec model is the standard mechanism for creating and running new programs. Rather than launching a new program in a single step, the operating system splits the task into two distinct system calls: fork, which" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-the-fork-and-exec-model-spawn-child-processes">How Does
+the Fork and Exec Model Spawn Child Processes?</h1>
+<p>In Unix-like operating systems, the fork-and-exec model is the
+standard mechanism for creating and running new programs. Rather than
+launching a new program in a single step, the operating system splits
+the task into two distinct system calls: fork, which duplicates the
+currently running process, and exec, which replaces the duplicated
+process's memory with a new program. This separation gives shells and
+other programs a clean window to configure input, output, and
+environment settings before the new program begins executing.</p>
+<h2 id="the-role-of-fork">The Role of <code>fork()</code></h2>
+<p>When a process calls <code>fork()</code>, the kernel creates an
+almost identical copy of the calling process. The original process is
+called the parent, and the newly created copy is called the child.</p>
+<p>Both processes continue executing from the exact point where
+<code>fork()</code> returned, but they can tell themselves apart by
+checking the return value of the system call:</p>
+<ul>
+<li><strong>In the parent process</strong>, <code>fork()</code> returns
+the process ID (PID) of the newly created child.</li>
+<li><strong>In the child process</strong>, <code>fork()</code> returns
+<code>0</code>.</li>
+<li><strong>On failure</strong>, <code>fork()</code> returns
+<code>-1</code> to the parent, and no child process is created.</li>
+</ul>
+<p>Modern Unix-like systems use <strong>copy-on-write (COW)</strong>
+optimization for <code>fork()</code>. Instead of immediately copying all
+of the parent's memory pages for the child, the kernel marks the shared
+pages as read-only. A physical copy of a memory page is only made if
+either the parent or the child attempts to modify it. This makes
+<code>fork()</code> fast and memory-efficient, especially when
+<code>exec()</code> is called shortly afterward.</p>
+<h2 id="the-role-of-exec">The Role of <code>exec()</code></h2>
+<p>The <code>exec</code> family of system calls (such as
+<code>execve</code>, <code>execl</code>, and <code>execvp</code>) does
+not create a new process. Instead, it replaces the current process's
+memory space—including its code, data, heap, and stack—with a new
+program loaded from an executable file.</p>
+<p>When the child process calls <code>exec()</code>:</p>
+<ol type="1">
+<li>The kernel locates and validates the target executable binary.</li>
+<li>The child's existing address space is discarded and replaced with
+the new program's segments.</li>
+<li>Execution starts at the new program's entry point (such as
+<code>main()</code> in a C program).</li>
+<li>The process ID (PID) remains the same as the child's PID assigned
+during <code>fork()</code>.</li>
+</ol>
+<p>If <code>exec()</code> succeeds, it never returns to the calling code
+because that code no longer exists in memory. If it fails (for example,
+if the file does not exist or lacks execute permissions), it returns
+<code>-1</code>, and the child process typically exits.</p>
+<h2 id="why-separate-fork-and-exec">Why Separate <code>fork()</code> and
+<code>exec()</code>?</h2>
+<p>Splitting process creation into two steps provides significant
+flexibility. Between calling <code>fork()</code> and calling
+<code>exec()</code>, the child process is still running the parent's
+code and can modify its own execution environment without affecting the
+parent.</p>
+<p>Common tasks performed in this window include:</p>
+<ul>
+<li><strong>I/O Redirection:</strong> Closing standard input or output
+and reopening them to files or pipes (such as
+<code>ls &gt; output.txt</code> in a shell).</li>
+<li><strong>Working Directory and Permissions:</strong> Changing the
+current working directory or dropping root privileges before running an
+untrusted binary.</li>
+<li><strong>Environment Variables:</strong> Modifying or clearing
+environment variables passed to the new program.</li>
+<li><strong>Signal Handling:</strong> Resetting signal handlers to their
+default behavior.</li>
+</ul>
+<h2 id="waiting-for-completion">Waiting for Completion</h2>
+<p>After spawning the child, the parent process often calls
+<code>wait()</code> or <code>waitpid()</code> to pause until the child
+finishes executing and to retrieve its exit status. Reading the exit
+status also allows the kernel to clean up the child's remaining process
+table entry, preventing it from becoming a zombie process.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-the-fork-and-exec-model-spawn-child-processes';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

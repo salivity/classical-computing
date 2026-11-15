@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Lamport Clocks and Vector Clocks Order Events? - classical-computing</title>
+    <meta name="description" content="Distributed systems lack a single global physical clock, making it impossible to rely on wall-clock timestamps to determine the exact order of operations across different machines. Leslie Lamport&#39;s logical clocks and vector clocks solve this problem by us">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-lamport-clocks-and-vector-clocks-order-events">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Lamport Clocks and Vector Clocks Order Events? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-lamport-clocks-and-vector-clocks-order-events" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Distributed systems lack a single global physical clock, making it impossible to rely on wall-clock timestamps to determine the exact order of operations across different machines. Leslie Lamport&#39;s logical clocks and vector clocks solve this problem by us" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-lamport-clocks-and-vector-clocks-order-events">How Do
+Lamport Clocks and Vector Clocks Order Events?</h1>
+<p>Distributed systems lack a single global physical clock, making it
+impossible to rely on wall-clock timestamps to determine the exact order
+of operations across different machines. Leslie Lamport's logical clocks
+and vector clocks solve this problem by using message-passing rules and
+counters to establish a causal ordering of events. This article explains
+the happened-before relation, how Lamport timestamps provide a partial
+and total ordering, and how vector clocks overcome the limitations of
+scalar counters to detect concurrent events.</p>
+<h2 id="the-happened-before-relation">The Happened-Before Relation</h2>
+<p>In a distributed system, processes communicate exclusively by sending
+and receiving messages over a network. Because physical clocks on
+separate nodes drift at different rates, comparing their local
+timestamps cannot reliably tell us whether one event caused another.</p>
+<p>In 1978, Leslie Lamport formalized causality using the
+<strong>happened-before</strong> relation, denoted by <span
+class="math inline">\(\rightarrow\)</span>. For any two events <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span>, we say <span class="math inline">\(a
+\rightarrow b\)</span> (<span class="math inline">\(a\)</span> happened
+before <span class="math inline">\(b\)</span>) if one of three
+conditions holds:</p>
+<ol type="1">
+<li><strong>Same Process:</strong> <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> occur on the same process, and <span
+class="math inline">\(a\)</span> occurs before <span
+class="math inline">\(b\)</span> in that process's local execution
+sequence.</li>
+<li><strong>Message Passing:</strong> <span
+class="math inline">\(a\)</span> is the sending of a message by one
+process, and <span class="math inline">\(b\)</span> is the receipt of
+that same message by another process.</li>
+<li><strong>Transitivity:</strong> There exists an intermediate event
+<span class="math inline">\(c\)</span> such that <span
+class="math inline">\(a \rightarrow c\)</span> and <span
+class="math inline">\(c \rightarrow b\)</span>.</li>
+</ol>
+<p>If neither <span class="math inline">\(a \rightarrow b\)</span> nor
+<span class="math inline">\(b \rightarrow a\)</span> is true, the events
+are <strong>concurrent</strong>, written as <span
+class="math inline">\(a \parallel b\)</span>. Concurrent events have no
+causal relationship; neither could have influenced the other.</p>
+<h2 id="lamport-logical-clocks">Lamport Logical Clocks</h2>
+<p>A Lamport logical clock assigns a monotonically increasing integer
+timestamp <span class="math inline">\(C(e)\)</span> to every event <span
+class="math inline">\(e\)</span>. Each process <span
+class="math inline">\(P_i\)</span> maintains a local scalar counter
+<span class="math inline">\(C_i\)</span>, initialized to <span
+class="math inline">\(0\)</span>, and updates it according to two
+rules:</p>
+<ol type="1">
+<li><strong>Local Event or Send:</strong> Before executing a local event
+or sending a message, <span class="math inline">\(P_i\)</span>
+increments its counter: <span class="math display">\[C_i = C_i +
+1\]</span> When sending a message <span
+class="math inline">\(m\)</span>, <span
+class="math inline">\(P_i\)</span> attaches its updated timestamp <span
+class="math inline">\(t = C_i\)</span> to <span
+class="math inline">\(m\)</span>.</li>
+<li><strong>Message Receipt:</strong> Upon receiving a message <span
+class="math inline">\(m\)</span> with timestamp <span
+class="math inline">\(t\)</span>, process <span
+class="math inline">\(P_j\)</span> updates its local counter to be
+strictly greater than both its current value and the incoming timestamp:
+<span class="math display">\[C_j = \max(C_j, t) + 1\]</span></li>
+</ol>
+<p>These rules guarantee the <strong>clock condition</strong>: <span
+class="math display">\[a \rightarrow b \implies C(a) &lt;
+C(b)\]</span></p>
+<p>If event <span class="math inline">\(a\)</span> causally precedes
+event <span class="math inline">\(b\)</span>, <span
+class="math inline">\(a\)</span> will always have a smaller Lamport
+timestamp than <span class="math inline">\(b\)</span>.</p>
+<h3 id="limitations-and-total-ordering">Limitations and Total
+Ordering</h3>
+<p>While Lamport clocks preserve causality in one direction, the
+converse does not hold: <span class="math display">\[C(a) &lt; C(b)
+\not\implies a \rightarrow b\]</span></p>
+<p>Because a single scalar integer cannot encode which process generated
+an event or whether two events are independent, <span
+class="math inline">\(C(a) &lt; C(b)\)</span> might simply mean <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> are concurrent.</p>
+<p>To break ties and create a <strong>total ordering</strong> of all
+events (useful for state machine replication or distributed mutual
+exclusion), Lamport timestamps can be paired with unique process IDs. If
+event <span class="math inline">\(a\)</span> occurs on <span
+class="math inline">\(P_i\)</span> and event <span
+class="math inline">\(b\)</span> occurs on <span
+class="math inline">\(P_j\)</span>, we define <span
+class="math inline">\(a \Rightarrow b\)</span> if and only if: <span
+class="math display">\[(C(a) &lt; C(b)) \lor (C(a) = C(b) \land i &lt;
+j)\]</span></p>
+<h2 id="vector-clocks">Vector Clocks</h2>
+<p>Vector clocks, introduced independently by Colin Fidge and Friedemann
+Mattern in 1988, extend Lamport clocks to capture exact causality.
+Instead of a single integer, each process <span
+class="math inline">\(P_i\)</span> in an <span
+class="math inline">\(N\)</span>-process system maintains an array
+(vector) of <span class="math inline">\(N\)</span> integers, <span
+class="math inline">\(V_i\)</span>, initialized to <span
+class="math inline">\([0, 0, \dots, 0]\)</span>.</p>
+<p>The update rules for vector clocks are:</p>
+<ol type="1">
+<li><strong>Local Event or Send:</strong> Before executing a local event
+or sending a message, <span class="math inline">\(P_i\)</span>
+increments its own entry in its vector: <span
+class="math display">\[V_i[i] = V_i[i] + 1\]</span> When sending a
+message <span class="math inline">\(m\)</span>, <span
+class="math inline">\(P_i\)</span> attaches its entire vector <span
+class="math inline">\(V_i\)</span> to <span
+class="math inline">\(m\)</span>.</li>
+<li><strong>Message Receipt:</strong> Upon receiving a message <span
+class="math inline">\(m\)</span> with vector <span
+class="math inline">\(V_m\)</span>, process <span
+class="math inline">\(P_j\)</span> merges the vectors element-wise and
+increments its own entry: <span class="math display">\[\forall k \in
+\{1, \dots, N\}: V_j[k] = \max(V_j[k], V_m[k])\]</span> <span
+class="math display">\[V_j[j] = V_j[j] + 1\]</span></li>
+</ol>
+<h3 id="comparing-vector-timestamps">Comparing Vector Timestamps</h3>
+<p>Vector clocks allow us to compare any two events <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> with vector timestamps <span
+class="math inline">\(V(a)\)</span> and <span
+class="math inline">\(V(b)\)</span>:</p>
+<ul>
+<li><span class="math inline">\(V(a) \le V(b)\)</span> if and only if
+<span class="math inline">\(\forall k: V(a)[k] \le
+V(b)[k]\)</span>.</li>
+<li><span class="math inline">\(V(a) &lt; V(b)\)</span> if and only if
+<span class="math inline">\(V(a) \le V(b)\)</span> and <span
+class="math inline">\(\exists k: V(a)[k] &lt; V(b)[k]\)</span>.</li>
+</ul>
+<p>Because each entry tracks the causal history from a specific process,
+vector clocks satisfy the <strong>strong clock condition</strong>: <span
+class="math display">\[a \rightarrow b \iff V(a) &lt; V(b)\]</span></p>
+<p>If neither <span class="math inline">\(V(a) \le V(b)\)</span> nor
+<span class="math inline">\(V(b) \le V(a)\)</span> holds, then <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> are guaranteed to be concurrent (<span
+class="math inline">\(a \parallel b\)</span>). This makes vector clocks
+essential for systems like distributed key-value stores and version
+control, where detecting conflicting concurrent updates is required.</p>
+<h2 id="summary-of-differences">Summary of Differences</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Lamport Clocks</th>
+<th style="text-align: left;">Vector Clocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">State per process</td>
+<td style="text-align: left;">Single integer (<span
+class="math inline">\(O(1)\)</span> space)</td>
+<td style="text-align: left;">Array of <span
+class="math inline">\(N\)</span> integers (<span
+class="math inline">\(O(N)\)</span> space)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Message overhead</td>
+<td style="text-align: left;"><span
+class="math inline">\(O(1)\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(O(N)\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;">Causal guarantee</td>
+<td style="text-align: left;"><span class="math inline">\(a \rightarrow
+b \implies C(a) &lt; C(b)\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(a \rightarrow
+b \iff V(a) &lt; V(b)\)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;">Detects concurrency</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-lamport-clocks-and-vector-clocks-order-events';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Is Grover&#39;s Algorithm Only a Quadratic Speedup? - classical-computing</title>
+    <meta name="description" content="Grover&#39;s quantum search algorithm finds a marked item in an unstructured database of size N in roughly the square root of N steps, whereas a classical computer requires on the order of N steps. This quadratic speedup is not a limitation of Grover&#39;s specif">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-is-grover-s-algorithm-only-a-quadratic-speedup">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Is Grover&#39;s Algorithm Only a Quadratic Speedup? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-is-grover-s-algorithm-only-a-quadratic-speedup" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Grover&#39;s quantum search algorithm finds a marked item in an unstructured database of size N in roughly the square root of N steps, whereas a classical computer requires on the order of N steps. This quadratic speedup is not a limitation of Grover&#39;s specif" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-is-grovers-algorithm-only-a-quadratic-speedup">Why Is
+Grover's Algorithm Only a Quadratic Speedup?</h1>
+<p>Grover's quantum search algorithm finds a marked item in an
+unstructured database of size N in roughly the square root of N steps,
+whereas a classical computer requires on the order of N steps. This
+quadratic speedup is not a limitation of Grover's specific circuit
+design, but rather a fundamental physical limit of quantum mechanics
+itself. Because quantum computers must distinguish between different
+possible database configurations using unitary evolution, any quantum
+algorithm that queries an unstructured oracle needs at least a
+square-root number of queries to reliably identify the target.</p>
+<h2 id="unstructured-search-and-the-black-box-oracle">Unstructured
+Search and the Black-Box Oracle</h2>
+<p>In unstructured search, there is no sorting, indexing, or hidden
+mathematical structure to exploit. The problem is modeled using a
+black-box function, or oracle, <span class="math inline">\(f(x)\)</span>
+that returns <span class="math inline">\(1\)</span> if <span
+class="math inline">\(x\)</span> is the target item and <span
+class="math inline">\(0\)</span> otherwise. Classically, each query to
+<span class="math inline">\(f(x)\)</span> checks a single candidate, so
+finding the target among <span class="math inline">\(N\)</span> items
+takes <span class="math inline">\(O(N)\)</span> queries in the worst and
+average cases.</p>
+<p>A quantum computer can query the oracle in superposition, evaluating
+<span class="math inline">\(f(x)\)</span> across all <span
+class="math inline">\(N\)</span> states simultaneously. However, this
+does not allow the computer to simply read out all <span
+class="math inline">\(N\)</span> answers at once. Measuring a quantum
+superposition collapses it to a single basis state, returning only one
+item with probability determined by its squared amplitude. To make the
+target item appear with high probability upon measurement, the algorithm
+must amplify its amplitude relative to the other <span
+class="math inline">\(N - 1\)</span> states.</p>
+<h2 id="amplitude-amplification-and-rotation-speed">Amplitude
+Amplification and Rotation Speed</h2>
+<p>Grover's algorithm achieves this through amplitude amplification,
+which can be visualized geometrically in a two-dimensional subspace
+spanned by the target state <span
+class="math inline">\(|w\rangle\)</span> and the uniform superposition
+of all non-target states <span
+class="math inline">\(|s&#39;\rangle\)</span>. The initial uniform
+superposition <span class="math inline">\(|s\rangle\)</span> starts
+almost orthogonal to <span class="math inline">\(|w\rangle\)</span>, at
+an angle <span class="math inline">\(\theta\)</span> where:</p>
+<p><span class="math display">\[\sin(\theta) =
+\frac{1}{\sqrt{N}}\]</span></p>
+<p>Each Grover iteration consists of an oracle phase flip followed by a
+diffusion operator, which together rotate the state vector toward <span
+class="math inline">\(|w\rangle\)</span> by an angle of <span
+class="math inline">\(2\theta\)</span>. For large <span
+class="math inline">\(N\)</span>, <span class="math inline">\(\theta
+\approx 1/\sqrt{N}\)</span>, so each step advances the angle by roughly
+<span class="math inline">\(2/\sqrt{N}\)</span> radians. To rotate from
+nearly <span class="math inline">\(0\)</span> to <span
+class="math inline">\(\pi/2\)</span> radians—where the target state has
+probability close to <span class="math inline">\(1\)</span>—the
+algorithm requires approximately:</p>
+<p><span class="math display">\[k \approx
+\frac{\pi}{4}\sqrt{N}\]</span></p>
+<p>iterations. Attempting to rotate faster is impossible within this
+framework because the oracle only flips the phase of <span
+class="math inline">\(|w\rangle\)</span>, which limits the maximum
+angular change per query.</p>
+<h2 id="the-bbbv-lower-bound">The BBBV Lower Bound</h2>
+<p>The deeper reason why no quantum algorithm can beat <span
+class="math inline">\(O(\sqrt{N})\)</span> for unstructured search is
+the Bennett-Bernstein-Brassard-Vazirani (BBBV) theorem, proven in
+1997—even before Grover's algorithm was widely generalized. The proof
+relies on the linearity and unitarity of quantum mechanics, which
+preserve inner products between quantum states.</p>
+<p>Suppose a quantum algorithm makes <span
+class="math inline">\(T\)</span> queries to an oracle. Consider running
+the algorithm with an empty oracle (where no item is marked) versus an
+oracle where a specific item <span class="math inline">\(y\)</span> is
+marked. If <span class="math inline">\(T\)</span> is much smaller than
+<span class="math inline">\(\sqrt{N}\)</span>, the quantum states
+produced by the two runs remain nearly indistinguishable. Specifically,
+the sum of the squared differences between the final state vectors
+across all <span class="math inline">\(N\)</span> possible marked items
+is bounded by <span class="math inline">\(O(T^2 / N)\)</span>. For the
+algorithm to distinguish the marked item from an unmarked database with
+constant probability, <span class="math inline">\(T^2 / N\)</span> must
+be at least a constant, which forces:</p>
+<p><span class="math display">\[T = \Omega(\sqrt{N})\]</span></p>
+<h2 id="why-exponential-speedup-requires-structure">Why Exponential
+Speedup Requires Structure</h2>
+<p>Algorithms like Shor's factoring algorithm achieve exponential
+speedups because they exploit mathematical structure, such as
+periodicity in modular arithmetic, using the Quantum Fourier Transform.
+Unstructured search has no such global pattern for interference to lock
+onto. Without structure, quantum interference can only shift probability
+amplitude gradually from <span class="math inline">\(N - 1\)</span>
+wrong answers into <span class="math inline">\(1\)</span> right answer,
+making <span class="math inline">\(\Theta(\sqrt{N})\)</span> the
+absolute speed limit for quantum unstructured search.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-is-grover-s-algorithm-only-a-quadratic-speedup';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does OpenMP Parallelize Loops With Compiler Directives? - classical-computing</title>
+    <meta name="description" content="OpenMP is an application programming interface that enables shared-memory parallel programming in C, C++, and Fortran using compiler directives. By inserting simple pragma statements before loop constructs, developers instruct the compiler to automaticall">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-open-mp-parallelize-loops-with-compiler-directives">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does OpenMP Parallelize Loops With Compiler Directives? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-open-mp-parallelize-loops-with-compiler-directives" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="OpenMP is an application programming interface that enables shared-memory parallel programming in C, C++, and Fortran using compiler directives. By inserting simple pragma statements before loop constructs, developers instruct the compiler to automaticall" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-openmp-parallelize-loops-with-compiler-directives">How
+Does OpenMP Parallelize Loops With Compiler Directives?</h1>
+<p>OpenMP is an application programming interface that enables
+shared-memory parallel programming in C, C++, and Fortran using compiler
+directives. By inserting simple pragma statements before loop
+constructs, developers instruct the compiler to automatically distribute
+loop iterations across multiple threads running on the cores of a
+shared-memory multiprocessor node. This approach allows sequential code
+to be parallelized incrementally without rewriting the underlying
+algorithm into explicit thread-management calls.</p>
+<h2 id="the-fork-join-execution-model">The Fork-Join Execution
+Model</h2>
+<p>OpenMP operates on a fork-join model of parallel execution. A program
+begins as a single master thread executing sequentially. When the master
+thread encounters a parallel directive, it forks a team of worker
+threads that execute the enclosed region concurrently. Once all threads
+in the team finish their assigned work, they synchronize at an implicit
+barrier and join back into the single master thread, which continues
+sequential execution.</p>
+<p>Because all threads in the team belong to the same process, they
+share a unified virtual address space. Any memory allocated before the
+parallel region is accessible to all threads, which eliminates the need
+for explicit message passing between cores on the same node.</p>
+<h2 id="compiler-directives-and-loop-work-sharing">Compiler Directives
+and Loop Work-Sharing</h2>
+<p>In C and C++, OpenMP directives are specified using
+<code>#pragma omp</code> preprocessor statements (and <code>!$omp</code>
+sentinel comments in Fortran). To parallelize a <code>for</code> loop,
+developers typically use the combined <code>parallel for</code>
+directive:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma omp parallel for</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    c<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">+</span> b<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>When the compiler sees <code>#pragma omp parallel for</code> (and the
+OpenMP flag such as <code>-fopenmp</code> is enabled), it transforms the
+loop into a parallel task:</p>
+<ol type="1">
+<li>It outlines the loop body into a separate internal function.</li>
+<li>It inserts runtime library calls to spawn or wake up a team of <span
+class="math inline">\(P\)</span> threads.</li>
+<li>It divides the iteration space <span class="math inline">\([0,
+N)\)</span> among the <span class="math inline">\(P\)</span> threads so
+that each thread executes a distinct subset of iterations.</li>
+</ol>
+<p>If a compiler does not support OpenMP or the OpenMP flag is omitted,
+the <code>#pragma</code> directive is ignored, and the loop compiles as
+standard sequential code.</p>
+<h2 id="loop-scheduling-strategies">Loop Scheduling Strategies</h2>
+<p>The <code>schedule</code> clause controls how iterations are mapped
+to threads, which is critical for load balancing when iterations have
+varying workloads:</p>
+<ul>
+<li><strong><code>static</code></strong>: Divides the iterations into
+equal-sized chunks of size <span class="math inline">\(\lceil N / P
+\rceil\)</span> (or a user-specified chunk size) and assigns them to
+threads in a round-robin fashion before the loop starts. This minimizes
+scheduling overhead and works best when every iteration takes roughly
+the same amount of time.</li>
+<li><strong><code>dynamic</code></strong>: Assigns chunks of iterations
+to threads on a first-come, first-served basis as they finish their
+current chunk. This improves load balance for irregular workloads at the
+cost of higher runtime synchronization overhead.</li>
+<li><strong><code>guided</code></strong>: Similar to dynamic scheduling,
+but starts with large chunks and exponentially decreases the chunk size
+down to a specified minimum as remaining iterations dwindle.</li>
+</ul>
+<h2 id="data-scoping-and-synchronization">Data Scoping and
+Synchronization</h2>
+<p>Because threads share memory, concurrent writes to the same variable
+can cause race conditions. OpenMP provides data-sharing clauses to
+define variable visibility:</p>
+<ul>
+<li><strong><code>shared</code></strong>: A single instance of the
+variable exists in memory, and all threads read from and write to
+it.</li>
+<li><strong><code>private</code></strong>: Each thread receives its own
+uninitialized local copy of the variable for the duration of the
+parallel region.</li>
+<li><strong><code>reduction(op:var)</code></strong>: Each thread
+maintains a private copy of <code>var</code> initialized to the identity
+value of <code>op</code> (such as <span class="math inline">\(0\)</span>
+for <code>+</code>), and the runtime safely combines all private copies
+into the shared variable at the end of the loop.</li>
+</ul>
+<p>For general synchronization inside a loop, OpenMP offers
+<code>#pragma omp critical</code> to restrict a code block to one thread
+at a time, and <code>#pragma omp atomic</code> to enforce hardware-level
+atomic updates on a single memory location.</p>
+<h2 id="shared-memory-performance-considerations">Shared-Memory
+Performance Considerations</h2>
+<p>While OpenMP simplifies loop parallelization, achieving high speedup
+on multiprocessor nodes requires attention to the underlying hardware
+architecture:</p>
+<ul>
+<li><strong>False Sharing</strong>: When threads on different cores
+modify independent variables that reside on the same cache line, the
+cache-coherence protocol repeatedly invalidates the line, degrading
+performance. Padding or aligning per-thread data prevents this.</li>
+<li><strong>NUMA Effects</strong>: On multi-socket nodes with
+Non-Uniform Memory Access (NUMA), memory access latency depends on which
+socket owns the physical memory page. Using the "first-touch"
+policy—initializing arrays in parallel using the same loop schedule as
+the compute loop—ensures data is allocated in the local memory of the
+core that processes it.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-open-mp-parallelize-loops-with-compiler-directives';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

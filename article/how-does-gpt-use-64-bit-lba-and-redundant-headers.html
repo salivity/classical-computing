@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does GPT Use 64-Bit LBA and Redundant Headers? - classical-computing</title>
+    <meta name="description" content="The GUID Partition Table, or GPT, is a modern disk partitioning standard that replaces the legacy Master Boot Record by using 64-bit logical block addressing and redundant headers. By expanding address space to 64 bits and storing backup partition metadat">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-gpt-use-64-bit-lba-and-redundant-headers">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does GPT Use 64-Bit LBA and Redundant Headers? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-gpt-use-64-bit-lba-and-redundant-headers" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GUID Partition Table, or GPT, is a modern disk partitioning standard that replaces the legacy Master Boot Record by using 64-bit logical block addressing and redundant headers. By expanding address space to 64 bits and storing backup partition metadat" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-gpt-use-64-bit-lba-and-redundant-headers">How Does GPT
+Use 64-Bit LBA and Redundant Headers?</h1>
+<p>The GUID Partition Table, or GPT, is a modern disk partitioning
+standard that replaces the legacy Master Boot Record by using 64-bit
+logical block addressing and redundant headers. By expanding address
+space to 64 bits and storing backup partition metadata at the end of the
+disk, GPT overcomes the storage capacity limits and
+single-point-of-failure vulnerabilities of older partitioning schemes in
+classical computing.</p>
+<h2
+id="overcoming-capacity-limits-with-64-bit-logical-block-addressing">Overcoming
+Capacity Limits with 64-Bit Logical Block Addressing</h2>
+<p>In legacy Master Boot Record (MBR) partitioning, disk sectors are
+addressed using 32-bit integers. With a standard sector size of 512
+bytes, a 32-bit address space can reference at most <span
+class="math inline">\(2^{32}\)</span> sectors, which caps addressable
+storage at <span class="math inline">\(2^{32} \times 512\text{ bytes} =
+2\text{ TiB}\)</span>. As modern hard drives and solid-state drives grew
+beyond this threshold, MBR could no longer allocate space past the 2 TiB
+boundary.</p>
+<p>GPT resolves this by using 64-bit Logical Block Addressing (LBA) for
+both the partition table headers and individual partition entries. A
+64-bit address space supports up to <span
+class="math inline">\(2^{64}\)</span> logical blocks. Assuming a
+512-byte sector size, the maximum addressable capacity becomes:</p>
+<p><span class="math display">\[2^{64} \times 512\text{ bytes} = 8\text{
+ZiB}\]</span></p>
+<p>For drives using 4,096-byte (4K) sectors, this limit scales to <span
+class="math inline">\(64\text{ ZiB}\)</span>. This vast address space
+ensures that storage capacity is effectively constrained by physical
+hardware and operating system limits rather than the partition table
+format itself.</p>
+<h2
+id="eliminating-single-points-of-failure-with-redundant-headers">Eliminating
+Single Points of Failure with Redundant Headers</h2>
+<p>MBR stores all partition metadata in a single 512-byte sector at LBA
+0. If that sector is overwritten or corrupted due to hardware failure,
+power loss, or software bugs, the operating system loses track of every
+partition on the drive.</p>
+<p>GPT mitigates this risk by maintaining two copies of the partition
+table metadata:</p>
+<ul>
+<li><strong>Primary GPT Header and Table:</strong> Located at the
+beginning of the disk, starting at LBA 1 (immediately following the
+protective MBR at LBA 0).</li>
+<li><strong>Backup GPT Header and Table:</strong> Located at the very
+end of the disk, with the backup header residing in the final sector
+(LBA <span class="math inline">\(-1\)</span>) and the backup partition
+entry array directly preceding it.</li>
+</ul>
+<p>Each GPT header contains fields pointing to its own LBA, the LBA of
+the alternate header, and the starting LBA of the partition entry array.
+If the primary header or partition table becomes corrupted, firmware or
+recovery tools can read the backup header at the end of the disk to
+restore the partition layout.</p>
+<h2 id="integrity-verification-via-crc32-checksums">Integrity
+Verification via CRC32 Checksums</h2>
+<p>Redundant headers alone cannot tell a system which copy is valid if
+the two differ. To solve this, GPT embeds 32-bit Cyclic Redundancy Check
+(CRC32) checksums in both the primary and backup headers.</p>
+<p>Each header stores two distinct checksums: one covering the GPT
+header itself and another covering the entire partition entry array.
+During boot or disk initialization, the system computes the CRC32 values
+and compares them against the stored checksums. If the primary copy
+fails verification, the system automatically falls back to the backup
+copy, verifies its CRC32 checksums, and can use it to repair the damaged
+primary structures.</p>
+<h2 id="protective-mbr-for-backward-compatibility">Protective MBR for
+Backward Compatibility</h2>
+<p>To prevent legacy utilities that only understand MBR from
+misinterpreting a GPT disk as unpartitioned space, GPT places a
+protective MBR at LBA 0. This sector contains a single partition entry
+of type <code>0xEE</code> spanning the entire disk (or up to the 2 TiB
+MBR limit). Legacy tools see the drive as fully occupied and avoid
+overwriting GPT data, while GPT-aware operating systems and UEFI
+firmware ignore the protective MBR and proceed directly to the primary
+GPT header at LBA 1.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-gpt-use-64-bit-lba-and-redundant-headers';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

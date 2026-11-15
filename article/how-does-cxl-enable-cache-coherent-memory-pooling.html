@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does CXL Enable Cache-Coherent Memory Pooling? - classical-computing</title>
+    <meta name="description" content="Compute Express Link (CXL) is an open industry-standard interconnect built on top of the PCI Express (PCIe) physical layer that enables high-bandwidth, low-latency, cache-coherent communication between CPUs and accelerators such as GPUs, FPGAs, and smart">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-cxl-enable-cache-coherent-memory-pooling">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does CXL Enable Cache-Coherent Memory Pooling? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-cxl-enable-cache-coherent-memory-pooling" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Compute Express Link (CXL) is an open industry-standard interconnect built on top of the PCI Express (PCIe) physical layer that enables high-bandwidth, low-latency, cache-coherent communication between CPUs and accelerators such as GPUs, FPGAs, and smart" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-cxl-enable-cache-coherent-memory-pooling">How Does CXL
+Enable Cache-Coherent Memory Pooling?</h1>
+<p>Compute Express Link (CXL) is an open industry-standard interconnect
+built on top of the PCI Express (PCIe) physical layer that enables
+high-bandwidth, low-latency, cache-coherent communication between CPUs
+and accelerators such as GPUs, FPGAs, and smart NICs. By unifying memory
+spaces and maintaining hardware-enforced cache coherency, CXL allows
+multiple processors and accelerators to share and pool memory resources
+dynamically without relying on slow software-managed data copies.</p>
+<h2 id="the-foundation-cxl-protocols-over-pcie">The Foundation: CXL
+Protocols Over PCIe</h2>
+<p>CXL operates over the PCIe electrical and physical infrastructure,
+using PCIe 5.0 and 6.0 signaling rates while replacing the traditional
+transaction layer with three specialized protocols multiplexed onto a
+single link:</p>
+<ul>
+<li><strong>CXL.io</strong>: Handles device discovery, configuration,
+initialization, register access, and traditional non-coherent DMA
+transfers, functioning similarly to standard PCIe.</li>
+<li><strong>CXL.cache</strong>: Allows attached accelerators to cache
+host CPU memory locally. The host manages coherency, ensuring that if
+the CPU or another device modifies a cached address, the accelerator's
+local copy is invalidated or updated automatically.</li>
+<li><strong>CXL.mem</strong>: Enables the host CPU to access memory
+attached to a CXL device (such as an accelerator's HBM or a dedicated
+memory expander) using standard load and store instructions, rather than
+explicit DMA commands.</li>
+</ul>
+<h2 id="device-types-and-coherency-models">Device Types and Coherency
+Models</h2>
+<p>CXL defines three primary device types based on which protocols they
+implement:</p>
+<ul>
+<li><strong>Type 1 Devices</strong>: Accelerators without local memory
+(such as smart NICs) that use <code>CXL.io</code> and
+<code>CXL.cache</code> to coherently cache host memory.</li>
+<li><strong>Type 2 Devices</strong>: Accelerators with their own
+high-bandwidth local memory (such as GPUs and FPGAs) that use all three
+protocols (<code>CXL.io</code>, <code>CXL.cache</code>, and
+<code>CXL.mem</code>). This allows the CPU to coherently access the
+accelerator's memory and the accelerator to coherently access the CPU's
+memory.</li>
+<li><strong>Type 3 Devices</strong>: Memory expansion buffers and pooled
+memory appliances that use <code>CXL.io</code> and <code>CXL.mem</code>
+to provide additional capacity and bandwidth to hosts.</li>
+</ul>
+<p>In a traditional PCIe setup, sharing data between a CPU and a GPU
+requires explicit memory copies across the bus, software
+synchronization, and duplicate data structures. With CXL Type 2 devices,
+both the CPU and the accelerator operate on a single shared virtual and
+physical address space. Hardware snoop filters and directory-based
+coherency protocols track cache-line states (Modified, Exclusive,
+Shared, Invalid) across the link, eliminating redundant copies and
+reducing synchronization overhead.</p>
+<h2 id="from-direct-attachment-to-memory-pooling">From Direct Attachment
+to Memory Pooling</h2>
+<p>While CXL 1.0 and 1.1 focused on point-to-point connections between a
+single host and a single device, CXL 2.0 introduced <strong>CXL
+switching</strong> and <strong>Single Logical Device (SLD)</strong> /
+<strong>Multi-Logical Device (MLD)</strong> architectures for memory
+pooling.</p>
+<p>Through a CXL switch, a rack or server can house a pool of Type 3
+memory devices or Type 2 accelerators that are not permanently bound to
+a single CPU. The fabric manager dynamically allocates slices of memory
+from the pool to different host CPUs based on workload demand. For
+example, if Host A requires an extra 256 GB of memory for an in-memory
+database and Host B is idle, the CXL switch can bind those memory
+regions to Host A's physical address space. When Host A finishes, the
+memory can be zeroed and reassigned to another host.</p>
+<p>CXL 3.0 and 3.1 further extend this capability by introducing
+<strong>fabric-attached memory</strong> and <strong>peer-to-peer (P2P)
+coherency</strong>. Multiple hosts and accelerators can now access the
+same shared memory region simultaneously with hardware-enforced
+coherency, enabled by back-invalidation channels in
+<code>CXL.mem</code>. This allows accelerators to exchange intermediate
+results directly through pooled memory without routing data through a
+host CPU.</p>
+<h2 id="performance-and-architectural-impact">Performance and
+Architectural Impact</h2>
+<p>By decoupling memory capacity and bandwidth from individual CPU
+sockets, CXL addresses the "memory wall" in classical computing. Instead
+of over-provisioning every server with maximum DRAM to handle peak
+workloads, data centers can provision average memory per node and draw
+from a shared CXL pool as needed.</p>
+<p>If a system has <span class="math inline">\(N\)</span> hosts each
+requiring peak memory <span
+class="math inline">\(M_{\text{peak}}\)</span> but average memory <span
+class="math inline">\(M_{\text{avg}}\)</span>, traditional provisioning
+requires <span class="math inline">\(N \times M_{\text{peak}}\)</span>
+total memory. With CXL pooling, total provisioned memory approaches
+<span class="math inline">\(N \times M_{\text{avg}} +
+M_{\text{burst}}\)</span>, significantly reducing stranded memory, power
+consumption, and hardware cost while maintaining cache-coherent access
+across CPUs and accelerators.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-cxl-enable-cache-coherent-memory-pooling';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

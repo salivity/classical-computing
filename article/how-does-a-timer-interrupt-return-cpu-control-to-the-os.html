@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a Timer Interrupt Return CPU Control to the OS? - classical-computing</title>
+    <meta name="description" content="A timer interrupt is a hardware signal sent to the central processing unit at regular intervals, forcing it to pause the currently running program and transfer execution to the operating system kernel. This mechanism prevents any single process from monop">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-timer-interrupt-return-cpu-control-to-the-os">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a Timer Interrupt Return CPU Control to the OS? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-timer-interrupt-return-cpu-control-to-the-os" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A timer interrupt is a hardware signal sent to the central processing unit at regular intervals, forcing it to pause the currently running program and transfer execution to the operating system kernel. This mechanism prevents any single process from monop" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-timer-interrupt-return-cpu-control-to-the-os">How
+Does a Timer Interrupt Return CPU Control to the OS?</h1>
+<p>A timer interrupt is a hardware signal sent to the central processing
+unit at regular intervals, forcing it to pause the currently running
+program and transfer execution to the operating system kernel. This
+mechanism prevents any single process from monopolizing the processor
+and enables preemptive multitasking, where the scheduler can decide
+which task should run next.</p>
+<h2 id="why-the-operating-system-needs-a-timer-interrupt">Why the
+Operating System Needs a Timer Interrupt</h2>
+<p>When a user program runs on the CPU, it executes instructions
+directly on the hardware. In a cooperative multitasking system, the
+operating system must wait for the running program to voluntarily yield
+control through a system call or an explicit yield instruction. If a
+program enters an infinite loop or simply refuses to yield, the
+operating system has no way to regain control, and the entire system
+freezes.</p>
+<p>To solve this problem, modern operating systems rely on preemptive
+multitasking. Preemption requires an external, hardware-enforced
+mechanism that cannot be ignored or bypassed by user-space software. A
+programmable hardware timer provides this guarantee by periodically
+interrupting the CPU regardless of what the current process is
+doing.</p>
+<h2 id="how-the-hardware-timer-works">How the Hardware Timer Works</h2>
+<p>A classical computer system includes a dedicated hardware timer, such
+as the Programmable Interval Timer (PIT), the Local APIC timer on x86
+processors, or the Generic Timer on ARM architectures. During system
+boot, the operating system configures this timer with a specific
+countdown value or frequency, often called the tick rate.</p>
+<p>For example, if the timer is configured to fire every <span
+class="math inline">\(10\text{ ms}\)</span>, the tick rate is:</p>
+<p><span class="math display">\[f = \frac{1}{0.01\text{ s}} = 100\text{
+Hz}\]</span></p>
+<p>Once started, the timer counts down independently of the CPU's
+instruction stream. When the counter reaches zero, the timer asserts an
+interrupt request (IRQ) line connected to the processor's interrupt
+controller, and then resets the counter to begin the next interval.</p>
+<h2 id="the-interrupt-handling-sequence">The Interrupt Handling
+Sequence</h2>
+<p>When the CPU receives the timer interrupt signal, it completes the
+current machine instruction and immediately performs a hardware-enforced
+context switch into kernel mode. The exact steps vary slightly by
+architecture, but the core sequence is consistent:</p>
+<ol type="1">
+<li><strong>Privilege Escalation</strong>: The CPU switches from user
+mode (low privilege) to kernel mode (high privilege) so that operating
+system code can access protected hardware and memory structures.</li>
+<li><strong>State Preservation</strong>: The processor automatically
+pushes key registers—such as the program counter (instruction pointer),
+processor status flags, and stack pointer—onto the kernel stack.</li>
+<li><strong>Vector Lookup</strong>: The CPU uses the interrupt number to
+look up the corresponding entry in the Interrupt Descriptor Table (IDT)
+or interrupt vector table.</li>
+<li><strong>Handler Execution</strong>: Execution jumps to the operating
+system's timer Interrupt Service Routine (ISR).</li>
+</ol>
+<h2 id="passing-control-to-the-scheduler">Passing Control to the
+Scheduler</h2>
+<p>Inside the timer ISR, the operating system performs essential
+housekeeping. It acknowledges the interrupt to the hardware controller,
+updates system clocks and process accounting metrics, and checks whether
+the current process has exhausted its allocated time slice (also known
+as a quantum).</p>
+<p>If the current process still has time remaining and no
+higher-priority task is waiting, the ISR restores the saved registers
+and executes a return-from-interrupt instruction, resuming the program
+exactly where it left off.</p>
+<p>If the time slice has expired, the ISR invokes the OS scheduler. The
+scheduler saves the remaining CPU state (such as general-purpose
+registers) into the current process's Process Control Block (PCB),
+selects the next runnable process from the ready queue, loads that
+process's saved state from its PCB, and returns from the interrupt into
+the new process. Because this happens tens or hundreds of times per
+second, multiple programs appear to run simultaneously on a single CPU
+core.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-timer-interrupt-return-cpu-control-to-the-os';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

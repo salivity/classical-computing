@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a 2-Bit Saturating Counter Improve Loop Prediction? - classical-computing</title>
+    <meta name="description" content="A two-bit saturating counter improves dynamic branch prediction inside loops by requiring two consecutive mispredictions before changing its prediction direction. Unlike a one-bit predictor that flips immediately on a single unexpected branch outcome, a t">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-2-bit-saturating-counter-improve-loop-prediction">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a 2-Bit Saturating Counter Improve Loop Prediction? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-2-bit-saturating-counter-improve-loop-prediction" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A two-bit saturating counter improves dynamic branch prediction inside loops by requiring two consecutive mispredictions before changing its prediction direction. Unlike a one-bit predictor that flips immediately on a single unexpected branch outcome, a t" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-2-bit-saturating-counter-improve-loop-prediction">How
+Does a 2-Bit Saturating Counter Improve Loop Prediction?</h1>
+<p>A two-bit saturating counter improves dynamic branch prediction
+inside loops by requiring two consecutive mispredictions before changing
+its prediction direction. Unlike a one-bit predictor that flips
+immediately on a single unexpected branch outcome, a two-bit counter
+tolerates the single not-taken exit at the end of a loop, preventing an
+extra misprediction on the next loop entry.</p>
+<h2 id="the-problem-with-one-bit-branch-predictors-in-loops">The Problem
+With One-Bit Branch Predictors in Loops</h2>
+<p>In classical pipelined processors, conditional branches at the end of
+a loop are typically taken many times in a row and not taken only once
+when the loop terminates. A one-bit branch predictor stores only a
+single bit representing the last observed outcome: Taken (<span
+class="math inline">\(T\)</span>) or Not Taken (<span
+class="math inline">\(N\)</span>).</p>
+<p>When a loop with <span class="math inline">\(N\)</span> iterations
+finishes, the final branch is not taken, which causes a misprediction
+and flips the predictor state from <span
+class="math inline">\(T\)</span> to <span
+class="math inline">\(N\)</span>. When the same loop is entered again
+later, the first iteration is predicted as <span
+class="math inline">\(N\)</span>, even though it will almost certainly
+be taken. This results in two mispredictions per loop execution: one at
+the exit and one at the re-entry.</p>
+<h2 id="how-a-two-bit-saturating-counter-works">How a Two-Bit Saturating
+Counter Works</h2>
+<p>A two-bit saturating counter uses four distinct states encoded with
+two bits, representing both the predicted direction and the confidence
+level:</p>
+<ul>
+<li><strong>00 (Strongly Not Taken):</strong> Predicts <span
+class="math inline">\(N\)</span>.</li>
+<li><strong>01 (Weakly Not Taken):</strong> Predicts <span
+class="math inline">\(N\)</span>.</li>
+<li><strong>10 (Weakly Taken):</strong> Predicts <span
+class="math inline">\(T\)</span>.</li>
+<li><strong>11 (Strongly Taken):</strong> Predicts <span
+class="math inline">\(T\)</span>.</li>
+</ul>
+<p>The counter increments by <span class="math inline">\(1\)</span> when
+a branch is taken and decrements by <span
+class="math inline">\(1\)</span> when a branch is not taken, saturating
+at <span class="math inline">\(11\)</span> (maximum) and <span
+class="math inline">\(00\)</span> (minimum):</p>
+<p><span class="math display">\[\text{Next State} = \begin{cases}
+\min(\text{State} + 1, 3) &amp; \text{if Taken} \\ \max(\text{State} -
+1, 0) &amp; \text{if Not Taken} \end{cases}\]</span></p>
+<p>The most significant bit determines the prediction: <span
+class="math inline">\(1\)</span> predicts Taken, and <span
+class="math inline">\(0\)</span> predicts Not Taken.</p>
+<h2 id="why-hysteresis-eliminates-the-re-entry-misprediction">Why
+Hysteresis Eliminates the Re-Entry Misprediction</h2>
+<p>During a loop's execution, repeated taken branches push the counter
+to <strong>Strongly Taken (11)</strong>. When the loop finally exits,
+the single not-taken branch decrements the counter from <span
+class="math inline">\(11\)</span> to <strong>Weakly Taken
+(10)</strong>.</p>
+<p>Because the most significant bit of <span
+class="math inline">\(10\)</span> is still <span
+class="math inline">\(1\)</span>, the predictor continues to predict
+<strong>Taken</strong> the next time the loop is entered. On that first
+iteration of the next loop execution, the branch is indeed taken, which
+increments the counter back to <span class="math inline">\(11\)</span>
+without any misprediction.</p>
+<p>By introducing this hysteresis, the two-bit saturating counter
+reduces loop mispredictions from two per loop execution to just one—at
+the loop exit itself—improving overall pipeline efficiency and reducing
+branch-penalty stalls.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-2-bit-saturating-counter-improve-loop-prediction';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Rate-Monotonic Scheduling Assign Priorities? - classical-computing</title>
+    <meta name="description" content="Rate-Monotonic Scheduling is a classic real-time scheduling algorithm that assigns fixed priorities to periodic tasks based on their execution periods. Tasks with shorter periods receive higher priorities, ensuring that more frequent operations get immedi">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-rate-monotonic-scheduling-assign-priorities">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Rate-Monotonic Scheduling Assign Priorities? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-rate-monotonic-scheduling-assign-priorities" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Rate-Monotonic Scheduling is a classic real-time scheduling algorithm that assigns fixed priorities to periodic tasks based on their execution periods. Tasks with shorter periods receive higher priorities, ensuring that more frequent operations get immedi" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-rate-monotonic-scheduling-assign-priorities">How Does
+Rate-Monotonic Scheduling Assign Priorities?</h1>
+<p>Rate-Monotonic Scheduling is a classic real-time scheduling algorithm
+that assigns fixed priorities to periodic tasks based on their execution
+periods. Tasks with shorter periods receive higher priorities, ensuring
+that more frequent operations get immediate access to the processor.
+Introduced by Liu and Layland in 1973, this approach provides
+mathematical guarantees for task schedulability through provable CPU
+utilization bounds.</p>
+<h2 id="static-priority-assignment-by-periodicity">Static Priority
+Assignment by Periodicity</h2>
+<p>In a classical real-time system, each periodic task <span
+class="math inline">\(\tau_i\)</span> is characterized by its worst-case
+execution time <span class="math inline">\(C_i\)</span> and its period
+<span class="math inline">\(T_i\)</span>, which also serves as its
+relative deadline <span class="math inline">\(D_i = T_i\)</span>.
+Rate-Monotonic Scheduling (RMS) is a static-priority, preemptive
+algorithm. Once priorities are assigned before execution begins, they do
+not change at runtime.</p>
+<p>The priority assignment rule is straightforward: priority is
+inversely proportional to the task period. A task with a smaller period
+<span class="math inline">\(T_i\)</span> has a higher request rate <span
+class="math inline">\(1/T_i\)</span>, and therefore receives a higher
+priority. Whenever a higher-priority task becomes ready to run, it
+immediately preempts any currently executing lower-priority task.</p>
+<h2 id="assumptions-of-the-classical-model">Assumptions of the Classical
+Model</h2>
+<p>The provable guarantees of RMS rely on a specific set of classical
+computing assumptions:</p>
+<ul>
+<li>All tasks are strictly periodic with constant periods.</li>
+<li>Relative deadlines equal the respective periods (<span
+class="math inline">\(D_i = T_i\)</span>).</li>
+<li>Tasks are independent, meaning they do not share resources or block
+each other.</li>
+<li>Context-switching overhead and scheduling overhead are
+negligible.</li>
+<li>Execution times are bounded by known worst-case values <span
+class="math inline">\(C_i\)</span>.</li>
+</ul>
+<h2 id="provable-cpu-utilization-bounds">Provable CPU Utilization
+Bounds</h2>
+<p>The total CPU utilization <span class="math inline">\(U\)</span> of a
+set of <span class="math inline">\(n\)</span> periodic tasks is defined
+as the sum of the ratios of each task's execution time to its
+period:</p>
+<p><span class="math display">\[U = \sum_{i=1}^{n}
+\frac{C_i}{T_i}\]</span></p>
+<p>Liu and Layland proved that a set of <span
+class="math inline">\(n\)</span> independent periodic tasks is
+guaranteed to be schedulable under RMS if the total CPU utilization
+satisfies the following sufficient condition:</p>
+<p><span class="math display">\[U \le n\left(2^{1/n} -
+1\right)\]</span></p>
+<p>For a single task (<span class="math inline">\(n = 1\)</span>), the
+bound is <span class="math inline">\(1.0\)</span> (100% utilization).
+For two tasks (<span class="math inline">\(n = 2\)</span>), the bound
+drops to approximately <span class="math inline">\(0.828\)</span>. As
+the number of tasks approaches infinity, the utilization bound converges
+to:</p>
+<p><span class="math display">\[\lim_{n \to \infty} n\left(2^{1/n} -
+1\right) = \ln 2 \approx 0.693\]</span></p>
+<p>This means any set of independent periodic tasks whose combined
+utilization is at or below <span class="math inline">\(69.3\%\)</span>
+is guaranteed to meet all deadlines under Rate-Monotonic Scheduling,
+regardless of the specific task periods.</p>
+<h2 id="beyond-the-utilization-bound">Beyond the Utilization Bound</h2>
+<p>The Liu and Layland bound is a sufficient condition, not a necessary
+one. Task sets with total utilization above <span
+class="math inline">\(n(2^{1/n} - 1)\)</span> can still be schedulable
+depending on the relationship between their periods. In particular, if
+all task periods are harmonic—meaning every period is an integer
+multiple of shorter periods—the schedulable utilization bound reaches
+<span class="math inline">\(100\%\)</span> (<span
+class="math inline">\(U \le 1.0\)</span>).</p>
+<p>When utilization exceeds the Liu and Layland bound and periods are
+not harmonic, exact schedulability can be verified using Response Time
+Analysis (RTA). RTA computes the worst-case response time <span
+class="math inline">\(R_i\)</span> for each task by summing its own
+execution time and the interference from all higher-priority tasks:</p>
+<p><span class="math display">\[R_i = C_i + \sum_{j \in hp(i)}
+\left\lceil \frac{R_i}{T_j} \right\rceil C_j\]</span></p>
+<p>If <span class="math inline">\(R_i \le T_i\)</span> holds for every
+task <span class="math inline">\(\tau_i\)</span>, the task set is
+guaranteed to be schedulable.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-rate-monotonic-scheduling-assign-priorities';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

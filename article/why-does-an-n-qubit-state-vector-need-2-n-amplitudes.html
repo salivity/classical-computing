@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Does an n-Qubit State Vector Need 2^n Amplitudes? - classical-computing</title>
+    <meta name="description" content="Simulating an n-qubit quantum state vector on classical hardware requires storing 2^n complex amplitudes because quantum mechanics describes a system of n qubits as a superposition over all possible classical bitstrings of length n simultaneously. Unlike">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-does-an-n-qubit-state-vector-need-2-n-amplitudes">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Does an n-Qubit State Vector Need 2^n Amplitudes? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-does-an-n-qubit-state-vector-need-2-n-amplitudes" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Simulating an n-qubit quantum state vector on classical hardware requires storing 2^n complex amplitudes because quantum mechanics describes a system of n qubits as a superposition over all possible classical bitstrings of length n simultaneously. Unlike" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-does-an-n-qubit-state-vector-need-2n-amplitudes">Why Does an
+n-Qubit State Vector Need 2^n Amplitudes?</h1>
+<p>Simulating an n-qubit quantum state vector on classical hardware
+requires storing 2^n complex amplitudes because quantum mechanics
+describes a system of n qubits as a superposition over all possible
+classical bitstrings of length n simultaneously. Unlike classical bits,
+which each occupy a single definite state, qubits exist in a combined
+state space whose dimension grows exponentially with every additional
+qubit.</p>
+<h2 id="classical-bits-vs-quantum-bits">Classical Bits vs. Quantum
+Bits</h2>
+<p>A classical register of <span class="math inline">\(n\)</span> bits
+can only be in one of <span class="math inline">\(2^n\)</span> possible
+configurations at any given moment, such as <code>0101</code>. To
+represent that state in memory, a classical computer only needs <span
+class="math inline">\(n\)</span> bits.</p>
+<p>A single qubit, however, exists in a linear combination
+(superposition) of both basis states, <span
+class="math inline">\(|0\rangle\)</span> and <span
+class="math inline">\(|1\rangle\)</span>:</p>
+<p><span class="math display">\[|\psi\rangle = \alpha|0\rangle +
+\beta|1\rangle\]</span></p>
+<p>Here, <span class="math inline">\(\alpha\)</span> and <span
+class="math inline">\(\beta\)</span> are complex numbers called
+probability amplitudes, subject to the normalization condition <span
+class="math inline">\(|\alpha|^2 + |\beta|^2 = 1\)</span>. Even for
+<span class="math inline">\(n = 1\)</span>, a classical simulator must
+store <span class="math inline">\(2^1 = 2\)</span> complex numbers.</p>
+<h2 id="the-tensor-product-and-exponential-growth">The Tensor Product
+and Exponential Growth</h2>
+<p>When multiple qubits are combined into a single quantum system, their
+joint state space is formed by the tensor product (<span
+class="math inline">\(\otimes\)</span>) of their individual state
+spaces. For two qubits, the combined basis consists of <span
+class="math inline">\(2 \times 2 = 4\)</span> states: <span
+class="math inline">\(|00\rangle\)</span>, <span
+class="math inline">\(|01\rangle\)</span>, <span
+class="math inline">\(|10\rangle\)</span>, and <span
+class="math inline">\(|11\rangle\)</span>.</p>
+<p>In general, an <span class="math inline">\(n\)</span>-qubit state
+vector <span class="math inline">\(|\Psi\rangle\)</span> is written
+as:</p>
+<p><span class="math display">\[|\Psi\rangle = \sum_{x \in \{0,1\}^n}
+c_x |x\rangle\]</span></p>
+<p>Each of the <span class="math inline">\(2^n\)</span> basis states
+<span class="math inline">\(|x\rangle\)</span> has its own independent
+complex amplitude <span class="math inline">\(c_x\)</span>. Adding just
+one more qubit doubles the number of basis states and therefore doubles
+the number of complex amplitudes required to describe the system.</p>
+<h2 id="why-entanglement-prevents-compression">Why Entanglement Prevents
+Compression</h2>
+<p>If qubits were always independent (unentangled), an <span
+class="math inline">\(n\)</span>-qubit state could be written as a
+simple product of <span class="math inline">\(n\)</span> single-qubit
+states, requiring only <span class="math inline">\(2n\)</span> complex
+numbers. However, quantum gates such as the CNOT gate create
+entanglement, meaning the joint state can no longer be factored into
+separate single-qubit states.</p>
+<p>Because arbitrary quantum circuits can generate entangled states
+where every amplitude <span class="math inline">\(c_x\)</span> carries
+correlated information about all <span class="math inline">\(n\)</span>
+qubits, a general-purpose state-vector simulator cannot compress the
+representation. It must track all <span
+class="math inline">\(2^n\)</span> complex amplitudes explicitly in
+memory.</p>
+<h2 id="practical-memory-limits-on-classical-hardware">Practical Memory
+Limits on Classical Hardware</h2>
+<p>Each complex amplitude is typically stored as two 64-bit
+floating-point numbers (16 bytes total in double precision). The memory
+required for <span class="math inline">\(n\)</span> qubits is
+therefore:</p>
+<p><span class="math display">\[\text{Memory} = 16 \times 2^n \text{
+bytes}\]</span></p>
+<p>For <span class="math inline">\(n = 30\)</span> qubits, this requires
+<span class="math inline">\(16 \times 2^{30}\)</span> bytes, or <span
+class="math inline">\(16\text{ GiB}\)</span> of RAM, which fits on a
+standard workstation. By <span class="math inline">\(n = 40\)</span>
+qubits, the requirement jumps to <span class="math inline">\(16\text{
+TiB}\)</span>, and by <span class="math inline">\(n = 50\)</span>
+qubits, it reaches <span class="math inline">\(16\text{ PiB}\)</span>,
+exceeding the memory capacity of most supercomputers.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-does-an-n-qubit-state-vector-need-2-n-amplitudes';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

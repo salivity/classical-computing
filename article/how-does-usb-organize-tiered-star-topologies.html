@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does USB Organize Tiered-Star Topologies? - classical-computing</title>
+    <meta name="description" content="The Universal Serial Bus (USB) protocol connects external peripherals to a host computer using a host-scheduled tiered-star topology. In this architecture, a single host controller manages all bus traffic, while hubs branch the connection into multiple ti">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-usb-organize-tiered-star-topologies">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does USB Organize Tiered-Star Topologies? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-usb-organize-tiered-star-topologies" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Universal Serial Bus (USB) protocol connects external peripherals to a host computer using a host-scheduled tiered-star topology. In this architecture, a single host controller manages all bus traffic, while hubs branch the connection into multiple ti" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-usb-organize-tiered-star-topologies">How Does USB
+Organize Tiered-Star Topologies?</h1>
+<p>The Universal Serial Bus (USB) protocol connects external peripherals
+to a host computer using a host-scheduled tiered-star topology. In this
+architecture, a single host controller manages all bus traffic, while
+hubs branch the connection into multiple tiers to support up to 127
+devices. By centralizing scheduling and eliminating peer-to-peer bus
+contention, USB ensures predictable bandwidth allocation and
+plug-and-play device discovery.</p>
+<h2 id="the-tiered-star-physical-architecture">The Tiered-Star Physical
+Architecture</h2>
+<p>A USB bus is structured as a tree of hubs and functions, with the
+host system at the top. The host contains a host controller and a root
+hub, which provides the initial physical ports. Each port on the root
+hub can connect either directly to a peripheral device (a function) or
+to an external USB hub, which in turn provides additional downstream
+ports.</p>
+<p>The USB specification limits this hierarchy to a maximum of 7 tiers,
+where Tier 1 is the root hub and Tier 7 can only contain peripheral
+functions, not additional hubs. Because each device on a bus is assigned
+a 7-bit address, a single host controller can address up to <span
+class="math inline">\(2^7 - 1 = 127\)</span> devices, with address
+<code>0</code> reserved for unconfigured devices during initial
+enumeration.</p>
+<h2 id="host-scheduled-communication">Host-Scheduled Communication</h2>
+<p>Unlike peer-to-peer buses where any device can initiate a transfer,
+USB is strictly host-centric. Peripherals cannot send data on their own;
+they must wait to be polled by the host controller. This design prevents
+collisions on the shared bus and keeps peripheral hardware simple and
+inexpensive.</p>
+<p>Every USB transaction consists of up to three phases:</p>
+<ul>
+<li><strong>Token Packet</strong>: Sent by the host to specify the
+target device address, endpoint number, and transfer direction
+(<code>IN</code> for device-to-host, <code>OUT</code> for
+host-to-device).</li>
+<li><strong>Data Packet</strong>: Carries the actual payload from the
+sender.</li>
+<li><strong>Handshake Packet</strong>: Sent by the receiver to
+acknowledge successful receipt (<code>ACK</code>), indicate the device
+is busy (<code>NAK</code>), or report an error
+(<code>STALL</code>).</li>
+</ul>
+<h2 id="frames-microframes-and-transfer-types">Frames, Microframes, and
+Transfer Types</h2>
+<p>To coordinate different types of peripherals, the host divides bus
+time into fixed intervals. In Low-Speed and Full-Speed USB, time is
+divided into <span class="math inline">\(1\text{ ms}\)</span> frames. In
+High-Speed USB (USB 2.0), each frame is further subdivided into eight
+<span class="math inline">\(125\ \mu\text{s}\)</span> microframes.</p>
+<p>The host scheduler allocates bandwidth within each frame or
+microframe across four distinct transfer types:</p>
+<ol type="1">
+<li><strong>Control Transfers</strong>: Used for device configuration,
+status checks, and command delivery.</li>
+<li><strong>Interrupt Transfers</strong>: Polled at guaranteed intervals
+for low-latency devices like keyboards and mice.</li>
+<li><strong>Isochronous Transfers</strong>: Reserved for time-sensitive
+streaming data such as audio and video, offering guaranteed bandwidth
+without error-retry overhead.</li>
+<li><strong>Bulk Transfers</strong>: Used for large, non-time-critical
+data like printer jobs or storage transfers, utilizing whatever
+bandwidth remains in the frame.</li>
+</ol>
+<h2 id="device-enumeration-and-endpoints">Device Enumeration and
+Endpoints</h2>
+<p>When a peripheral is plugged into a hub port, the hub detects the
+electrical change and notifies the host during its next poll. The host
+then resets the port, communicates with the device at default address
+<code>0</code>, and assigns it a unique 7-bit address.</p>
+<p>During this enumeration process, the host reads the device's
+descriptors to learn its capabilities, power requirements, and
+endpoints. An endpoint is a unidirectional buffer inside the peripheral,
+and a single device can expose multiple endpoints to handle different
+transfer types simultaneously. Once configured, the host integrates the
+device's endpoints into its ongoing frame schedule.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-usb-organize-tiered-star-topologies';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

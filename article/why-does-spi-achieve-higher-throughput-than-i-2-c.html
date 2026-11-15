@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Does SPI Achieve Higher Throughput Than I2C? - classical-computing</title>
+    <meta name="description" content="The Serial Peripheral Interface achieves higher throughput than the Inter-Integrated Circuit protocol because it uses separate unidirectional data lines for simultaneous full-duplex communication, dedicated chip-select pins that eliminate addressing overh">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-does-spi-achieve-higher-throughput-than-i-2-c">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Does SPI Achieve Higher Throughput Than I2C? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-does-spi-achieve-higher-throughput-than-i-2-c" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Serial Peripheral Interface achieves higher throughput than the Inter-Integrated Circuit protocol because it uses separate unidirectional data lines for simultaneous full-duplex communication, dedicated chip-select pins that eliminate addressing overh" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-does-spi-achieve-higher-throughput-than-i2c">Why Does SPI
+Achieve Higher Throughput Than I2C?</h1>
+<p>The Serial Peripheral Interface achieves higher throughput than the
+Inter-Integrated Circuit protocol because it uses separate
+unidirectional data lines for simultaneous full-duplex communication,
+dedicated chip-select pins that eliminate addressing overhead, and
+push-pull drivers that support much faster clock speeds. While I2C
+prioritizes pin efficiency and multi-device simplicity on a shared
+two-wire bus, SPI trades extra physical pins for raw data transfer speed
+and lower protocol overhead in classical computing systems.</p>
+<h2 id="full-duplex-data-lines-vs-half-duplex-sharing">Full-Duplex Data
+Lines vs. Half-Duplex Sharing</h2>
+<p>SPI uses two separate data lines: Master Out Slave In (MOSI) and
+Master In Slave Out (MISO). Because each line carries data in only one
+direction, the controller and the peripheral can transmit and receive
+bits simultaneously on every clock cycle. This full-duplex architecture
+doubles the effective bandwidth compared to a half-duplex bus when
+bidirectional data exchange is needed.</p>
+<p>In contrast, I2C relies on a single bidirectional data line (SDA) for
+both transmitting and receiving. Only one device can drive the SDA line
+at any given time, which forces communication into half-duplex mode. If
+a controller needs to send a command and read back sensor data, it must
+first complete the write phase, release or reverse the bus direction,
+and then clock in the response.</p>
+<h2 id="chip-select-pins-vs-protocol-addressing-overhead">Chip-Select
+Pins vs. Protocol Addressing Overhead</h2>
+<p>SPI uses dedicated hardware chip-select (CS) or slave-select (SS)
+pins to choose which peripheral is active. Pulling a specific
+peripheral's CS line low immediately prepares that device for
+communication without sending any address bits over the data lines. Once
+selected, every clock pulse transfers useful payload data.</p>
+<p>I2C avoids extra select pins by embedding a 7-bit or 10-bit device
+address into the data stream at the start of every transaction. In
+addition to the address bits, I2C requires a read/write bit, start and
+stop conditions, and an acknowledgment (ACK/NACK) bit after every byte
+transferred. For a standard 8-bit byte in I2C, at least 9 clock cycles
+are needed, meaning protocol overhead consumes at least <span
+class="math inline">\(\frac{1}{9} \approx 11.1\%\)</span> of the clock
+cycles just for acknowledgments, plus the initial addressing frame.</p>
+<h2 id="push-pull-drivers-vs-open-drain-pull-up-resistors">Push-Pull
+Drivers vs. Open-Drain Pull-Up Resistors</h2>
+<p>The electrical design of the bus also limits how fast each protocol
+can be clocked. SPI outputs use push-pull drivers, which actively drive
+the signal lines both high and low. Active driving produces sharp, fast
+rising and falling edges, allowing SPI clocks to routinely operate at
+tens of megahertz—often <span class="math inline">\(10\text{
+MHz}\)</span> to <span class="math inline">\(50\text{ MHz}\)</span> or
+higher depending on board layout.</p>
+<p>I2C uses open-drain (or open-collector) drivers on both SDA and SCL.
+Devices can only pull the lines low; returning a line to a high state
+depends on external pull-up resistors charging the bus capacitance. The
+RC time constant <span class="math inline">\(\tau = R \cdot C\)</span>
+slows down the rising edge, which restricts standard I2C speeds to <span
+class="math inline">\(100\text{ kHz}\)</span>, Fast Mode to <span
+class="math inline">\(400\text{ kHz}\)</span>, and Fast Mode Plus to
+<span class="math inline">\(1\text{ MHz}\)</span>. Even specialized
+High-Speed I2C (<span class="math inline">\(3.4\text{ MHz}\)</span>)
+remains significantly slower than typical SPI implementations.</p>
+<h2 id="summary-of-trade-offs">Summary of Trade-Offs</h2>
+<p>SPI achieves superior throughput by dedicating more pins to the
+interface—typically four wires (SCLK, MOSI, MISO, CS) plus an additional
+CS line per peripheral. This hardware investment removes bus
+arbitration, addressing frames, acknowledgment bits, and slow open-drain
+rise times, making SPI the preferred choice for high-speed peripherals
+such as flash memory, displays, and high-rate analog-to-digital
+converters.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-does-spi-achieve-higher-throughput-than-i-2-c';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

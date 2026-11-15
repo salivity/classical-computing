@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Do Programmers Use Hexadecimal for Memory Addresses? - classical-computing</title>
+    <meta name="description" content="Systems programmers rely on hexadecimal notation because it provides a compact, human-readable representation of binary data. While computers store and process information in base-2, raw binary strings are too long and error-prone for humans to read easil">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-do-programmers-use-hexadecimal-for-memory-addresses">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Do Programmers Use Hexadecimal for Memory Addresses? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-do-programmers-use-hexadecimal-for-memory-addresses" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Systems programmers rely on hexadecimal notation because it provides a compact, human-readable representation of binary data. While computers store and process information in base-2, raw binary strings are too long and error-prone for humans to read easil" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-do-programmers-use-hexadecimal-for-memory-addresses">Why Do
+Programmers Use Hexadecimal for Memory Addresses?</h1>
+<p>Systems programmers rely on hexadecimal notation because it provides
+a compact, human-readable representation of binary data. While computers
+store and process information in base-2, raw binary strings are too long
+and error-prone for humans to read easily. Hexadecimal, which is
+base-16, maps directly to four-bit binary groups, making it ideal for
+inspecting memory addresses and binary dumps.</p>
+<h2 id="the-direct-mapping-between-binary-and-hexadecimal">The Direct
+Mapping Between Binary and Hexadecimal</h2>
+<p>The primary advantage of hexadecimal over decimal (base-10) is its
+mathematical relationship to binary (base-2). Because <span
+class="math inline">\(16 = 2^4\)</span>, a single hexadecimal digit
+represents exactly four binary digits, also known as a nibble.</p>
+<p>In contrast, decimal does not align with powers of two. Converting a
+large binary number to decimal requires dividing by <span
+class="math inline">\(10\)</span> repeatedly, which obscures the
+underlying bit patterns. With hexadecimal, you can convert any binary
+string by grouping it into sets of four bits from right to left and
+translating each group independently.</p>
+<p>For example, the 8-bit binary value <code>11010110</code> splits into
+two 4-bit nibbles: <code>1101</code> and <code>0110</code>. In
+hexadecimal, <code>1101</code> is <code>D</code> (<span
+class="math inline">\(13\)</span> in decimal) and <code>0110</code> is
+<code>6</code>. Together, they form <code>0xD6</code>.</p>
+<h2 id="compactness-for-large-memory-addresses">Compactness for Large
+Memory Addresses</h2>
+<p>Modern classical computers use 32-bit or 64-bit memory architectures.
+Writing out a 64-bit memory address in binary requires 64 characters,
+which is difficult to scan or compare without making mistakes.</p>
+<p>Using hexadecimal reduces the length of a binary string by a factor
+of four:</p>
+<ul>
+<li>An 8-bit byte is represented by <span
+class="math inline">\(2\)</span> hex digits.</li>
+<li>A 32-bit address is represented by <span
+class="math inline">\(8\)</span> hex digits.</li>
+<li>A 64-bit address is represented by <span
+class="math inline">\(16\)</span> hex digits.</li>
+</ul>
+<p>This compactness allows debuggers, disassemblers, and memory dumps to
+display large amounts of data in aligned columns. A 16-byte row in a hex
+dump always takes up the same horizontal space, making it easy to spot
+offsets, alignment boundaries, and data structures.</p>
+<h2 id="reading-bitmasks-and-flags">Reading Bitmasks and Flags</h2>
+<p>Systems programming frequently involves bit-level operations such as
+masking, shifting, and checking status flags. Because each hex digit
+corresponds to a fixed 4-bit pattern, programmers can mentally decode
+bitmasks without converting to decimal.</p>
+<p>For instance, if a hardware register uses bit <span
+class="math inline">\(3\)</span> (the fourth bit from the right, <span
+class="math inline">\(2^3 = 8\)</span>) as an error flag, a programmer
+inspecting the register value <code>0x08</code> immediately knows that
+only bit <span class="math inline">\(3\)</span> is set. Similarly,
+<code>0xFF</code> clearly indicates that all eight bits in a byte are
+set to <code>1</code>.</p>
+<h2 id="standardization-in-tooling">Standardization in Tooling</h2>
+<p>Because of these practical benefits, hexadecimal has become the
+universal standard across low-level computing tools. Compilers, linkers,
+kernel panic logs, and network packet analyzers all default to
+hexadecimal when displaying raw memory or machine code, ensuring
+consistency across the entire systems programming ecosystem.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-do-programmers-use-hexadecimal-for-memory-addresses';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

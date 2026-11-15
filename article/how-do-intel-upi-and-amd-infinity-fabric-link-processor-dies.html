@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Intel UPI and AMD Infinity Fabric Link Processor Dies? - classical-computing</title>
+    <meta name="description" content="Modern high-performance processors rely on multiple silicon dies rather than a single monolithic chip to scale core counts and improve manufacturing yields. Intel Ultra Path Interconnect and AMD Infinity Fabric are the specialized interconnect architectur">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-intel-upi-and-amd-infinity-fabric-link-processor-dies">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Intel UPI and AMD Infinity Fabric Link Processor Dies? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-intel-upi-and-amd-infinity-fabric-link-processor-dies" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern high-performance processors rely on multiple silicon dies rather than a single monolithic chip to scale core counts and improve manufacturing yields. Intel Ultra Path Interconnect and AMD Infinity Fabric are the specialized interconnect architectur" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1
+id="how-do-intel-upi-and-amd-infinity-fabric-link-processor-dies">How Do
+Intel UPI and AMD Infinity Fabric Link Processor Dies?</h1>
+<p>Modern high-performance processors rely on multiple silicon dies
+rather than a single monolithic chip to scale core counts and improve
+manufacturing yields. Intel Ultra Path Interconnect and AMD Infinity
+Fabric are the specialized interconnect architectures that bind these
+separate dies into a unified, cache-coherent computing system. By
+managing high-speed point-to-point data transfers, memory access, and
+cache coherency protocols across physical boundaries, both technologies
+allow operating systems and applications to treat a multi-die or
+multi-socket machine as a single logical processor.</p>
+<h2 id="why-multi-die-architectures-need-high-speed-interconnects">Why
+Multi-Die Architectures Need High-Speed Interconnects</h2>
+<p>As transistor scaling slowed and reticle limits constrained the
+maximum size of a single silicon die, chipmakers shifted toward chiplet
+and multi-die designs. Splitting a processor into smaller dies reduces
+manufacturing defects and lowers costs, but it introduces a major
+engineering challenge: communication between cores on different dies
+must be fast enough to avoid bottlenecks.</p>
+<p>Without a dedicated interconnect, a core on one die trying to read
+data cached on another die would suffer severe latency penalties. Both
+Intel Ultra Path Interconnect (UPI) and AMD Infinity Fabric solve this
+by providing high-bandwidth, low-latency pathways that maintain a single
+shared memory address space across all dies.</p>
+<h2 id="how-intel-ultra-path-interconnect-upi-works">How Intel Ultra
+Path Interconnect (UPI) Works</h2>
+<p>Intel Ultra Path Interconnect, introduced with the Skylake-SP Xeon
+architecture to replace the older QuickPath Interconnect (QPI), is a
+point-to-point processor interconnect designed primarily for
+multi-socket servers and multi-die Xeon packages.</p>
+<h3 id="point-to-point-topology-and-packet-routing">Point-to-Point
+Topology and Packet Routing</h3>
+<p>UPI links processors directly using dedicated high-speed serial
+lanes. Each UPI link consists of multiple differential pairs for
+transmitting and receiving data simultaneously. Rather than broadcasting
+every request to all nodes, UPI uses a directory-based coherency
+protocol. A home agent tracks which cache lines are owned by which die
+or socket, routing snoop requests only where needed to minimize wasted
+bandwidth.</p>
+<h3 id="cache-coherency-and-numa">Cache Coherency and NUMA</h3>
+<p>When a core requests data not present in its local L1, L2, or L3
+cache, the memory controller or caching agent checks the directory. If
+the data resides in a remote die's cache or local DRAM, UPI transfers
+the cache line across the link. Because accessing memory attached to a
+remote die takes longer than accessing local memory, systems using UPI
+expose Non-Uniform Memory Access (NUMA) domains to the operating system
+so schedulers can keep threads close to their data.</p>
+<h2 id="how-amd-infinity-fabric-works">How AMD Infinity Fabric
+Works</h2>
+<p>AMD Infinity Fabric is a modular, scalable interconnect architecture
+used across Ryzen, Threadripper, and EPYC processors. Unlike UPI, which
+was initially focused on socket-to-socket links, Infinity Fabric was
+built from the ground up to connect chiplets within a single package as
+well as across multiple sockets.</p>
+<h3 id="control-fabric-and-data-fabric">Control Fabric and Data
+Fabric</h3>
+<p>Infinity Fabric is divided into two distinct planes:</p>
+<ul>
+<li><strong>Scalable Data Fabric (SDF):</strong> Handles the actual
+movement of data packets between CPU Core Complex Dies (CCDs), I/O dies,
+memory controllers, and PCIe lanes.</li>
+<li><strong>Scalable Control Fabric (SCF):</strong> Manages system-level
+functions such as power management, thermal monitoring, clock
+distribution, and security resets across all connected dies.</li>
+</ul>
+<h3 id="chiplet-to-io-die-communication">Chiplet-to-I/O Die
+Communication</h3>
+<p>In modern AMD EPYC and Ryzen architectures, compute cores reside on
+separate CCDs fabricated on leading-edge process nodes, while memory
+controllers and I/O interfaces sit on a central I/O die (IOD). Infinity
+Fabric links each CCD to the central IOD using high-speed, low-power
+SerDes (Serializer/Deserializer) or advanced packaging traces. Because
+all memory traffic flows through the central IOD, latency between cores
+on different CCDs remains uniform, simplifying memory scheduling
+compared to older multi-die designs.</p>
+<h2 id="key-architectural-differences">Key Architectural
+Differences</h2>
+<p>While both interconnects achieve cache-coherent multi-die
+communication, they differ in how they scale and route traffic:</p>
+<ul>
+<li><strong>Primary Scope:</strong> Intel UPI is predominantly used for
+socket-to-socket communication and connecting large compute tiles,
+whereas AMD Infinity Fabric serves as a universal fabric for
+intra-package chiplet links, inter-socket links, and even GPU-to-CPU
+connections (Infinity Fabric Links).</li>
+<li><strong>Clocking and Bandwidth:</strong> Earlier generations of
+Infinity Fabric tied its clock speed directly to the system memory clock
+(<span class="math inline">\(f_{\text{IF}} = f_{\text{MCLK}}\)</span>),
+though newer architectures allow decoupled ratios. Intel UPI operates
+independently of the memory clock, using fixed high-speed link rates
+measured in gigatransfers per second (<span
+class="math inline">\(\text{GT/s}\)</span>).</li>
+<li><strong>Topology:</strong> UPI typically forms direct mesh or ring
+topologies between sockets, while Infinity Fabric uses a hub-and-spoke
+layout inside the package (CCDs to I/O die) and point-to-point links
+between sockets.</li>
+</ul>
+<h2 id="performance-trade-offs-in-classical-computing">Performance
+Trade-Offs in Classical Computing</h2>
+<p>In classical computing workloads, the performance of both
+interconnects depends on bandwidth, hop count, and latency. If a
+workload frequently shares data between threads running on different
+dies, interconnect saturation or cross-die latency can reduce scaling
+efficiency.</p>
+<p>Total theoretical unidirectional bandwidth per link can be expressed
+as:</p>
+<p><span class="math display">\[\text{Bandwidth} = \text{Link Rate}
+\times \text{Lane Width} \times \text{Encoding Efficiency}\]</span></p>
+<p>To mitigate cross-die penalties, modern compilers, hypervisors, and
+operating systems use NUMA-aware scheduling. By pinning related threads
+and their allocated memory pages to the same die or socket, systems
+minimize the volume of traffic traversing UPI or Infinity Fabric,
+reserving interconnect bandwidth for genuinely shared workloads.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-intel-upi-and-amd-infinity-fabric-link-processor-dies';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

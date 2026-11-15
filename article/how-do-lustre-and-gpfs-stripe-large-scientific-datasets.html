@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Lustre and GPFS Stripe Large Scientific Datasets? - classical-computing</title>
+    <meta name="description" content="Parallel file systems such as Lustre and GPFS enable high-performance computing clusters to read and write massive scientific datasets simultaneously across hundreds of storage servers. By dividing large files into fixed-size blocks and distributing those">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-lustre-and-gpfs-stripe-large-scientific-datasets">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Lustre and GPFS Stripe Large Scientific Datasets? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-lustre-and-gpfs-stripe-large-scientific-datasets" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Parallel file systems such as Lustre and GPFS enable high-performance computing clusters to read and write massive scientific datasets simultaneously across hundreds of storage servers. By dividing large files into fixed-size blocks and distributing those" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-lustre-and-gpfs-stripe-large-scientific-datasets">How Do
+Lustre and GPFS Stripe Large Scientific Datasets?</h1>
+<p>Parallel file systems such as Lustre and GPFS enable high-performance
+computing clusters to read and write massive scientific datasets
+simultaneously across hundreds of storage servers. By dividing large
+files into fixed-size blocks and distributing those blocks across
+multiple independent storage targets, these systems eliminate
+single-server bottlenecks and aggregate the bandwidth of the entire
+storage network.</p>
+<h2 id="core-architecture-of-parallel-striping">Core Architecture of
+Parallel Striping</h2>
+<p>In classical computing environments, a single storage server cannot
+saturate the aggregate network bandwidth of thousands of compute nodes.
+Parallel file systems solve this by separating metadata operations from
+bulk data transfer. Metadata servers (MDS) manage file names,
+permissions, and directory structures, while data servers handle the
+actual storage blocks.</p>
+<p>When a client application writes a large dataset, the file is
+partitioned into chunks of a defined stripe size, denoted as <span
+class="math inline">\(S\)</span>. If a file has total size <span
+class="math inline">\(F\)</span>, the number of stripes <span
+class="math inline">\(N\)</span> is given by:</p>
+<p><span class="math display">\[N = \left\lceil \frac{F}{S}
+\right\rceil\]</span></p>
+<p>These chunks are distributed in a round-robin fashion across a set of
+storage targets, known as the stripe count <span
+class="math inline">\(C\)</span>. Because each target resides on a
+separate physical disk array or storage server, multiple compute nodes
+can read or write different portions of the same file concurrently
+without waiting for a single disk controller.</p>
+<h2 id="striping-in-lustre">Striping in Lustre</h2>
+<p>Lustre uses Object Storage Servers (OSS) that manage one or more
+Object Storage Targets (OSTs). Each OST represents a dedicated storage
+volume. When a file is created in Lustre, the Metadata Server (MDS)
+assigns it a layout that specifies:</p>
+<ul>
+<li><strong>Stripe size:</strong> The size of each contiguous chunk
+written to a single OST, commonly set to 1 MB or 4 MB for scientific
+workloads.</li>
+<li><strong>Stripe count:</strong> The number of OSTs across which the
+file is distributed.</li>
+<li><strong>Stripe offset:</strong> The index of the first OST where
+striping begins, which is usually chosen automatically to balance load
+across the cluster.</li>
+</ul>
+<p>For a byte at offset <span class="math inline">\(B\)</span> within a
+file, Lustre determines the target OST index <span
+class="math inline">\(i\)</span> using modular arithmetic:</p>
+<p><span class="math display">\[i = \left( \text{offset} + \left\lfloor
+\frac{B}{S} \right\rfloor \right) \bmod C\]</span></p>
+<p>Modern Lustre deployments also support Progressive File Layouts
+(PFL). PFL allows a single file to use different striping parameters at
+different byte ranges. Small files or the initial megabytes of a file
+might use a stripe count of 1 to minimize overhead, while gigabytes
+further into the file automatically expand to dozens or hundreds of
+OSTs.</p>
+<h2 id="striping-in-gpfs">Striping in GPFS</h2>
+<p>GPFS, now known as IBM Storage Scale, takes a block-level approach
+rather than an object-based approach. It organizes storage devices into
+Network Shared Disks (NSDs). Unlike Lustre, which allows per-file
+striping configurations, GPFS typically applies striping policies at the
+file system or storage pool level.</p>
+<p>When a file is created in GPFS, its data blocks are distributed
+across all NSDs in the assigned storage pool using a round-robin or
+scatter allocation algorithm. The block size in GPFS is often much
+larger than in traditional file systems, ranging from 256 KB up to 16
+MB.</p>
+<p>To prevent lock contention when hundreds of compute nodes write to
+the same file simultaneously, GPFS uses distributed byte-range locking.
+A token manager grants locks on specific byte ranges rather than the
+entire file. This allows Node A to write to bytes <span
+class="math inline">\(0\)</span> through <span
+class="math inline">\(S-1\)</span> on one NSD while Node B writes to
+bytes <span class="math inline">\(S\)</span> through <span
+class="math inline">\(2S-1\)</span> on another NSD, all in parallel.</p>
+<h2 id="performance-trade-offs-and-alignment">Performance Trade-Offs and
+Alignment</h2>
+<p>Choosing the right striping parameters is critical for scientific
+applications using libraries like MPI-IO, HDF5, or NetCDF. If the stripe
+size <span class="math inline">\(S\)</span> is too small, the system
+spends excessive time managing metadata and network connections. If
+<span class="math inline">\(S\)</span> is too large, a dataset may not
+spread across enough targets to utilize the available aggregate
+bandwidth.</p>
+<p>Maximum theoretical throughput <span
+class="math inline">\(T_{\text{max}}\)</span> scales with the number of
+active targets <span class="math inline">\(C\)</span> and the bandwidth
+per target <span class="math inline">\(B_{\text{target}}\)</span>,
+bounded by the client network interface <span
+class="math inline">\(B_{\text{network}}\)</span>:</p>
+<p><span class="math display">\[T_{\text{max}} = \min\left( C \cdot
+B_{\text{target}}, \, B_{\text{network}} \right)\]</span></p>
+<p>To achieve optimal performance, scientific workflows align their
+application-level I/O buffers with the underlying file system stripe
+size. When collective I/O operations match the stripe boundaries, each
+compute node communicates primarily with a single storage target per I/O
+phase, minimizing cross-network traffic and maximizing sustained
+throughput.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-lustre-and-gpfs-stripe-large-scientific-datasets';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Defines Noise Margin in Digital Logic Circuits? - classical-computing</title>
+    <meta name="description" content="Noise margin in classical computing is the quantitative buffer between the output voltage levels of a driving logic gate and the input voltage thresholds of a receiving logic gate. It defines how much electrical noise a digital signal can tolerate without">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-defines-noise-margin-in-digital-logic-circuits">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Defines Noise Margin in Digital Logic Circuits? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-defines-noise-margin-in-digital-logic-circuits" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Noise margin in classical computing is the quantitative buffer between the output voltage levels of a driving logic gate and the input voltage thresholds of a receiving logic gate. It defines how much electrical noise a digital signal can tolerate without" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-defines-noise-margin-in-digital-logic-circuits">What
+Defines Noise Margin in Digital Logic Circuits?</h1>
+<p>Noise margin in classical computing is the quantitative buffer
+between the output voltage levels of a driving logic gate and the input
+voltage thresholds of a receiving logic gate. It defines how much
+electrical noise a digital signal can tolerate without being
+misinterpreted as the wrong binary state. By establishing a clear
+separation between logic high and logic low regions, noise margin
+ensures reliable data transmission and computation across billions of
+transistors.</p>
+<h2 id="the-four-key-voltage-thresholds">The Four Key Voltage
+Thresholds</h2>
+<p>In digital electronics, binary states are represented by voltage
+ranges rather than exact single values. Four standardized voltage
+parameters define the boundaries of valid logic levels between a driver
+and a receiver:</p>
+<ul>
+<li><strong><span class="math inline">\(V_{OH}\)</span> (Output High
+Voltage):</strong> The minimum voltage a driving gate guarantees to
+output when representing a logic 1.</li>
+<li><strong><span class="math inline">\(V_{OL}\)</span> (Output Low
+Voltage):</strong> The maximum voltage a driving gate guarantees to
+output when representing a logic 0.</li>
+<li><strong><span class="math inline">\(V_{IH}\)</span> (Input High
+Voltage):</strong> The minimum voltage a receiving gate requires to
+reliably recognize an input as a logic 1.</li>
+<li><strong><span class="math inline">\(V_{IL}\)</span> (Input Low
+Voltage):</strong> The maximum voltage a receiving gate can accept while
+still reliably recognizing an input as a logic 0.</li>
+</ul>
+<p>For a logic family to function properly, the driver's output must
+fall safely within the receiver's expected input range. This requires
+<span class="math inline">\(V_{OH} &gt; V_{IH}\)</span> and <span
+class="math inline">\(V_{OL} &lt; V_{IL}\)</span>.</p>
+<h2 id="calculating-high-and-low-noise-margins">Calculating High and Low
+Noise Margins</h2>
+<p>Noise margin is split into two distinct metrics: one for the logic
+high state and one for the logic low state.</p>
+<p>The high-level noise margin (<span
+class="math inline">\(NM_H\)</span>) is the difference between the
+minimum guaranteed high output and the minimum required high input:</p>
+<p><span class="math display">\[NM_H = V_{OH} - V_{IH}\]</span></p>
+<p>The low-level noise margin (<span
+class="math inline">\(NM_L\)</span>) is the difference between the
+maximum allowed low input and the maximum guaranteed low output:</p>
+<p><span class="math display">\[NM_L = V_{IL} - V_{OL}\]</span></p>
+<p>If external interference—such as electromagnetic coupling or power
+supply ripple—pushes a logic high signal down by more than <span
+class="math inline">\(NM_H\)</span>, or pushes a logic low signal up by
+more than <span class="math inline">\(NM_L\)</span>, the signal enters
+the indeterminate region between <span
+class="math inline">\(V_{IL}\)</span> and <span
+class="math inline">\(V_{IH}\)</span>. In this undefined zone, the
+receiving gate's output becomes unpredictable.</p>
+<h2 id="the-role-of-the-voltage-transfer-characteristic">The Role of the
+Voltage Transfer Characteristic</h2>
+<p>The exact values of <span class="math inline">\(V_{IH}\)</span> and
+<span class="math inline">\(V_{IL}\)</span> are determined by the
+Voltage Transfer Characteristic (VTC) curve of a logic gate, which plots
+output voltage (<span class="math inline">\(V_{out}\)</span>) against
+input voltage (<span class="math inline">\(V_{in}\)</span>).</p>
+<p>In an ideal inverter, the transition between high and low is
+instantaneous. In real-world CMOS gates, the transition is a steep but
+continuous curve. Engineers typically define <span
+class="math inline">\(V_{IL}\)</span> and <span
+class="math inline">\(V_{IH}\)</span> as the unity-gain points on the
+VTC curve—the specific locations where the slope of the curve equals
+<span class="math inline">\(-1\)</span>:</p>
+<p><span class="math display">\[\frac{dV_{out}}{dV_{in}} =
+-1\]</span></p>
+<p>Between these two unity-gain points, the gate exhibits high voltage
+gain, meaning small changes in input voltage cause large swings in
+output voltage. Outside this region, the gain is less than <span
+class="math inline">\(1\)</span>, which allows the gate to attenuate
+small noise fluctuations rather than amplify them.</p>
+<h2 id="factors-that-influence-noise-margin">Factors That Influence
+Noise Margin</h2>
+<p>Several physical and design factors govern the size of a circuit's
+noise margin:</p>
+<ul>
+<li><strong>Supply Voltage (<span
+class="math inline">\(V_{DD}\)</span>):</strong> Higher supply voltages
+generally allow for wider voltage swings and larger noise margins. As
+modern processors scale down <span class="math inline">\(V_{DD}\)</span>
+to reduce power consumption, noise margins shrink, making circuits more
+sensitive to interference.</li>
+<li><strong>Transistor Sizing and Threshold Voltage (<span
+class="math inline">\(V_{th}\)</span>):</strong> The switching threshold
+of a CMOS gate depends on the relative strengths of its pull-up (PMOS)
+and pull-down (NMOS) networks. Symmetrical sizing maximizes both <span
+class="math inline">\(NM_H\)</span> and <span
+class="math inline">\(NM_L\)</span> simultaneously.</li>
+<li><strong>Process, Voltage, and Temperature (PVT) Variations:</strong>
+Manufacturing tolerances, supply voltage droop, and temperature
+fluctuations shift transistor characteristics, which can compress the
+available noise margin under worst-case operating conditions.</li>
+</ul>
+<p>Designing classical computing hardware requires balancing these
+factors to maintain sufficient noise margins while meeting strict power
+and performance targets.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-defines-noise-margin-in-digital-logic-circuits';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

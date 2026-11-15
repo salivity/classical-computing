@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Tournament and TAGE Predictors Correlate History? - classical-computing</title>
+    <meta name="description" content="Tournament and TAGE branch predictors bridge global program execution patterns and individual branch behavior by combining multiple prediction mechanisms that index into different history lengths. While a Tournament predictor dynamically arbitrates betwee">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-tournament-and-tage-predictors-correlate-history">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Tournament and TAGE Predictors Correlate History? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-tournament-and-tage-predictors-correlate-history" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Tournament and TAGE branch predictors bridge global program execution patterns and individual branch behavior by combining multiple prediction mechanisms that index into different history lengths. While a Tournament predictor dynamically arbitrates betwee" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-tournament-and-tage-predictors-correlate-history">How Do
+Tournament and TAGE Predictors Correlate History?</h1>
+<p>Tournament and TAGE branch predictors bridge global program execution
+patterns and individual branch behavior by combining multiple prediction
+mechanisms that index into different history lengths. While a Tournament
+predictor dynamically arbitrates between a dedicated local predictor and
+a global predictor for each branch, TAGE generalizes this concept using
+tagged tables indexed by geometric global history lengths alongside a
+base bimodal table. Both architectures recognize that some branches
+depend primarily on their own past outcomes, whereas others are governed
+by the path of recent branches leading up to them.</p>
+<h2 id="why-branch-prediction-needs-both-global-and-local-context">Why
+Branch Prediction Needs Both Global and Local Context</h2>
+<p>Modern pipelined processors rely on accurate branch prediction to
+keep instruction fetch units supplied without stalling on control
+hazards. A single branch instruction can behave differently depending on
+two distinct sources of correlation:</p>
+<ul>
+<li><strong>Local history</strong> captures the recent outcomes of the
+same static branch instruction, which is effective for loop branches or
+branches that alternate in regular patterns.</li>
+<li><strong>Global history</strong> captures the outcomes of the last
+<span class="math inline">\(k\)</span> dynamic branches executed across
+the entire program, which is effective for correlated branches whose
+outcomes depend on prior conditional checks.</li>
+</ul>
+<p>Relying solely on local history fails when a branch's direction is
+determined by an earlier <code>if</code> statement elsewhere in the
+code. Relying solely on global history fails when unrelated branches
+pollute the global history register (GHR) and alias away a branch's own
+repeating pattern.</p>
+<h2
+id="how-tournament-predictors-arbitrate-between-local-and-global">How
+Tournament Predictors Arbitrate Between Local and Global</h2>
+<p>A Tournament branch predictor—famously implemented in the Alpha
+21264—addresses this trade-off by running a local predictor and a global
+predictor in parallel and using a <strong>meta-predictor</strong> (or
+selector) to choose between them.</p>
+<h3 id="architecture-of-a-tournament-predictor">Architecture of a
+Tournament Predictor</h3>
+<ol type="1">
+<li><strong>Local Predictor:</strong> Uses a two-level structure. The
+branch's Program Counter (PC) indexes into a Local History Table (LHT)
+to retrieve the branch's recent <span
+class="math inline">\(m\)</span>-bit outcome pattern. That pattern then
+indexes into a Local Pattern History Table (PHT) of saturating counters
+to produce a local prediction.</li>
+<li><strong>Global Predictor:</strong> Uses the <span
+class="math inline">\(k\)</span>-bit Global History Register (GHR),
+often combined with the PC via XOR or concatenation, to index into a
+Global PHT of saturating counters.</li>
+<li><strong>Choice (Meta) Predictor:</strong> A table of 2-bit
+saturating counters, indexed by the PC (or PC combined with global
+history), tracks which of the two predictors has been more accurate for
+that branch.</li>
+</ol>
+<h3 id="correlation-through-dynamic-selection">Correlation Through
+Dynamic Selection</h3>
+<p>When a branch resolves, the Tournament predictor updates the local
+and global PHTs as usual, and updates the choice counter only when the
+two predictors disagree:</p>
+<ul>
+<li>If the global predictor was correct and the local predictor was
+wrong, the choice counter increments toward selecting global.</li>
+<li>If the local predictor was correct and the global predictor was
+wrong, the choice counter decrements toward selecting local.</li>
+</ul>
+<p>In this way, the Tournament predictor correlates global history with
+local behavior by assigning each branch to whichever context best models
+it, rather than blending both contexts into a single hash.</p>
+<h2 id="how-tage-predictors-correlate-multiple-history-lengths">How TAGE
+Predictors Correlate Multiple History Lengths</h2>
+<p>The <strong>TAGE</strong> (TAgged GEometric history length)
+predictor, introduced by Seznec and Michaud, moves beyond a binary
+choice between one local table and one global table. Instead, it uses a
+<strong>base predictor</strong> (<span
+class="math inline">\(T_0\)</span>) paired with a series of
+<strong>tagged predictor components</strong> (<span
+class="math inline">\(T_1, T_2, \dots, T_M\)</span>) that each use
+progressively longer global history lengths.</p>
+<h3 id="geometric-history-lengths">Geometric History Lengths</h3>
+<p>The history lengths <span class="math inline">\(L(i)\)</span> for
+each tagged table <span class="math inline">\(T_i\)</span> form a
+geometric series:</p>
+<p><span class="math display">\[L(i) = \left\lfloor \alpha^{i-1} \cdot
+L(1) + 0.5 \right\rfloor\]</span></p>
+<p>where <span class="math inline">\(L(1)\)</span> is a short history
+length and <span class="math inline">\(\alpha &gt; 1\)</span> is a
+constant ratio. Short-history tables capture tight local-like
+correlations, while long-history tables capture deep, program-wide path
+correlations.</p>
+<h3 id="tagged-lookup-and-longest-match-selection">Tagged Lookup and
+Longest-Match Selection</h3>
+<p>Each tagged table <span class="math inline">\(T_i\)</span> is indexed
+by a hash of the PC and the folded <span
+class="math inline">\(L(i)\)</span>-bit global history, and stores a
+partial <strong>tag</strong> derived from another hash of the PC and
+history, a prediction counter, and a usefulness counter (<span
+class="math inline">\(u\)</span>).</p>
+<p>During a lookup:</p>
+<ol type="1">
+<li>All tables <span class="math inline">\(T_0\)</span> through <span
+class="math inline">\(T_M\)</span> are queried in parallel.</li>
+<li><span class="math inline">\(T_0\)</span> is a tagless bimodal table
+indexed only by the PC, providing a default local-only prediction.</li>
+<li>Among all tagged tables <span class="math inline">\(T_1 \dots
+T_M\)</span> that produce a tag hit, the predictor selects the one with
+the <strong>longest history length</strong> (the <em>provider</em>
+component).</li>
+<li>If no tagged table hits, the prediction falls back to <span
+class="math inline">\(T_0\)</span>.</li>
+</ol>
+<h3 id="implicit-correlation-of-local-and-global-behavior">Implicit
+Correlation of Local and Global Behavior</h3>
+<p>TAGE correlates local branch behavior with global history without
+needing a separate local history table. Because every table index and
+tag includes the PC, a branch's identity is always bound to its global
+history context. When a branch behaves purely according to its own local
+bias, <span class="math inline">\(T_0\)</span> handles it. When a branch
+depends on a specific sequence of prior branches, a tagged table <span
+class="math inline">\(T_i\)</span> allocates an entry for that <span
+class="math inline">\((\text{PC}, \text{GHR}[0..L(i)-1])\)</span> pair.
+If an even longer global context resolves an ambiguity, a higher table
+<span class="math inline">\(T_j\)</span> (<span class="math inline">\(j
+&gt; i\)</span>) allocates an entry and overrides <span
+class="math inline">\(T_i\)</span> via longest-match priority.</p>
+<h2 id="comparing-tournament-and-tage-correlation">Comparing Tournament
+and TAGE Correlation</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Tournament Predictor</th>
+<th style="text-align: left;">TAGE Predictor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Local Representation</strong></td>
+<td style="text-align: left;">Explicit Local History Table + PHT</td>
+<td style="text-align: left;">Tagless PC-indexed base table (<span
+class="math inline">\(T_0\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Global
+Representation</strong></td>
+<td style="text-align: left;">Single fixed-length GHR table</td>
+<td style="text-align: left;">Multiple tables with geometric history
+lengths</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Selection Mechanism</strong></td>
+<td style="text-align: left;">Per-branch 2-bit meta-predictor</td>
+<td style="text-align: left;">Longest-matching tagged table</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Aliasing Mitigation</strong></td>
+<td style="text-align: left;">Limited to table sizing</td>
+<td style="text-align: left;">Explicit tags and usefulness counters</td>
+</tr>
+</tbody>
+</table>
+<p>By replacing a single global history length and a binary
+meta-predictor with tagged geometric history tables, TAGE achieves
+higher prediction accuracy across diverse workloads while naturally
+unifying local bias and global path correlation.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-tournament-and-tage-predictors-correlate-history';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

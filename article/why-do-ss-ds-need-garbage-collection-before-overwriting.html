@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Do SSDs Need Garbage Collection Before Overwriting? - classical-computing</title>
+    <meta name="description" content="NAND flash solid-state drives cannot overwrite existing data in place due to the physical and electrical properties of floating-gate and charge-trap transistors. Instead, drives must write new data to empty pages, mark old pages as invalid, and rely on ga">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-do-ss-ds-need-garbage-collection-before-overwriting">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Do SSDs Need Garbage Collection Before Overwriting? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-do-ss-ds-need-garbage-collection-before-overwriting" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="NAND flash solid-state drives cannot overwrite existing data in place due to the physical and electrical properties of floating-gate and charge-trap transistors. Instead, drives must write new data to empty pages, mark old pages as invalid, and rely on ga" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-do-ssds-need-garbage-collection-before-overwriting">Why Do
+SSDs Need Garbage Collection Before Overwriting?</h1>
+<p>NAND flash solid-state drives cannot overwrite existing data in place
+due to the physical and electrical properties of floating-gate and
+charge-trap transistors. Instead, drives must write new data to empty
+pages, mark old pages as invalid, and rely on garbage collection to
+consolidate valid data and erase entire blocks before those physical
+locations can be reused.</p>
+<h2 id="the-physics-of-nand-flash-memory">The Physics of NAND Flash
+Memory</h2>
+<p>NAND flash stores data by trapping electrons inside an insulated
+floating gate or charge-trap layer. The presence or absence of electrons
+shifts the transistor's threshold voltage, which the drive reads as
+binary values.</p>
+<p>Programming a cell (typically changing a bit from <span
+class="math inline">\(1\)</span> to <span
+class="math inline">\(0\)</span>) requires applying a high positive
+voltage to the control gate, which pulls electrons into the floating
+gate via Fowler-Nordheim tunneling or hot-electron injection. However,
+removing those electrons to reset a cell back to <span
+class="math inline">\(1\)</span> requires applying a high voltage in the
+opposite direction to the substrate. Because of how NAND flash arrays
+are wired, this erase voltage cannot be applied to a single bit or a
+single page; it must be applied to an entire block at once.</p>
+<h2 id="pages-vs-blocks-the-read-write-erase-asymmetry">Pages vs.
+Blocks: The Read-Write-Erase Asymmetry</h2>
+<p>NAND flash memory is organized into a strict hierarchy that creates
+an asymmetry between reading, writing, and erasing:</p>
+<ul>
+<li><strong>Pages:</strong> The smallest unit that can be read or
+programmed (written), typically <span class="math inline">\(4\text{
+KB}\)</span> to <span class="math inline">\(16\text{ KB}\)</span> in
+size.</li>
+<li><strong>Blocks:</strong> Groups of dozens or hundreds of pages,
+typically <span class="math inline">\(128\)</span> to <span
+class="math inline">\(512\)</span> pages per block, totaling several
+megabytes. A block is the smallest unit that can be erased.</li>
+</ul>
+<p>Because you can program individual pages but must erase entire
+blocks, an SSD cannot simply overwrite a single <span
+class="math inline">\(4\text{ KB}\)</span> page with new data. If a page
+already contains programmed bits (<span
+class="math inline">\(0\)</span>s), attempting to program it again
+without erasing can only turn remaining <span
+class="math inline">\(1\)</span>s into <span
+class="math inline">\(0\)</span>s—it cannot turn <span
+class="math inline">\(0\)</span>s back into <span
+class="math inline">\(1\)</span>s.</p>
+<h2
+id="out-of-place-writes-and-the-flash-translation-layer">Out-of-Place
+Writes and the Flash Translation Layer</h2>
+<p>To hide this hardware limitation from the operating system, SSDs use
+an internal controller running a Flash Translation Layer (FTL). The FTL
+maintains a mapping table that translates Logical Block Addresses (LBAs)
+used by the host computer into Physical Block Addresses (PBAs) on the
+NAND flash.</p>
+<p>When the operating system modifies a file and requests an overwrite
+of an existing LBA, the SSD performs an <strong>out-of-place
+write</strong>:</p>
+<ol type="1">
+<li>The controller writes the updated data to a different,
+already-erased physical page.</li>
+<li>The FTL updates its mapping table so the LBA points to the new
+physical page.</li>
+<li>The old physical page is marked as <strong>invalid</strong> (stale),
+meaning it still holds old charge patterns but is no longer referenced
+by the file system.</li>
+</ol>
+<h2 id="how-garbage-collection-works">How Garbage Collection Works</h2>
+<p>Over time, out-of-place writes leave blocks fragmented with a mix of
+valid pages (current data) and invalid pages (stale data). If the drive
+never cleaned up these blocks, it would eventually run out of empty
+pages to write to, even if the drive is not full of active user
+data.</p>
+<p>Garbage collection resolves this by reclaiming space from partially
+invalid blocks:</p>
+<ol type="1">
+<li><strong>Block Selection:</strong> The SSD controller identifies a
+block containing a high ratio of invalid pages.</li>
+<li><strong>Valid Data Migration:</strong> The controller reads the
+remaining valid pages from that block and writes them to empty pages in
+another block.</li>
+<li><strong>Mapping Update:</strong> The FTL updates its address table
+to point to the new locations of the migrated pages.</li>
+<li><strong>Block Erasure:</strong> Once all valid data has been moved
+out, the entire source block is erased, resetting all of its pages to
+the <span class="math inline">\(1\)</span> state so they are ready for
+future writes.</li>
+</ol>
+<h2 id="write-amplification-and-performance-impact">Write Amplification
+and Performance Impact</h2>
+<p>Moving valid pages during garbage collection introduces <strong>write
+amplification</strong>, where the physical amount of data written to the
+NAND flash exceeds the amount of data the host computer actually
+requested to write. Write amplification can be expressed as:</p>
+<p><span class="math display">\[\text{Write Amplification Factor (WAF)}
+= \frac{\text{Data Written to NAND Flash}}{\text{Data Written by
+Host}}\]</span></p>
+<p>If a block is mostly full of valid data, garbage collection must copy
+many pages just to free up a few invalid ones, driving up the WAF. This
+extra internal activity consumes NAND bandwidth, increases latency for
+incoming host writes, and accelerates wear on the flash cells, which
+only survive a finite number of program/erase (P/E) cycles.</p>
+<h2 id="the-role-of-trim">The Role of TRIM</h2>
+<p>Operating systems help reduce garbage collection overhead using the
+<strong>TRIM</strong> command (or <code>UNMAP</code> in SCSI/NVMe). When
+a user deletes a file, the OS normally just removes the file's entry
+from its own file system table without telling the SSD. Without TRIM,
+the SSD still considers those pages valid and will waste time copying
+them during garbage collection.</p>
+<p>When TRIM is enabled, the OS notifies the SSD controller which LBAs
+are no longer in use. The controller immediately marks the corresponding
+physical pages as invalid, allowing garbage collection to skip copying
+them and erase the block more efficiently.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-do-ss-ds-need-garbage-collection-before-overwriting';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

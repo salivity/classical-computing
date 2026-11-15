@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Do Weak Memory Models Need Memory Fences? - classical-computing</title>
+    <meta name="description" content="Weak hardware memory consistency models require explicit memory fences or barriers because modern processors reorder memory operations and buffer writes to maximize performance. While these optimizations preserve single-threaded program behavior, they all">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-do-weak-memory-models-need-memory-fences">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Do Weak Memory Models Need Memory Fences? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-do-weak-memory-models-need-memory-fences" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Weak hardware memory consistency models require explicit memory fences or barriers because modern processors reorder memory operations and buffer writes to maximize performance. While these optimizations preserve single-threaded program behavior, they all" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-do-weak-memory-models-need-memory-fences">Why Do Weak Memory
+Models Need Memory Fences?</h1>
+<p>Weak hardware memory consistency models require explicit memory
+fences or barriers because modern processors reorder memory operations
+and buffer writes to maximize performance. While these optimizations
+preserve single-threaded program behavior, they allow different CPU
+cores to observe shared memory updates in different orders. Without
+explicit fences, multithreaded programs that rely on specific ordering
+between reads and writes can experience subtle data races, stale reads,
+and broken synchronization.</p>
+<h2 id="why-modern-cpus-reorder-memory-operations">Why Modern CPUs
+Reorder Memory Operations</h2>
+<p>To understand the need for memory fences, it helps to look at how
+modern classical processors execute instructions. Accessing main memory
+(DRAM) is orders of magnitude slower than executing arithmetic
+operations in CPU registers. To hide this latency, hardware designers
+implement several optimizations:</p>
+<ul>
+<li><strong>Store Buffers:</strong> When a core executes a write, it
+places the value into a local store buffer instead of stalling until the
+cache coherency protocol completes. The core can then continue executing
+subsequent instructions, including reads from other addresses.</li>
+<li><strong>Out-of-Order Execution:</strong> Processors dynamically
+schedule independent instructions to keep execution units busy, meaning
+a later load may execute before an earlier store or load.</li>
+<li><strong>Speculative Execution:</strong> Cores predict branches and
+execute loads ahead of time before knowing whether the branch was
+actually taken.</li>
+<li><strong>Non-Uniform Cache Architectures:</strong> In multi-core
+systems, cache invalidations and updates propagate asynchronously across
+interconnects.</li>
+</ul>
+<p>In a single-threaded program, hardware tracks data dependencies so
+that a core always reads its own most recent writes. However, hardware
+does not automatically coordinate the visibility of independent memory
+operations across multiple cores.</p>
+<h2 id="weak-consistency-vs-sequential-consistency">Weak Consistency vs.
+Sequential Consistency</h2>
+<p>In a <strong>sequentially consistent</strong> memory model, all cores
+appear to execute memory operations in a single global order, and each
+core's operations appear in program order. Under this model, if Thread 1
+writes <code>data = 42</code> and then sets <code>ready = 1</code>, any
+thread that sees <code>ready == 1</code> is guaranteed to see
+<code>data == 42</code>.</p>
+<p>In <strong>weak memory consistency models</strong> (such as those
+used by ARM, POWER, and RISC-V architectures), the hardware makes far
+fewer guarantees about the global ordering of independent loads and
+stores. Even x86-64, which uses a relatively strong Total Store Order
+(TSO) model, still permits a store to be reordered after a subsequent
+load to a different address.</p>
+<p>Consider the classic message-passing pattern:</p>
+<pre class="text"><code>// Initial state: data = 0, ready = 0
+
+// Thread 1 (Producer)          // Thread 2 (Consumer)
+data = 42;                      while (ready == 0) { }
+ready = 1;                      print(data);</code></pre>
+<p>On a weakly ordered processor, Thread 1's write to <code>ready</code>
+may become visible to Thread 2 before the write to <code>data</code>
+leaves Thread 1's store buffer. Similarly, Thread 2 might speculatively
+read <code>data</code> before <code>ready</code> becomes <code>1</code>.
+As a result, Thread 2 can print <code>0</code> instead of
+<code>42</code>.</p>
+<h2 id="how-memory-fences-restore-ordering">How Memory Fences Restore
+Ordering</h2>
+<p>A <strong>memory fence</strong> (or <strong>memory barrier</strong>)
+is a CPU instruction that restricts how memory operations before and
+after the fence can be reordered or made visible to other cores. Fences
+do not make memory faster; instead, they tell the hardware where
+performance optimizations must pause to preserve correctness.</p>
+<p>Common types of memory fences include:</p>
+<ul>
+<li><strong>Store-Store (Write) Barrier:</strong> Ensures that all
+writes issued before the barrier become globally visible before any
+writes issued after the barrier.</li>
+<li><strong>Load-Load (Read) Barrier:</strong> Ensures that all reads
+issued before the barrier complete before any reads issued after the
+barrier.</li>
+<li><strong>Load-Store and Store-Load Barriers:</strong> Control
+ordering between reads and writes. A full <strong>Store-Load</strong>
+barrier (such as <code>MFENCE</code> on x86 or <code>DMB SY</code> on
+ARM) is typically the most expensive because it forces the core to drain
+its store buffer before proceeding with subsequent loads.</li>
+</ul>
+<p>In high-level languages like C++ or Rust, programmers rarely write
+raw hardware fence instructions directly. Instead, they use
+<strong>acquire-release</strong> semantics or sequential consistency
+atomics, which the compiler translates into the appropriate fences for
+the target architecture.</p>
+<h2 id="performance-trade-offs">Performance Trade-Offs</h2>
+<p>Weak memory models exist because enforcing strict global ordering on
+every instruction would severely limit instruction-level parallelism and
+scalability across many cores. By default, weak architectures run at
+full speed and pay the synchronization cost only when the programmer
+explicitly requests it through fences or atomic operations. This design
+shifts the burden of specifying ordering constraints onto compilers and
+concurrency libraries, ensuring that synchronization overhead is
+incurred only where shared data actually requires it.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-do-weak-memory-models-need-memory-fences';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Are Precise Exceptions Maintained in Out-of-Order CPUs? - classical-computing</title>
+    <meta name="description" content="Modern processors execute instructions out of program order to maximize performance, yet they must still present the illusion of sequential execution when an error or interrupt occurs. Maintaining precise exceptions means ensuring that when an instruction">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-are-precise-exceptions-maintained-in-out-of-order-cp-us">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Are Precise Exceptions Maintained in Out-of-Order CPUs? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-are-precise-exceptions-maintained-in-out-of-order-cp-us" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern processors execute instructions out of program order to maximize performance, yet they must still present the illusion of sequential execution when an error or interrupt occurs. Maintaining precise exceptions means ensuring that when an instruction" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-are-precise-exceptions-maintained-in-out-of-order-cpus">How
+Are Precise Exceptions Maintained in Out-of-Order CPUs?</h1>
+<p>Modern processors execute instructions out of program order to
+maximize performance, yet they must still present the illusion of
+sequential execution when an error or interrupt occurs. Maintaining
+precise exceptions means ensuring that when an instruction faults, all
+prior instructions in program order have completed and updated the
+architectural state, while no subsequent instructions have modified it.
+Hardware achieves this by separating out-of-order execution from
+in-order retirement using structures like the reorder buffer, register
+renaming, and store buffers.</p>
+<h2 id="what-is-a-precise-exception">What Is a Precise Exception?</h2>
+<p>An exception is precise if the processor can stop at a well-defined
+boundary in the program's instruction stream. Suppose a program consists
+of instructions <span class="math inline">\(I_1, I_2, \dots,
+I_n\)</span> in sequential program order. If instruction <span
+class="math inline">\(I_k\)</span> raises an exception—such as a page
+fault, division by zero, or an invalid opcode—the architectural state
+visible to the operating system must satisfy two conditions:</p>
+<ol type="1">
+<li>Every instruction <span class="math inline">\(I_j\)</span> with
+<span class="math inline">\(j &lt; k\)</span> has completed and
+committed its results to the architectural registers and memory.</li>
+<li>Every instruction <span class="math inline">\(I_j\)</span> with
+<span class="math inline">\(j \ge k\)</span> has not modified the
+architectural state, and can be restarted cleanly after the exception is
+handled.</li>
+</ol>
+<p>Without out-of-order execution, a simple in-order pipeline satisfies
+this naturally if exceptions are checked at a single pipeline stage.
+When instructions complete out of order, a younger instruction <span
+class="math inline">\(I_{k+1}\)</span> might finish and write its result
+before an older instruction <span class="math inline">\(I_k\)</span>
+even detects that it has faulted.</p>
+<h2 id="the-reorder-buffer-rob">The Reorder Buffer (ROB)</h2>
+<p>The primary mechanism for preserving precise exceptions is the
+reorder buffer (ROB). The ROB is a circular FIFO queue that tracks every
+in-flight instruction in its original program order.</p>
+<p>When instructions are decoded and dispatched, they are allocated an
+entry at the tail of the ROB. Execution units may complete instructions
+in any order, writing their results and any exception flags into their
+assigned ROB entry rather than directly into the architectural register
+file.</p>
+<p>An instruction is only allowed to <strong>commit</strong> (or retire)
+when it reaches the head of the ROB and has finished execution without
+raising an exception. During commit:</p>
+<ul>
+<li>The result stored in the ROB entry is written to the permanent
+architectural state.</li>
+<li>The ROB head pointer advances to the next instruction in program
+order.</li>
+</ul>
+<p>If the instruction at the head of the ROB has its exception flag set,
+the processor does not commit it. Instead, it flushes all younger
+instructions from the ROB and the pipeline, records the faulting program
+counter, and transfers control to the operating system's exception
+handler. Because no younger instruction has reached the head of the ROB,
+none of them have altered the architectural state.</p>
+<h2 id="speculative-state-and-register-renaming">Speculative State and
+Register Renaming</h2>
+<p>To execute instructions out of order without corrupting architectural
+registers, processors use register renaming. Architectural registers
+(such as <code>R1</code> or <code>RAX</code>) are mapped to a larger
+pool of physical registers via a Register Alias Table (RAT).</p>
+<p>When an instruction writes to an architectural register, it actually
+writes to a newly allocated physical register. The old physical register
+holding the previous value is not freed until the new instruction
+commits. If an exception occurs at the head of the ROB, the processor
+simply discards the speculative mappings and restores the RAT to the
+state corresponding to the last committed instruction.</p>
+<h2 id="handling-memory-writes-with-store-buffers">Handling Memory
+Writes with Store Buffers</h2>
+<p>Memory writes cannot be undone easily once they reach the data cache
+or main memory. To prevent speculative stores from corrupting memory
+before an older instruction's exception status is known, processors use
+a store buffer (or store queue).</p>
+<p>Store instructions compute their target address and data out of
+order, placing both into the store buffer. The write is held there
+speculatively and is only drained to the cache hierarchy after the store
+instruction commits at the head of the ROB. If an older instruction
+faults, the uncommitted entries in the store buffer are simply
+discarded.</p>
+<h2 id="summary-of-the-commit-boundary">Summary of the Commit
+Boundary</h2>
+<p>By buffering register results in the ROB, isolating speculative
+register mappings through renaming, and holding memory writes in the
+store buffer, an out-of-order processor decouples execution speed from
+architectural correctness. Instructions can execute as soon as their
+operands are ready, but their effects become permanent strictly in
+program order, guaranteeing precise exceptions.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-are-precise-exceptions-maintained-in-out-of-order-cp-us';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

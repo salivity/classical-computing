@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does VQE Use Classical Optimizers for Quantum Circuits? - classical-computing</title>
+    <meta name="description" content="Hybrid variational quantum algorithms like the Variational Quantum Eigensolver combine quantum processors with classical computers to solve complex optimization problems. In this feedback loop, a quantum computer prepares a trial quantum state using a par">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-vqe-use-classical-optimizers-for-quantum-circuits">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does VQE Use Classical Optimizers for Quantum Circuits? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-vqe-use-classical-optimizers-for-quantum-circuits" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Hybrid variational quantum algorithms like the Variational Quantum Eigensolver combine quantum processors with classical computers to solve complex optimization problems. In this feedback loop, a quantum computer prepares a trial quantum state using a par" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-vqe-use-classical-optimizers-for-quantum-circuits">How
+Does VQE Use Classical Optimizers for Quantum Circuits?</h1>
+<p>Hybrid variational quantum algorithms like the Variational Quantum
+Eigensolver combine quantum processors with classical computers to solve
+complex optimization problems. In this feedback loop, a quantum computer
+prepares a trial quantum state using a parameterized circuit and
+measures its energy, while a classical optimizer adjusts the circuit's
+rotation angles to minimize that energy. This division of labor allows
+current noisy quantum hardware to tackle problems in quantum chemistry
+and materials science by keeping quantum circuits shallow.</p>
+<h2 id="the-hybrid-quantum-classical-feedback-loop">The Hybrid
+Quantum-Classical Feedback Loop</h2>
+<p>The core of the Variational Quantum Eigensolver (VQE) is an iterative
+loop between a quantum processing unit (QPU) and a classical central
+processing unit (CPU). The goal is to find the ground state energy of a
+given Hamiltonian <span class="math inline">\(H\)</span>, which
+represents the total energy of a quantum system.</p>
+<p>According to the variational principle, the expectation value of the
+Hamiltonian for any trial wavefunction <span
+class="math inline">\(|\psi(\vec{\theta})\rangle\)</span> is always
+greater than or equal to the true ground state energy <span
+class="math inline">\(E_0\)</span>:</p>
+<p><span class="math display">\[E(\vec{\theta}) = \langle
+\psi(\vec{\theta}) | H | \psi(\vec{\theta}) \rangle \ge E_0\]</span></p>
+<p>Here, <span class="math inline">\(\vec{\theta} = (\theta_1, \theta_2,
+\dots, \theta_m)\)</span> is a vector of classical parameters, typically
+representing the rotation angles of quantum gates in a parameterized
+quantum circuit (also called an ansatz).</p>
+<h2 id="step-by-step-execution">Step-by-Step Execution</h2>
+<p>The optimization process unfolds in four repeating steps:</p>
+<ol type="1">
+<li><strong>Initialization:</strong> The classical computer selects an
+initial set of angles <span
+class="math inline">\(\vec{\theta}^{(0)}\)</span> and sends them to the
+quantum processor.</li>
+<li><strong>State Preparation:</strong> The quantum processor applies a
+sequence of parameterized gates <span
+class="math inline">\(U(\vec{\theta})\)</span> to an initial register of
+qubits <span class="math inline">\(|0\rangle^{\otimes n}\)</span>,
+creating the trial state <span
+class="math inline">\(|\psi(\vec{\theta})\rangle =
+U(\vec{\theta})|0\rangle^{\otimes n}\)</span>.</li>
+<li><strong>Measurement:</strong> The quantum state is measured in the
+bases required by the Hamiltonian <span
+class="math inline">\(H\)</span>. Because a single measurement collapses
+the quantum state, the circuit is executed and measured many times
+(shots) to estimate the expectation value <span
+class="math inline">\(E(\vec{\theta})\)</span>.</li>
+<li><strong>Classical Optimization:</strong> The estimated energy <span
+class="math inline">\(E(\vec{\theta})\)</span> is returned to the
+classical optimizer, which computes a new set of angles <span
+class="math inline">\(\vec{\theta}^{(k+1)}\)</span> aimed at lowering
+the energy.</li>
+</ol>
+<p>This cycle repeats until the energy converges to a minimum or a
+maximum number of iterations is reached.</p>
+<h2 id="how-classical-optimizers-update-the-angles">How Classical
+Optimizers Update the Angles</h2>
+<p>Classical optimizers generally fall into two categories:
+gradient-based and gradient-free methods.</p>
+<h3 id="gradient-based-optimizers">Gradient-Based Optimizers</h3>
+<p>Gradient-based methods, such as Adam or BFGS, update the parameters
+by moving in the direction of steepest descent:</p>
+<p><span class="math display">\[\vec{\theta}^{(k+1)} =
+\vec{\theta}^{(k)} - \eta \nabla_{\vec{\theta}}
+E(\vec{\theta}^{(k)})\]</span></p>
+<p>where <span class="math inline">\(\eta\)</span> is the learning rate.
+On quantum hardware, gradients cannot be computed using classical
+backpropagation. Instead, they are typically obtained using the
+parameter-shift rule. For a gate parameterized by <span
+class="math inline">\(\theta_i\)</span>, the partial derivative is
+calculated by running the circuit twice with shifted angles:</p>
+<p><span class="math display">\[\frac{\partial E(\vec{\theta})}{\partial
+\theta_i} = \frac{E(\vec{\theta} + \frac{\pi}{2}\hat{e}_i) -
+E(\vec{\theta} - \frac{\pi}{2}\hat{e}_i)}{2}\]</span></p>
+<h3 id="gradient-free-optimizers">Gradient-Free Optimizers</h3>
+<p>Gradient-free optimizers, such as COBYLA, Nelder-Mead, or SPSA
+(Simultaneous Perturbation Stochastic Approximation), do not require
+exact derivatives. SPSA is especially popular on noisy quantum devices
+because it approximates the gradient using only two circuit evaluations
+per iteration, regardless of the number of parameters <span
+class="math inline">\(m\)</span>, by perturbing all angles
+simultaneously in random directions.</p>
+<h2 id="challenges-in-classical-optimization">Challenges in Classical
+Optimization</h2>
+<p>Updating quantum circuit angles classically introduces unique
+challenges. Shot noise from finite measurements and hardware decoherence
+create a noisy cost landscape, which can trap optimizers in local
+minima. Additionally, for deep or poorly designed ansatzes, the gradient
+can vanish exponentially with the number of qubits—a phenomenon known as
+a barren plateau—making it difficult for the classical optimizer to find
+a direction of improvement.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-vqe-use-classical-optimizers-for-quantum-circuits';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

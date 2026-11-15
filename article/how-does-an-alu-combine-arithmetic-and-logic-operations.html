@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does an ALU Combine Arithmetic and Logic Operations? - classical-computing</title>
+    <meta name="description" content="An arithmetic logic unit (ALU) is the core digital circuit inside a processor that performs both mathematical calculations and bitwise logical operations on binary numbers. Rather than building completely separate, isolated hardware for every individual i">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-an-alu-combine-arithmetic-and-logic-operations">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does an ALU Combine Arithmetic and Logic Operations? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-an-alu-combine-arithmetic-and-logic-operations" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="An arithmetic logic unit (ALU) is the core digital circuit inside a processor that performs both mathematical calculations and bitwise logical operations on binary numbers. Rather than building completely separate, isolated hardware for every individual i" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-an-alu-combine-arithmetic-and-logic-operations">How
+Does an ALU Combine Arithmetic and Logic Operations?</h1>
+<p>An arithmetic logic unit (ALU) is the core digital circuit inside a
+processor that performs both mathematical calculations and bitwise
+logical operations on binary numbers. Rather than building completely
+separate, isolated hardware for every individual instruction, an ALU
+combines shared logic gates, adders, and multiplexers so that a single
+circuit can switch between addition, subtraction, AND, OR, XOR, and
+other functions based on control signals.</p>
+<h2 id="the-role-of-control-signals-and-multiplexers">The Role of
+Control Signals and Multiplexers</h2>
+<p>At the heart of an ALU's versatility is the multiplexer, often
+abbreviated as MUX. A multiplexer acts like a programmable railway
+switch: it takes multiple data inputs and uses a set of control
+bits—called the opcode or function select lines—to route only one of
+those inputs to the output.</p>
+<p>In a typical design, the ALU receives two <span
+class="math inline">\(n\)</span>-bit operands, <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>, along with a control signal. Both the
+arithmetic unit and the logic unit may process <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> simultaneously, or specific
+sub-circuits may be enabled. The multiplexer at the output stage then
+selects which result is actually passed forward to the processor's
+registers or bus.</p>
+<h2 id="how-bitwise-logic-operations-work">How Bitwise Logic Operations
+Work</h2>
+<p>Bitwise logic operations are the simplest part of the ALU because
+each bit position is completely independent of its neighbors. There is
+no carry or borrow between bits.</p>
+<p>For an <span class="math inline">\(n\)</span>-bit ALU, the logic
+stage consists of <span class="math inline">\(n\)</span> identical 1-bit
+logic slices running in parallel. Each slice contains basic gates:</p>
+<ul>
+<li><strong>AND</strong> (<span class="math inline">\(A_i \land
+B_i\)</span>): Outputs <span class="math inline">\(1\)</span> only if
+both input bits are <span class="math inline">\(1\)</span>.</li>
+<li><strong>OR</strong> (<span class="math inline">\(A_i \lor
+B_i\)</span>): Outputs <span class="math inline">\(1\)</span> if at
+least one input bit is <span class="math inline">\(1\)</span>.</li>
+<li><strong>XOR</strong> (<span class="math inline">\(A_i \oplus
+B_i\)</span>): Outputs <span class="math inline">\(1\)</span> if the
+input bits are different.</li>
+<li><strong>NOT</strong> (<span
+class="math inline">\(\overline{A_i}\)</span>): Inverts the input
+bit.</li>
+</ul>
+<p>A small multiplexer inside each 1-bit slice uses the ALU's control
+bits to choose which gate's output represents the final logic result for
+that bit position.</p>
+<h2 id="how-arithmetic-operations-share-hardware">How Arithmetic
+Operations Share Hardware</h2>
+<p>Unlike bitwise logic, arithmetic operations such as addition and
+subtraction require communication between adjacent bit positions through
+a carry bit. The foundational building block here is the <strong>full
+adder</strong>.</p>
+<p>A full adder takes three 1-bit inputs—<span
+class="math inline">\(A_i\)</span>, <span
+class="math inline">\(B_i\)</span>, and a carry-in (<span
+class="math inline">\(C_{in}\)</span>)—and produces a sum bit (<span
+class="math inline">\(S_i\)</span>) and a carry-out bit (<span
+class="math inline">\(C_{out}\)</span>):</p>
+<p><span class="math display">\[S_i = A_i \oplus B_i \oplus
+C_{in}\]</span></p>
+<p><span class="math display">\[C_{out} = (A_i \land B_i) \lor (C_{in}
+\land (A_i \oplus B_i))\]</span></p>
+<p>By chaining <span class="math inline">\(n\)</span> full adders
+together, where the <span class="math inline">\(C_{out}\)</span> of one
+stage feeds into the <span class="math inline">\(C_{in}\)</span> of the
+next, the ALU forms a <strong>ripple-carry adder</strong> (or a faster
+<strong>carry-lookahead adder</strong> in modern CPUs).</p>
+<h3 id="unifying-addition-and-subtraction">Unifying Addition and
+Subtraction</h3>
+<p>An ALU does not need a separate subtractor circuit. Instead, it uses
+two's complement arithmetic to perform subtraction with the exact same
+adder hardware. To compute <span class="math inline">\(A - B\)</span>,
+the ALU inverts every bit of <span class="math inline">\(B\)</span> and
+adds <span class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[A - B = A + \overline{B} +
+1\]</span></p>
+<p>This is achieved by placing an XOR gate in front of each <span
+class="math inline">\(B_i\)</span> input and connecting the other input
+of the XOR gate to a <code>Subtract</code> control line:</p>
+<ul>
+<li>When <code>Subtract</code> is <span
+class="math inline">\(0\)</span>, <span class="math inline">\(B_i \oplus
+0 = B_i\)</span>, and <span class="math inline">\(C_{in}\)</span> to the
+first adder is <span class="math inline">\(0\)</span>, performing <span
+class="math inline">\(A + B\)</span>.</li>
+<li>When <code>Subtract</code> is <span
+class="math inline">\(1\)</span>, <span class="math inline">\(B_i \oplus
+1 = \overline{B_i}\)</span>, and <span
+class="math inline">\(C_{in}\)</span> to the first adder is <span
+class="math inline">\(1\)</span>, performing <span
+class="math inline">\(A + \overline{B} + 1\)</span>.</li>
+</ul>
+<h2 id="bringing-arithmetic-and-logic-together">Bringing Arithmetic and
+Logic Together</h2>
+<p>In a classic 1-bit ALU slice, the arithmetic and logic paths are
+combined into a single modular unit. The inputs <span
+class="math inline">\(A_i\)</span> and <span
+class="math inline">\(B_i\)</span> enter the slice, where they are fed
+into the logic gates (AND, OR, XOR) and the full adder
+simultaneously.</p>
+<p>A 2-to-1 or 4-to-1 multiplexer at the end of the slice takes the
+outputs from the logic gates and the sum output (<span
+class="math inline">\(S_i\)</span>) from the full adder. Depending on
+the control signals from the CPU's control unit, the multiplexer outputs
+either the chosen bitwise logic result or the arithmetic sum.</p>
+<h3 id="status-flags">Status Flags</h3>
+<p>Beyond the <span class="math inline">\(n\)</span>-bit result, the
+combined ALU also generates status flags that inform the processor about
+the outcome of the operation:</p>
+<ul>
+<li><strong>Zero (Z):</strong> Set to <span
+class="math inline">\(1\)</span> if all bits of the output are <span
+class="math inline">\(0\)</span>.</li>
+<li><strong>Carry (C):</strong> Set to <span
+class="math inline">\(1\)</span> if an arithmetic operation produces a
+carry-out from the most significant bit.</li>
+<li><strong>Overflow (V):</strong> Set to <span
+class="math inline">\(1\)</span> if a signed arithmetic result exceeds
+the range <span class="math inline">\([-2^{n-1}, 2^{n-1} -
+1]\)</span>.</li>
+<li><strong>Negative (N):</strong> Mirrors the most significant bit of
+the result in signed two's complement representation.</li>
+</ul>
+<p>By stacking <span class="math inline">\(n\)</span> of these 1-bit
+slices together and linking their carry lines, a classical computer
+creates a unified <span class="math inline">\(n\)</span>-bit ALU capable
+of executing both arithmetic and bitwise logic efficiently on shared
+silicon.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-an-alu-combine-arithmetic-and-logic-operations';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

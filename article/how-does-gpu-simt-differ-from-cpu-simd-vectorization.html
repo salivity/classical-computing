@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does GPU SIMT Differ from CPU SIMD Vectorization? - classical-computing</title>
+    <meta name="description" content="Single Instruction, Multiple Threads (SIMT) on GPUs and Single Instruction, Multiple Data (SIMD) on CPUs both accelerate data-parallel workloads by executing the same operation across multiple data elements simultaneously. While they share this foundation">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-gpu-simt-differ-from-cpu-simd-vectorization">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does GPU SIMT Differ from CPU SIMD Vectorization? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-gpu-simt-differ-from-cpu-simd-vectorization" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Single Instruction, Multiple Threads (SIMT) on GPUs and Single Instruction, Multiple Data (SIMD) on CPUs both accelerate data-parallel workloads by executing the same operation across multiple data elements simultaneously. While they share this foundation" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-gpu-simt-differ-from-cpu-simd-vectorization">How Does
+GPU SIMT Differ from CPU SIMD Vectorization?</h1>
+<p>Single Instruction, Multiple Threads (SIMT) on GPUs and Single
+Instruction, Multiple Data (SIMD) on CPUs both accelerate data-parallel
+workloads by executing the same operation across multiple data elements
+simultaneously. While they share this foundational goal, they differ
+significantly in their hardware abstractions, control flow handling,
+memory access patterns, latency-hiding strategies, and programming
+models. Understanding these differences helps developers choose the
+right architecture and write efficient parallel code.</p>
+<h2 id="execution-model-and-hardware-abstraction">Execution Model and
+Hardware Abstraction</h2>
+<p>In traditional CPU SIMD vectorization—such as x86 AVX-512 or ARM
+Neon—a single instruction stream operates on wide vector registers. A
+programmer or compiler explicitly packs <span
+class="math inline">\(N\)</span> data elements into a vector register of
+width <span class="math inline">\(W = N \times b\)</span> bits, where
+<span class="math inline">\(b\)</span> is the bit width of each element.
+There is only one program counter, one call stack, and one set of scalar
+control registers for the entire vector.</p>
+<p>In contrast, the GPU SIMT model exposes each data element as an
+independent logical thread. Each thread has its own register state,
+local variables, and logical program counter. The GPU hardware groups
+these threads into fixed-size execution units—commonly called warps (32
+threads on NVIDIA GPUs) or wavefronts (64 threads on AMD GPUs)—and
+executes them in lockstep on a multiprocessor.</p>
+<h2 id="control-flow-and-branch-divergence">Control Flow and Branch
+Divergence</h2>
+<p>Handling conditional branches (<code>if</code>/<code>else</code>) is
+one of the sharpest distinctions between SIMT and SIMD:</p>
+<ul>
+<li><strong>CPU SIMD:</strong> Conditional execution requires explicit
+masking. The programmer or compiler must compute a bitmask, execute both
+branches or use masked instructions, and blend the results into the
+destination vector register.</li>
+<li><strong>GPU SIMT:</strong> Threads can branch independently using
+standard scalar control-flow syntax. When threads within the same warp
+take different paths—a phenomenon known as branch divergence—the
+hardware automatically serializes the execution of each path, using an
+internal active mask to disable threads not on the current path. Modern
+GPU architectures (such as NVIDIA Volta and later) even support
+independent thread scheduling, allowing threads to reconverge at finer
+granularities.</li>
+</ul>
+<h2 id="memory-access-patterns">Memory Access Patterns</h2>
+<p>CPU SIMD instructions are heavily optimized for contiguous, aligned
+memory loads and stores. Accessing non-contiguous data requires slower
+gather/scatter instructions or manual shuffling across vector lanes.</p>
+<p>GPU SIMT allows each thread to compute its own arbitrary memory
+address independently. To maintain high bandwidth, the GPU memory
+controller dynamically inspects the addresses generated by all threads
+in a warp. When threads access adjacent memory locations, the hardware
+merges those requests into a minimal number of wide memory transactions,
+a process called memory coalescing.</p>
+<h2 id="latency-hiding-and-scheduling">Latency Hiding and
+Scheduling</h2>
+<p>CPUs rely on large multi-level caches, branch predictors, and
+out-of-order execution engines to minimize the latency of a few active
+threads. SIMD units sit inside these complex cores and benefit from the
+core's ability to keep data close in cache.</p>
+<p>GPUs take the opposite approach: they dedicate most of their silicon
+to arithmetic logic units (ALUs) rather than large caches or complex
+control logic. To hide the high latency of global memory accesses (which
+can take hundreds of clock cycles), GPUs rely on massive hardware
+multithreading. A single streaming multiprocessor maintains the register
+state for dozens of warps simultaneously. When one warp stalls waiting
+for memory, the warp scheduler switches to another ready warp in a
+single clock cycle with zero context-switch overhead.</p>
+<h2 id="programming-model">Programming Model</h2>
+<p>Writing CPU SIMD code often involves either relying on compiler
+auto-vectorization—which can be fragile for complex loops—or writing
+low-level compiler intrinsics tied to a specific instruction set width
+(e.g., 128-bit, 256-bit, or 512-bit).</p>
+<p>SIMT kernels (written in CUDA, HIP, or OpenCL) are written from the
+perspective of a single scalar thread. The hardware and runtime handle
+mapping those threads onto the underlying vector width, making the
+source code more portable across GPU generations with different core
+counts and execution widths.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-gpu-simt-differ-from-cpu-simd-vectorization';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

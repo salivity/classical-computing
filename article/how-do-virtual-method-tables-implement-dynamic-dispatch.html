@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Virtual Method Tables Implement Dynamic Dispatch? - classical-computing</title>
+    <meta name="description" content="Virtual method tables, commonly called vtables, are lookup tables used by object-oriented programming languages to resolve method calls at runtime rather than compile time. By storing function pointers for each class and embedding a hidden pointer to the">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-virtual-method-tables-implement-dynamic-dispatch">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Virtual Method Tables Implement Dynamic Dispatch? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-virtual-method-tables-implement-dynamic-dispatch" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Virtual method tables, commonly called vtables, are lookup tables used by object-oriented programming languages to resolve method calls at runtime rather than compile time. By storing function pointers for each class and embedding a hidden pointer to the" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-virtual-method-tables-implement-dynamic-dispatch">How Do
+Virtual Method Tables Implement Dynamic Dispatch?</h1>
+<p>Virtual method tables, commonly called vtables, are lookup tables
+used by object-oriented programming languages to resolve method calls at
+runtime rather than compile time. By storing function pointers for each
+class and embedding a hidden pointer to the appropriate table inside
+every object instance, vtables enable dynamic dispatch and runtime
+polymorphism with constant-time overhead.</p>
+<h2 id="what-is-dynamic-dispatch-and-runtime-polymorphism">What Is
+Dynamic Dispatch and Runtime Polymorphism?</h2>
+<p>In object-oriented programming, a base class reference or pointer can
+hold an instance of any derived class. When a program invokes an
+overridden method through that base reference, the runtime must execute
+the implementation belonging to the actual object type, not the declared
+type of the reference. This behavior is known as runtime polymorphism,
+and the mechanism that selects the correct implementation at execution
+time is called dynamic dispatch.</p>
+<p>Without dynamic dispatch, the compiler would bind every method call
+statically to a fixed memory address based on the variable's declared
+type. Static binding is fast, but it prevents a single interface from
+exhibiting different behaviors depending on the underlying object.</p>
+<h2 id="structure-of-a-virtual-method-table">Structure of a Virtual
+Method Table</h2>
+<p>A virtual method table is a static array of function pointers
+generated by the compiler for each class that defines or inherits
+virtual methods. Every entry in the table corresponds to a specific
+virtual method signature and holds the memory address of the function
+that implements it for that class.</p>
+<p>When a derived class inherits from a base class, the compiler
+constructs a new vtable for the derived class:</p>
+<ul>
+<li>Methods that are not overridden retain the function pointers
+inherited from the base class.</li>
+<li>Methods that are overridden have their slots updated to point to the
+derived class's new implementations.</li>
+<li>Newly introduced virtual methods are appended to the end of the
+table.</li>
+</ul>
+<p>Because every class in an inheritance hierarchy shares the same slot
+layout for inherited methods, a given method always appears at the same
+fixed index <span class="math inline">\(i\)</span> across all related
+vtables.</p>
+<h2 id="the-role-of-the-virtual-pointer">The Role of the Virtual
+Pointer</h2>
+<p>To connect an object instance to its class's vtable, the compiler
+inserts a hidden member variable—commonly called the virtual pointer, or
+<code>vptr</code>—into the memory layout of each object, typically as
+its very first field. When an object is constructed, its constructor
+initializes the <code>vptr</code> to point to the vtable of its concrete
+class.</p>
+<p>If a base class constructor runs before a derived class constructor,
+the <code>vptr</code> is initially set to the base class vtable and then
+updated to the derived class vtable once the derived constructor begins.
+This ensures that virtual calls made during construction resolve safely
+to the currently initialized type.</p>
+<h2 id="how-a-virtual-method-call-executes">How a Virtual Method Call
+Executes</h2>
+<p>When a program calls a virtual method through a base pointer or
+reference, the compiled machine code performs a small, fixed sequence of
+memory dereferences:</p>
+<ol type="1">
+<li>Read the <code>vptr</code> from the object's base memory
+address.</li>
+<li>Add the compile-time constant offset <span class="math inline">\(i
+\times \text{sizeof}(\text{pointer})\)</span> to locate the target slot
+in the vtable.</li>
+<li>Load the function pointer stored at that slot.</li>
+<li>Jump to the loaded address, passing the object's address as the
+implicit <code>this</code> or <code>self</code> pointer.</li>
+</ol>
+<p>Because the slot index is known at compile time, the lookup takes
+<span class="math inline">\(O(1)\)</span> time regardless of the depth
+of the inheritance hierarchy.</p>
+<h2 id="performance-and-memory-trade-offs">Performance and Memory
+Trade-offs</h2>
+<p>Virtual method tables provide a predictable balance between
+flexibility and efficiency, though they introduce minor costs compared
+to static dispatch:</p>
+<ul>
+<li><strong>Memory overhead:</strong> Each object instance carries one
+extra pointer (<code>vptr</code>), and each polymorphic class stores one
+vtable in read-only memory.</li>
+<li><strong>Indirection overhead:</strong> Calling a virtual method
+requires two extra pointer dereferences (object to vtable, then vtable
+to function), which can slightly increase CPU cache pressure.</li>
+<li><strong>Inlining limitations:</strong> Because the target function
+address is unknown at compile time, compilers generally cannot inline
+virtual calls unless devirtualization optimizations prove the exact
+runtime type.</li>
+</ul>
+<p>Despite these trade-offs, vtables remain the standard implementation
+strategy for runtime polymorphism in compiled object-oriented languages
+such as C++, Java, and C#.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-virtual-method-tables-implement-dynamic-dispatch';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

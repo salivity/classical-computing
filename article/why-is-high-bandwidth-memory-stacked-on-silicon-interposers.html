@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Is High-Bandwidth Memory Stacked on Silicon Interposers? - classical-computing</title>
+    <meta name="description" content="High-Bandwidth Memory is stacked vertically on silicon interposers to overcome the memory wall in data-intensive accelerators such as GPUs and AI processors. By combining 3D-stacked DRAM dies with a 2.5D silicon interposer, hardware architects achieve mas">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-is-high-bandwidth-memory-stacked-on-silicon-interposers">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Is High-Bandwidth Memory Stacked on Silicon Interposers? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-is-high-bandwidth-memory-stacked-on-silicon-interposers" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="High-Bandwidth Memory is stacked vertically on silicon interposers to overcome the memory wall in data-intensive accelerators such as GPUs and AI processors. By combining 3D-stacked DRAM dies with a 2.5D silicon interposer, hardware architects achieve mas" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-is-high-bandwidth-memory-stacked-on-silicon-interposers">Why
+Is High-Bandwidth Memory Stacked on Silicon Interposers?</h1>
+<p>High-Bandwidth Memory is stacked vertically on silicon interposers to
+overcome the memory wall in data-intensive accelerators such as GPUs and
+AI processors. By combining 3D-stacked DRAM dies with a 2.5D silicon
+interposer, hardware architects achieve massive bus widths, shorter
+electrical interconnects, lower power consumption per bit, and higher
+compute density within a single package.</p>
+<h2 id="overcoming-the-memory-wall">Overcoming the Memory Wall</h2>
+<p>Modern classical accelerators can execute trillions of operations per
+second, yet their overall performance is often bottlenecked by how fast
+data moves between memory and compute units. Traditional off-package
+memory architectures, such as GDDR or DDR modules mounted on a printed
+circuit board (PCB), rely on narrow buses and long copper traces.</p>
+<p>Memory bandwidth is governed by the relationship:</p>
+<p><span class="math display">\[B = \frac{W \times f}{8}\]</span></p>
+<p>where <span class="math inline">\(B\)</span> is bandwidth in bytes
+per second, <span class="math inline">\(W\)</span> is the bus width in
+bits, and <span class="math inline">\(f\)</span> is the effective data
+transfer rate per pin. Scaling <span class="math inline">\(f\)</span> to
+extreme frequencies increases signal integrity challenges and power
+dissipation. Stacking High-Bandwidth Memory (HBM) vertically and placing
+it on a silicon interposer directly next to the processor allows
+architects to dramatically increase <span
+class="math inline">\(W\)</span>—often to 1024 bits per stack—without
+needing extreme clock frequencies.</p>
+<h2 id="the-role-of-vertical-3d-stacking">The Role of Vertical 3D
+Stacking</h2>
+<p>In an HBM stack, multiple DRAM dies are thinned and stacked
+vertically on top of a base logic die. These dies are connected using
+Through-Silicon Vias (TSVs) and microbumps.</p>
+<p>Vertical stacking provides several key advantages:</p>
+<ul>
+<li><strong>Compact Footprint:</strong> Stacking 4, 8, or 12 DRAM dies
+vertically multiplies memory capacity without consuming additional
+horizontal board or package area.</li>
+<li><strong>Short Vertical Interconnects:</strong> Signals travel
+micrometers vertically through TSVs rather than centimeters horizontally
+across a PCB, reducing capacitance and latency.</li>
+<li><strong>Parallelism:</strong> Each DRAM die can be divided into
+independent channels, allowing simultaneous read and write operations
+across the stack.</li>
+</ul>
+<h2 id="why-a-silicon-interposer-is-necessary">Why a Silicon Interposer
+Is Necessary</h2>
+<p>While 3D stacking solves the vertical density problem, the HBM stacks
+still need to communicate with the adjacent accelerator die (such as a
+GPU or ASIC). A standard organic package substrate cannot reliably route
+thousands of ultra-fine-pitch traces required for a 1024-bit-wide
+interface per stack.</p>
+<p>A silicon interposer acts as a passive, high-density bridge between
+the compute die and the HBM stacks in a 2.5D packaging configuration.
+Built using mature semiconductor lithography processes, the interposer
+supports sub-micrometer trace widths and spacing. This fine-pitch
+routing enables thousands of parallel, point-to-point connections
+between the processor and multiple HBM stacks within a few
+millimeters.</p>
+<h2 id="energy-efficiency-and-signal-integrity">Energy Efficiency and
+Signal Integrity</h2>
+<p>Data movement consumes a substantial portion of an accelerator's
+total power budget. The dynamic energy required to transmit a bit over
+an interconnect is proportional to the capacitance <span
+class="math inline">\(C\)</span> and the square of the voltage <span
+class="math inline">\(V\)</span>:</p>
+<p><span class="math display">\[E_{\text{bit}} \propto C \cdot
+V^2\]</span></p>
+<p>Because silicon interposer traces are much shorter than PCB traces,
+their parasitic capacitance <span class="math inline">\(C\)</span> is
+significantly lower. Lower capacitance allows the interface to operate
+at lower voltages and moderate frequencies while still delivering
+terabytes per second of aggregate bandwidth. Additionally, the uniform
+thermal and mechanical properties of silicon help maintain signal
+integrity across thousands of densely packed wires.</p>
+<h2 id="summary-of-architectural-trade-offs">Summary of Architectural
+Trade-Offs</h2>
+<p>Stacking HBM on silicon interposers introduces higher manufacturing
+complexity and packaging costs compared to traditional PCB-mounted
+memory. However, for data-intensive classical computing workloads—such
+as large-scale matrix multiplication, scientific simulation, and graph
+analytics—the gains in bandwidth density and energy efficiency per bit
+make 2.5D and 3D integration essential for scaling accelerator
+performance.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-is-high-bandwidth-memory-stacked-on-silicon-interposers';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

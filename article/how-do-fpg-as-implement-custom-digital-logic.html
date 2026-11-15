@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do FPGAs Implement Custom Digital Logic? - classical-computing</title>
+    <meta name="description" content="Field-Programmable Gate Arrays implement custom digital logic by combining arrays of configurable logic blocks with a programmable interconnect fabric. Instead of fabricating fixed silicon gates for a specific circuit, an FPGA uses small memory-based look">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-fpg-as-implement-custom-digital-logic">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do FPGAs Implement Custom Digital Logic? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-fpg-as-implement-custom-digital-logic" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Field-Programmable Gate Arrays implement custom digital logic by combining arrays of configurable logic blocks with a programmable interconnect fabric. Instead of fabricating fixed silicon gates for a specific circuit, an FPGA uses small memory-based look" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-fpgas-implement-custom-digital-logic">How Do FPGAs
+Implement Custom Digital Logic?</h1>
+<p>Field-Programmable Gate Arrays implement custom digital logic by
+combining arrays of configurable logic blocks with a programmable
+interconnect fabric. Instead of fabricating fixed silicon gates for a
+specific circuit, an FPGA uses small memory-based lookup tables to
+emulate any Boolean function and a routing matrix of programmable
+switches to wire those functions together. This architecture allows
+hardware engineers to reconfigure the physical behavior of the chip
+after manufacturing by loading a binary configuration file.</p>
+<h2 id="configurable-logic-blocks-and-lookup-tables">Configurable Logic
+Blocks and Lookup Tables</h2>
+<p>The fundamental building block of an FPGA is the Configurable Logic
+Block (CLB), which contains one or more Lookup Tables (LUTs) paired with
+storage elements. A LUT is essentially a small, fast Static
+Random-Access Memory (SRAM) array combined with a multiplexer tree.
+Rather than using physical AND, OR, or NOT gates, a <span
+class="math inline">\(k\)</span>-input LUT stores the complete truth
+table for any Boolean function of <span class="math inline">\(k\)</span>
+variables.</p>
+<p>Because a <span class="math inline">\(k\)</span>-input Boolean
+function has <span class="math inline">\(2^k\)</span> possible input
+combinations, a <span class="math inline">\(k\)</span>-input LUT
+requires <span class="math inline">\(2^k\)</span> bits of configuration
+memory. For example, a 4-input LUT stores <span
+class="math inline">\(2^4 = 16\)</span> bits, while a modern 6-input LUT
+stores <span class="math inline">\(2^6 = 64\)</span> bits. When signals
+arrive at the <span class="math inline">\(k\)</span> input pins of the
+LUT, they act as select lines for the multiplexer, which routes the
+single corresponding bit from the SRAM to the LUT output.</p>
+<p>For instance, to implement the 3-input Boolean function <span
+class="math inline">\(Y = (A \cdot B) + \overline{C}\)</span>, the
+synthesis tool precomputes the 8 output bits for every combination of
+<span class="math inline">\((A, B, C)\)</span> and writes them into the
+LUT's SRAM. During operation, the LUT evaluates <span
+class="math inline">\(Y\)</span> in constant time, regardless of the
+function's complexity, because the signal simply traverses a fixed
+multiplexer depth.</p>
+<h2 id="flip-flops-and-sequential-logic">Flip-Flops and Sequential
+Logic</h2>
+<p>Combinational logic alone cannot store state or synchronize
+operations across clock cycles. To support sequential circuits such as
+finite state machines, counters, and pipelines, each LUT in a CLB is
+typically paired with a D-type flip-flop.</p>
+<p>A multiplexer at the output of the logic slice determines whether the
+LUT's result goes directly to the routing fabric (combinational path) or
+is registered by the flip-flop on a clock edge (sequential path). This
+tight coupling between LUTs and flip-flops minimizes propagation delay
+and enables high-frequency synchronous designs.</p>
+<h2 id="programmable-routing-matrices">Programmable Routing
+Matrices</h2>
+<p>While LUTs provide the computation, the programmable routing matrix
+provides the communication. An FPGA's logic blocks are arranged in a
+two-dimensional grid surrounded by horizontal and vertical routing
+channels filled with metal wire segments of varying lengths.</p>
+<p>At the intersections of these channels sit programmable switch
+matrices. Each switch matrix contains arrays of pass transistors or
+multiplexers controlled by configuration SRAM bits. By turning specific
+switches on or off, the FPGA connects the output of one CLB to the
+inputs of another, forming custom data paths across the chip.</p>
+<p>Because routing signals through programmable switches introduces
+resistance and capacitance, interconnect delay often dominates the
+critical path timing of an FPGA design. Modern architectures mitigate
+this by providing a hierarchy of wire lengths, including:</p>
+<ul>
+<li>Direct local connections between adjacent CLBs for fast carry chains
+and tight loops</li>
+<li>Medium-length lines spanning several logic blocks</li>
+<li>Long global lines and dedicated clock networks for low-skew
+distribution across the entire die</li>
+</ul>
+<h2 id="from-hardware-description-to-bitstream">From Hardware
+Description to Bitstream</h2>
+<p>Implementing a custom circuit on an FPGA requires translating a
+high-level Hardware Description Language (HDL) design, such as Verilog
+or VHDL, into a physical configuration:</p>
+<ol type="1">
+<li><strong>Synthesis:</strong> The toolchain converts RTL code into a
+netlist of generic logic gates and registers.</li>
+<li><strong>Technology Mapping:</strong> The netlist is grouped and
+packed into <span class="math inline">\(k\)</span>-input LUTs and
+flip-flops specific to the target FPGA architecture.</li>
+<li><strong>Place and Route:</strong> The placer assigns each mapped LUT
+and flip-flop to a physical CLB location, and the router determines
+which switch matrix paths will connect them while meeting timing
+constraints.</li>
+<li><strong>Bitstream Generation:</strong> The final placement and
+routing decisions are compiled into a binary bitstream that initializes
+every LUT SRAM cell and routing switch on the device.</li>
+</ol>
+<p>Once the bitstream is loaded into the FPGA's configuration memory,
+the hardware immediately behaves as the specified digital circuit,
+executing operations in true parallel hardware rather than sequentially
+fetching instructions like a processor.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-fpg-as-implement-custom-digital-logic';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

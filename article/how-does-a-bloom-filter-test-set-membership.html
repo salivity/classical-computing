@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a Bloom Filter Test Set Membership? - classical-computing</title>
+    <meta name="description" content="A Bloom filter is a space-efficient probabilistic data structure used in classical computing to test whether an element is a member of a set. It combines a fixed-size bit array with multiple independent hash functions to achieve fast insertions and lookup">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-bloom-filter-test-set-membership">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a Bloom Filter Test Set Membership? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-bloom-filter-test-set-membership" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A Bloom filter is a space-efficient probabilistic data structure used in classical computing to test whether an element is a member of a set. It combines a fixed-size bit array with multiple independent hash functions to achieve fast insertions and lookup" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-bloom-filter-test-set-membership">How Does a Bloom
+Filter Test Set Membership?</h1>
+<p>A Bloom filter is a space-efficient probabilistic data structure used
+in classical computing to test whether an element is a member of a set.
+It combines a fixed-size bit array with multiple independent hash
+functions to achieve fast insertions and lookups. While it can
+occasionally produce false positives by indicating that an element might
+be in the set when it is not, it guarantees zero false negatives,
+meaning it will never falsely claim that an inserted element is
+absent.</p>
+<h2 id="the-bit-array-and-hash-functions">The Bit Array and Hash
+Functions</h2>
+<p>A Bloom filter consists of a bit array of <span
+class="math inline">\(m\)</span> bits, all initially set to <span
+class="math inline">\(0\)</span>, and <span
+class="math inline">\(k\)</span> independent hash functions <span
+class="math inline">\(h_1, h_2, \dots, h_k\)</span>. Each hash function
+maps an input element <span class="math inline">\(x\)</span> to a
+uniform random index in the range <span class="math inline">\(\{0, 1,
+\dots, m - 1\}\)</span>.</p>
+<p>Because the bit array stores only single bits rather than the actual
+elements, the data structure requires significantly less memory than a
+hash table or a balanced search tree.</p>
+<h2 id="inserting-an-element">Inserting an Element</h2>
+<p>To insert an element <span class="math inline">\(x\)</span> into the
+Bloom filter, the algorithm computes all <span
+class="math inline">\(k\)</span> hash values:</p>
+<p><span class="math display">\[h_1(x), h_2(x), \dots,
+h_k(x)\]</span></p>
+<p>Each resulting index in the bit array is then set to <span
+class="math inline">\(1\)</span>. If a bit at a given index is already
+<span class="math inline">\(1\)</span> due to a previous insertion, it
+simply remains <span class="math inline">\(1\)</span>. Both the time
+complexity of insertion and the number of bit operations required are
+<span class="math inline">\(O(k)\)</span>, independent of the number of
+elements already stored.</p>
+<h2 id="querying-for-membership">Querying for Membership</h2>
+<p>To test whether an element <span class="math inline">\(y\)</span> is
+in the set, the algorithm computes the same <span
+class="math inline">\(k\)</span> hash functions for <span
+class="math inline">\(y\)</span> and checks the corresponding positions
+in the bit array:</p>
+<ul>
+<li>If <strong>any</strong> of the bits at indices <span
+class="math inline">\(h_1(y), h_2(y), \dots, h_k(y)\)</span> is <span
+class="math inline">\(0\)</span>, the element <span
+class="math inline">\(y\)</span> is definitely not in the set.</li>
+<li>If <strong>all</strong> of the bits at those indices are <span
+class="math inline">\(1\)</span>, the element <span
+class="math inline">\(y\)</span> is probably in the set.</li>
+</ul>
+<h2 id="why-zero-false-negatives-are-guaranteed">Why Zero False
+Negatives Are Guaranteed</h2>
+<p>A false negative would occur if an element <span
+class="math inline">\(x\)</span> was previously inserted, yet a
+subsequent query for <span class="math inline">\(x\)</span> returned
+that it is not in the set. In a standard Bloom filter, this is
+impossible because bits are only ever changed from <span
+class="math inline">\(0\)</span> to <span
+class="math inline">\(1\)</span> during insertions, never from <span
+class="math inline">\(1\)</span> to <span
+class="math inline">\(0\)</span>.</p>
+<p>Once <span class="math inline">\(x\)</span> is inserted, all <span
+class="math inline">\(k\)</span> positions <span
+class="math inline">\(h_1(x), \dots, h_k(x)\)</span> are set to <span
+class="math inline">\(1\)</span> and remain <span
+class="math inline">\(1\)</span> permanently. Therefore, any future
+query for <span class="math inline">\(x\)</span> will always find all
+<span class="math inline">\(k\)</span> bits set to <span
+class="math inline">\(1\)</span>, guaranteeing a zero false-negative
+rate.</p>
+<h2 id="understanding-false-positives">Understanding False
+Positives</h2>
+<p>False positives happen because multiple elements share the same <span
+class="math inline">\(m\)</span>-bit array. Even if an element <span
+class="math inline">\(y\)</span> was never inserted, its <span
+class="math inline">\(k\)</span> hash positions might all have been set
+to <span class="math inline">\(1\)</span> by various combinations of
+other inserted elements.</p>
+<p>After inserting <span class="math inline">\(n\)</span> elements into
+a bit array of size <span class="math inline">\(m\)</span> using <span
+class="math inline">\(k\)</span> hash functions, the probability <span
+class="math inline">\(p\)</span> of a false positive is
+approximately:</p>
+<p><span class="math display">\[p \approx \left(1 - e^{-kn /
+m}\right)^k\]</span></p>
+<p>For a given <span class="math inline">\(m\)</span> and <span
+class="math inline">\(n\)</span>, the number of hash functions <span
+class="math inline">\(k\)</span> that minimizes the false-positive rate
+is:</p>
+<p><span class="math display">\[k = \frac{m}{n} \ln 2\]</span></p>
+<p>By tuning <span class="math inline">\(m\)</span> and <span
+class="math inline">\(k\)</span> according to the expected number of
+elements <span class="math inline">\(n\)</span>, developers can trade a
+small, controlled false-positive rate for substantial memory savings and
+constant-time <span class="math inline">\(O(k)\)</span> lookups.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-bloom-filter-test-set-membership';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Is MOSFET Subthreshold Swing Limited to 60 mV/decade? - classical-computing</title>
+    <meta name="description" content="The Boltzmann tyranny refers to a fundamental thermodynamic limit on how sharply a conventional metal-oxide-semiconductor field-effect transistor can switch between its off and on states at room temperature. Because charge carriers in a semiconductor foll">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-is-mosfet-subthreshold-swing-limited-to-60-m-v-decade">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Is MOSFET Subthreshold Swing Limited to 60 mV/decade? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-is-mosfet-subthreshold-swing-limited-to-60-m-v-decade" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Boltzmann tyranny refers to a fundamental thermodynamic limit on how sharply a conventional metal-oxide-semiconductor field-effect transistor can switch between its off and on states at room temperature. Because charge carriers in a semiconductor foll" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-is-mosfet-subthreshold-swing-limited-to-60-mvdecade">Why Is
+MOSFET Subthreshold Swing Limited to 60 mV/decade?</h1>
+<p>The Boltzmann tyranny refers to a fundamental thermodynamic limit on
+how sharply a conventional metal-oxide-semiconductor field-effect
+transistor can switch between its off and on states at room temperature.
+Because charge carriers in a semiconductor follow a thermal energy
+distribution, reducing the subthreshold drain current by a factor of ten
+requires at least 60 millivolts of gate voltage change at 300 Kelvin.
+This physical barrier prevents classical computing chips from scaling
+operating voltages down indefinitely without causing excessive leakage
+power.</p>
+<h2 id="what-is-subthreshold-swing">What Is Subthreshold Swing?</h2>
+<p>In a MOSFET, the gate voltage <span
+class="math inline">\(V_G\)</span> controls the flow of current <span
+class="math inline">\(I_D\)</span> between the source and drain
+terminals. Even when <span class="math inline">\(V_G\)</span> is below
+the threshold voltage <span class="math inline">\(V_{th}\)</span>, a
+small subthreshold leakage current still flows. Subthreshold swing,
+denoted as <span class="math inline">\(SS\)</span>, measures how much
+gate voltage is needed to change this subthreshold current by one order
+of magnitude (a factor of 10):</p>
+<p><span class="math display">\[SS = \frac{dV_G}{d(\log_{10}
+I_D)}\]</span></p>
+<p>A smaller subthreshold swing means a steeper, more efficient switch.
+With a steeper slope, a transistor can achieve a high on-current and a
+very low off-current using a smaller supply voltage <span
+class="math inline">\(V_{DD}\)</span>.</p>
+<h2 id="the-thermodynamics-behind-boltzmann-tyranny">The Thermodynamics
+Behind Boltzmann Tyranny</h2>
+<p>In a standard MOSFET, turning the device on or off relies on
+modulating an electrostatic potential barrier <span
+class="math inline">\(\psi_s\)</span> in the channel. Carriers in the
+source must overcome this barrier via thermionic emission to reach the
+drain. At thermal equilibrium, the energy of these carriers follows the
+Maxwell-Boltzmann distribution, where the probability of a carrier
+having energy <span class="math inline">\(E\)</span> above the barrier
+scales as <span class="math inline">\(\exp(-E / k_B T)\)</span>.</p>
+<p>Here, <span class="math inline">\(k_B\)</span> is the Boltzmann
+constant and <span class="math inline">\(T\)</span> is the absolute
+temperature. Because the current depends exponentially on the barrier
+height, the subthreshold drain current is proportional to:</p>
+<p><span class="math display">\[I_D \propto \exp\left(\frac{q
+\psi_s}{k_B T}\right)\]</span></p>
+<p>where <span class="math inline">\(q\)</span> is the elementary
+charge. Converting the natural exponential to base-10 logarithm
+introduces a factor of <span class="math inline">\(\ln(10) \approx
+2.3026\)</span>. Therefore, the minimum voltage change in the channel
+potential required to change <span class="math inline">\(I_D\)</span> by
+one decade is:</p>
+<p><span class="math display">\[\frac{d\psi_s}{d(\log_{10} I_D)} =
+\frac{k_B T}{q} \ln(10)\]</span></p>
+<p>At room temperature (<span class="math inline">\(T = 300\text{
+K}\)</span>), the thermal voltage <span class="math inline">\(k_B T /
+q\)</span> is approximately <span class="math inline">\(25.85\text{
+mV}\)</span>. Multiplying by <span
+class="math inline">\(\ln(10)\)</span> yields:</p>
+<p><span class="math display">\[\frac{k_B T}{q} \ln(10) \approx
+59.5\text{ mV/decade} \approx 60\text{ mV/decade}\]</span></p>
+<h2 id="the-role-of-capacitive-coupling">The Role of Capacitive
+Coupling</h2>
+<p>The gate terminal does not control the channel potential <span
+class="math inline">\(\psi_s\)</span> directly; instead, it acts through
+a capacitive voltage divider formed by the gate oxide capacitance <span
+class="math inline">\(C_{ox}\)</span> and the semiconductor depletion
+capacitance <span class="math inline">\(C_d\)</span>. This relationship
+is captured by the body factor <span
+class="math inline">\(m\)</span>:</p>
+<p><span class="math display">\[m = 1 + \frac{C_d}{C_{ox}} \ge
+1\]</span></p>
+<p>Combining the body factor with the thermal limit gives the full
+expression for subthreshold swing:</p>
+<p><span class="math display">\[SS = m \cdot \frac{k_B T}{q} \ln(10) =
+\left(1 + \frac{C_d}{C_{ox}}\right) \frac{k_B T}{q} \ln(10)\]</span></p>
+<p>Even in an ideal transistor where <span class="math inline">\(C_{ox}
+\gg C_d\)</span> and <span class="math inline">\(m\)</span> approaches
+<span class="math inline">\(1\)</span>, the subthreshold swing cannot
+drop below <span class="math inline">\(60\text{ mV/decade}\)</span> at
+<span class="math inline">\(300\text{ K}\)</span>.</p>
+<h2 id="impact-on-classical-computing">Impact on Classical
+Computing</h2>
+<p>For decades, Dennard scaling allowed engineers to shrink transistors
+and lower supply voltages <span class="math inline">\(V_{DD}\)</span>
+together, keeping power density roughly constant. However, as <span
+class="math inline">\(V_{DD}\)</span> approached <span
+class="math inline">\(1\text{ V}\)</span> and below, the <span
+class="math inline">\(60\text{ mV/decade}\)</span> limit created a
+severe bottleneck.</p>
+<p>To maintain a fast switching speed, the threshold voltage <span
+class="math inline">\(V_{th}\)</span> must be kept low enough relative
+to <span class="math inline">\(V_{DD}\)</span>. Yet lowering <span
+class="math inline">\(V_{th}\)</span> while <span
+class="math inline">\(SS\)</span> is fixed at <span
+class="math inline">\(\ge 60\text{ mV/decade}\)</span> causes the
+off-state leakage current <span class="math inline">\(I_{off}\)</span>
+at <span class="math inline">\(V_G = 0\)</span> to rise exponentially.
+This trade-off between performance and static power dissipation ended
+classical Dennard scaling and continues to constrain energy efficiency
+in modern processors.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-is-mosfet-subthreshold-swing-limited-to-60-m-v-decade';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

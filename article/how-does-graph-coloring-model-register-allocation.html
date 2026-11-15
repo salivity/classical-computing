@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Graph Coloring Model Register Allocation? - classical-computing</title>
+    <meta name="description" content="Compilers translate high-level programs that use an unlimited number of virtual variables into machine code that must run on a processor with a small, fixed number of physical registers. To bridge this gap, compilers model register allocation as a graph c">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-graph-coloring-model-register-allocation">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Graph Coloring Model Register Allocation? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-graph-coloring-model-register-allocation" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Compilers translate high-level programs that use an unlimited number of virtual variables into machine code that must run on a processor with a small, fixed number of physical registers. To bridge this gap, compilers model register allocation as a graph c" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-graph-coloring-model-register-allocation">How Does
+Graph Coloring Model Register Allocation?</h1>
+<p>Compilers translate high-level programs that use an unlimited number
+of virtual variables into machine code that must run on a processor with
+a small, fixed number of physical registers. To bridge this gap,
+compilers model register allocation as a graph coloring problem. In this
+model, variables are represented as vertices, conflicts between
+variables that are needed at the same time are represented as edges, and
+physical registers are represented as colors. Finding a valid assignment
+of variables to registers without exceeding the hardware limit is
+equivalent to coloring the graph with at most k colors, a classic
+problem known to be NP-complete.</p>
+<h2 id="liveness-analysis-and-interference-graphs">Liveness Analysis and
+Interference Graphs</h2>
+<p>Before building the graph, the compiler performs liveness analysis on
+the intermediate representation of the program. A variable is considered
+live at a given program point if its current value will be read by a
+future instruction before it is overwritten.</p>
+<p>Two variables interfere if they are both live at the same program
+point. Because they must hold distinct values simultaneously, they
+cannot share the same physical register. The compiler encodes these
+constraints in an undirected interference graph <span
+class="math inline">\(G = (V, E)\)</span>, where:</p>
+<ul>
+<li>Each vertex <span class="math inline">\(v \in V\)</span> corresponds
+to a virtual register or temporary variable.</li>
+<li>An edge <span class="math inline">\((u, v) \in E\)</span> exists if
+and only if variables <span class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> are simultaneously live at some point
+in the program.</li>
+</ul>
+<p>If the target CPU has <span class="math inline">\(k\)</span>
+general-purpose registers, the register allocation problem reduces to
+finding a proper <span class="math inline">\(k\)</span>-coloring of
+<span class="math inline">\(G\)</span>: a function <span
+class="math inline">\(c: V \to \{1, 2, \dots, k\}\)</span> such that for
+every edge <span class="math inline">\((u, v) \in E\)</span>, <span
+class="math inline">\(c(u) \neq c(v)\)</span>.</p>
+<h2 id="why-the-problem-is-np-complete">Why the Problem Is
+NP-Complete</h2>
+<p>In classical complexity theory, deciding whether an arbitrary graph
+<span class="math inline">\(G\)</span> is <span
+class="math inline">\(k\)</span>-colorable is NP-complete for any <span
+class="math inline">\(k \ge 3\)</span>. Gregory Chaitin and his
+colleagues proved in 1981 that register allocation via graph coloring is
+also NP-complete by showing that any arbitrary graph can be realized as
+the interference graph of some valid program.</p>
+<p>Because no polynomial-time algorithm is known to solve NP-complete
+problems optimally in the general case, production compilers rely on
+heuristics to find good colorings quickly rather than searching for a
+guaranteed optimal solution.</p>
+<h2 id="chaitin-briggs-heuristic-algorithm">Chaitin-Briggs Heuristic
+Algorithm</h2>
+<p>Most classical graph-coloring allocators follow the Chaitin-Briggs
+algorithm, which alternates between simplifying the graph and assigning
+colors:</p>
+<ol type="1">
+<li><strong>Simplify</strong>: If there is a vertex <span
+class="math inline">\(v\)</span> with degree <span
+class="math inline">\(\deg(v) &lt; k\)</span>, it can always be colored
+regardless of how its neighbors are colored. The compiler removes <span
+class="math inline">\(v\)</span> from the graph and pushes it onto a
+stack.</li>
+<li><strong>Spill (Potential)</strong>: If every remaining vertex has
+degree <span class="math inline">\(\ge k\)</span>, the graph cannot be
+simplified further with certainty. The compiler selects a vertex <span
+class="math inline">\(v\)</span> as a potential spill
+candidate—typically choosing one with high degree and low estimated
+execution frequency—and pushes it onto the stack anyway, hoping its
+neighbors will end up using fewer than <span
+class="math inline">\(k\)</span> distinct colors.</li>
+<li><strong>Select</strong>: Once the graph is empty, the compiler pops
+vertices from the stack one by one, reinserts them into the graph, and
+assigns each a color not used by any of its already-colored
+neighbors.</li>
+<li><strong>Actual Spill</strong>: If a popped vertex has neighbors
+using all <span class="math inline">\(k\)</span> colors, it cannot be
+assigned a register. The compiler inserts load and store instructions to
+keep that variable in memory (spilling it), updates the interference
+graph, and repeats the process.</li>
+</ol>
+<h2 id="coalescing-and-rematerialization">Coalescing and
+Rematerialization</h2>
+<p>To improve performance further, compilers often combine graph
+coloring with copy coalescing. If a move instruction copies variable
+<span class="math inline">\(u\)</span> to variable <span
+class="math inline">\(v\)</span> and there is no edge <span
+class="math inline">\((u, v) \in E\)</span>, the compiler can merge
+<span class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span> into a single vertex, eliminating the
+move instruction entirely. However, aggressive coalescing increases
+vertex degrees and can introduce spills, so modern allocators use
+conservative strategies—such as Briggs' or George's criteria—to merge
+nodes only when doing so is guaranteed not to make the graph
+uncolorable.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-graph-coloring-model-register-allocation';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

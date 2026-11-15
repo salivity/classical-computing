@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does JTAG Debug Silicon Hardware and Registers? - classical-computing</title>
+    <meta name="description" content="JTAG, standardized as IEEE 1149.1, provides a serial interface that lets engineers test printed circuit boards and debug integrated circuits after fabrication. By shifting instructions and data through dedicated on-chip test logic, engineers can observe a">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-jtag-debug-silicon-hardware-and-registers">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does JTAG Debug Silicon Hardware and Registers? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-jtag-debug-silicon-hardware-and-registers" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="JTAG, standardized as IEEE 1149.1, provides a serial interface that lets engineers test printed circuit boards and debug integrated circuits after fabrication. By shifting instructions and data through dedicated on-chip test logic, engineers can observe a" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-jtag-debug-silicon-hardware-and-registers">How Does
+JTAG Debug Silicon Hardware and Registers?</h1>
+<p>JTAG, standardized as IEEE 1149.1, provides a serial interface that
+lets engineers test printed circuit boards and debug integrated circuits
+after fabrication. By shifting instructions and data through dedicated
+on-chip test logic, engineers can observe and control pin states,
+inspect internal registers, and halt or step processor cores without
+physical probes. This article explains the JTAG architecture, its state
+machine, and how it enables post-fabrication silicon debugging.</p>
+<h2 id="the-test-access-port-tap">The Test Access Port (TAP)</h2>
+<p>At the hardware level, JTAG communicates through a Test Access Port
+(TAP) consisting of four mandatory signals and one optional signal:</p>
+<ul>
+<li><strong>TCK (Test Clock):</strong> Synchronizes all internal test
+logic operations.</li>
+<li><strong>TMS (Test Mode Select):</strong> Controls transitions within
+the TAP controller state machine.</li>
+<li><strong>TDI (Test Data In):</strong> Serially shifts instructions
+and data into the chip.</li>
+<li><strong>TDO (Test Data Out):</strong> Serially shifts captured data
+out of the chip.</li>
+<li><strong>TRST (Test Reset, optional):</strong> Asynchronously resets
+the TAP controller.</li>
+</ul>
+<p>Because multiple chips on a board can be daisy-chained by connecting
+one device's <code>TDO</code> to the next device's <code>TDI</code>, a
+single JTAG header can address an entire system.</p>
+<h2 id="the-tap-controller-state-machine">The TAP Controller State
+Machine</h2>
+<p>The TAP controller is a 16-state finite state machine clocked on the
+rising edge of <code>TCK</code>. The value sampled on <code>TMS</code>
+determines each state transition. The state machine is divided into two
+parallel paths: one for shifting into the <strong>Instruction Register
+(IR)</strong> and one for shifting into a <strong>Data Register
+(DR)</strong>.</p>
+<p>Each path follows a consistent sequence:</p>
+<ol type="1">
+<li><strong>Capture:</strong> Loads parallel data from the target logic
+into the shift register.</li>
+<li><strong>Shift:</strong> Moves bits serially from <code>TDI</code>
+toward <code>TDO</code> on each <code>TCK</code> cycle.</li>
+<li><strong>Update:</strong> Latches the shifted-in data onto the
+parallel output stage, making it active.</li>
+</ol>
+<p>If <code>TMS</code> is held high for five consecutive
+<code>TCK</code> cycles, the controller is guaranteed to return to the
+<code>Test-Logic-Reset</code> state, providing a reliable recovery
+mechanism without needing <code>TRST</code>.</p>
+<h2 id="instruction-and-data-registers">Instruction and Data
+Registers</h2>
+<p>The <strong>Instruction Register (IR)</strong> holds the current
+opcode that selects which <strong>Data Register (DR)</strong> is placed
+between <code>TDI</code> and <code>TDO</code>. Standard instructions
+defined by IEEE 1149.1 include:</p>
+<ul>
+<li><strong>BYPASS:</strong> Connects a single-bit register between
+<code>TDI</code> and <code>TDO</code>, allowing engineers to skip over
+chips in a daisy chain with minimal latency.</li>
+<li><strong>IDCODE:</strong> Selects a 32-bit read-only register
+containing the manufacturer, part number, and version, used to verify
+silicon identity during bring-up.</li>
+<li><strong>SAMPLE/PRELOAD:</strong> Captures a snapshot of normal pin
+activity without disrupting chip operation, or preloads values into
+boundary-scan cells.</li>
+<li><strong>EXTEST:</strong> Disconnects the core logic from the I/O
+pins and drives the pins directly from the boundary-scan cells to test
+board-level interconnects for opens and shorts.</li>
+</ul>
+<h2
+id="boundary-scan-cells-and-internal-register-inspection">Boundary-Scan
+Cells and Internal Register Inspection</h2>
+<p>Every digital I/O pin on a JTAG-compliant chip is wrapped by a
+<strong>boundary-scan cell</strong>. Together, these cells form the
+<strong>Boundary-Scan Register (BSR)</strong>. During normal operation,
+signals pass transparently through the cells. In test mode, the cells
+isolate the core silicon from the external pins, allowing engineers to
+inject known logic levels or sample incoming signals.</p>
+<p>To inspect internal register states beyond the I/O boundary, silicon
+designers extend JTAG with vendor-specific instructions and custom data
+registers:</p>
+<ul>
+<li><strong>Internal Scan Chains:</strong> Flip-flops inside the core
+logic are linked into long shift registers. By halting the system clock
+and switching to scan mode, engineers can shift out the exact state of
+internal pipelines and state machines.</li>
+<li><strong>On-Chip Debug Modules:</strong> Modern processors (such as
+ARM CoreSight or RISC-V Debug Modules) map JTAG data registers to a
+Debug Transport Module. Through this interface, engineers can halt a CPU
+core, single-step instructions, read or write general-purpose and
+control registers, and access system memory over the internal bus.</li>
+</ul>
+<h2 id="post-fabrication-debugging-workflow">Post-Fabrication Debugging
+Workflow</h2>
+<p>When new silicon returns from the foundry, engineers typically follow
+a structured JTAG-based bring-up sequence:</p>
+<ol type="1">
+<li><strong>Chain Verification:</strong> Read <code>IDCODE</code> from
+every device in the JTAG chain to confirm power, clock, and basic TAP
+connectivity.</li>
+<li><strong>Board Interconnect Testing:</strong> Run <code>EXTEST</code>
+to verify solder joints and PCB traces between chips without booting
+firmware.</li>
+<li><strong>Core Halt and State Inspection:</strong> Use debug
+instructions to halt the processor, inspect status registers, and check
+for unexpected fault flags or bus hangs.</li>
+<li><strong>Memory and Peripheral Bring-Up:</strong> Read and write
+memory-mapped registers directly through the JTAG debug port to validate
+memory controllers and peripherals before loading an operating
+system.</li>
+</ol>
+<p>By combining standardized boundary-scan cells with extensible debug
+registers, JTAG gives hardware engineers non-intrusive visibility into
+packaged silicon that would otherwise be inaccessible.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-jtag-debug-silicon-hardware-and-registers';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

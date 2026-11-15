@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Diffie-Hellman Key Exchange Work? - classical-computing</title>
+    <meta name="description" content="The Diffie-Hellman key exchange is a cryptographic protocol that allows two parties to establish a shared secret key over an insecure communication channel without having met beforehand. By relying on mathematical operations that are easy to perform in on">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-diffie-hellman-key-exchange-work">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Diffie-Hellman Key Exchange Work? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-diffie-hellman-key-exchange-work" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Diffie-Hellman key exchange is a cryptographic protocol that allows two parties to establish a shared secret key over an insecure communication channel without having met beforehand. By relying on mathematical operations that are easy to perform in on" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-diffie-hellman-key-exchange-work">How Does
+Diffie-Hellman Key Exchange Work?</h1>
+<p>The Diffie-Hellman key exchange is a cryptographic protocol that
+allows two parties to establish a shared secret key over an insecure
+communication channel without having met beforehand. By relying on
+mathematical operations that are easy to perform in one direction but
+extremely difficult to reverse, both parties can independently compute
+the same secret value while an eavesdropper observing all exchanged
+messages cannot practically determine it.</p>
+<h2 id="public-parameters">Public Parameters</h2>
+<p>Before the exchange begins, the two parties—commonly referred to as
+Alice and Bob—agree on two public numbers: a large prime modulus <span
+class="math inline">\(p\)</span> and a base <span
+class="math inline">\(g\)</span> (called a primitive root modulo <span
+class="math inline">\(p\)</span>). These values do not need to be kept
+secret and can be transmitted openly over the insecure channel.</p>
+<h2 id="generating-and-exchanging-keys">Generating and Exchanging
+Keys</h2>
+<p>Each party chooses a private secret integer and uses modular
+exponentiation to compute a public value:</p>
+<ol type="1">
+<li>Alice chooses a secret integer <span
+class="math inline">\(a\)</span> and computes <span
+class="math inline">\(A = g^a \bmod p\)</span>. She sends <span
+class="math inline">\(A\)</span> to Bob.</li>
+<li>Bob chooses a secret integer <span class="math inline">\(b\)</span>
+and computes <span class="math inline">\(B = g^b \bmod p\)</span>. He
+sends <span class="math inline">\(B\)</span> to Alice.</li>
+</ol>
+<p>An eavesdropper intercepting the communication can see <span
+class="math inline">\(p\)</span>, <span
+class="math inline">\(g\)</span>, <span
+class="math inline">\(A\)</span>, and <span
+class="math inline">\(B\)</span>, but does not know <span
+class="math inline">\(a\)</span> or <span
+class="math inline">\(b\)</span>.</p>
+<h2 id="computing-the-shared-secret">Computing the Shared Secret</h2>
+<p>Once Alice receives <span class="math inline">\(B\)</span> and Bob
+receives <span class="math inline">\(A\)</span>, each raises the
+received public value to their own private exponent modulo <span
+class="math inline">\(p\)</span>:</p>
+<ol type="1">
+<li>Alice computes <span class="math inline">\(s = B^a \bmod
+p\)</span>.</li>
+<li>Bob computes <span class="math inline">\(s = A^b \bmod
+p\)</span>.</li>
+</ol>
+<p>Because of the properties of modular exponentiation, both
+calculations yield the exact same result:</p>
+<p><span class="math display">\[s = (g^b \bmod p)^a \bmod p = g^{ab}
+\bmod p = (g^a \bmod p)^b \bmod p\]</span></p>
+<p>Alice and Bob now share the secret value <span
+class="math inline">\(s\)</span>, which can be used directly or passed
+through a key derivation function to generate a symmetric encryption key
+for secure communication.</p>
+<h2 id="why-eavesdroppers-cannot-recover-the-secret">Why Eavesdroppers
+Cannot Recover the Secret</h2>
+<p>The security of Diffie-Hellman in classical computing relies on the
+difficulty of the Discrete Logarithm Problem (DLP). Given <span
+class="math inline">\(p\)</span>, <span
+class="math inline">\(g\)</span>, and <span class="math inline">\(g^a
+\bmod p\)</span>, finding the exponent <span
+class="math inline">\(a\)</span> is computationally infeasible when
+<span class="math inline">\(p\)</span> is sufficiently large (typically
+at least 2048 bits). Without knowing either <span
+class="math inline">\(a\)</span> or <span
+class="math inline">\(b\)</span>, an attacker cannot compute <span
+class="math inline">\(g^{ab} \bmod p\)</span> from <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> alone.</p>
+<h2 id="limitations">Limitations</h2>
+<p>While Diffie-Hellman protects against passive eavesdropping, it does
+not authenticate the identities of the communicating parties. An active
+attacker can perform a man-in-the-middle attack by intercepting <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> and establishing separate shared
+secrets with Alice and Bob. For this reason, Diffie-Hellman is typically
+combined with digital signatures or certificates to verify each party's
+identity.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-diffie-hellman-key-exchange-work';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

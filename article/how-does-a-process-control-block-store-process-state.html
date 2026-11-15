@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a Process Control Block Store Process State? - classical-computing</title>
+    <meta name="description" content="A Process Control Block (PCB) is a kernel data structure that an operating system maintains for every active process in classical computing. It serves as the central repository for everything the kernel needs to pause, resume, isolate, and manage a progra">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-process-control-block-store-process-state">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a Process Control Block Store Process State? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-process-control-block-store-process-state" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A Process Control Block (PCB) is a kernel data structure that an operating system maintains for every active process in classical computing. It serves as the central repository for everything the kernel needs to pause, resume, isolate, and manage a progra" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-process-control-block-store-process-state">How Does a
+Process Control Block Store Process State?</h1>
+<p>A Process Control Block (PCB) is a kernel data structure that an
+operating system maintains for every active process in classical
+computing. It serves as the central repository for everything the kernel
+needs to pause, resume, isolate, and manage a program, including its CPU
+execution state, virtual memory mappings, and open file descriptors.</p>
+<h2 id="execution-state-and-cpu-context">Execution State and CPU
+Context</h2>
+<p>When the operating system switches the CPU from one process to
+another, it must save the exact point where the outgoing process stopped
+so it can resume later without data loss. The PCB stores this execution
+state in a dedicated context block.</p>
+<ul>
+<li><strong>Program Counter (PC):</strong> Holds the memory address of
+the next machine instruction to be executed.</li>
+<li><strong>CPU Registers:</strong> Preserves general-purpose registers,
+stack pointers, base pointers, and status/flag registers (such as zero,
+carry, or overflow flags).</li>
+<li><strong>Process Status:</strong> Tracks the current lifecycle state
+of the process, typically categorized as New, Ready, Running, Waiting
+(Blocked), or Terminated.</li>
+<li><strong>Scheduling Metadata:</strong> Records priority levels,
+scheduling queue pointers, and CPU time used so the scheduler can decide
+which process runs next.</li>
+</ul>
+<p>During a context switch, the kernel copies the live hardware register
+values into the outgoing process's PCB, loads the saved register values
+from the incoming process's PCB back into the CPU, and jumps to the
+incoming process's saved program counter.</p>
+<h2 id="memory-mappings-and-address-space">Memory Mappings and Address
+Space</h2>
+<p>Each process in a modern operating system operates in its own
+isolated virtual address space. Rather than storing the entire memory
+contents inside the PCB, the PCB stores pointers and metadata that
+describe how virtual addresses map to physical RAM.</p>
+<ul>
+<li><strong>Page Table Pointer:</strong> Points to the root of the
+process's page table (such as the value loaded into the <code>CR3</code>
+register on x86 architectures), which the Memory Management Unit (MMU)
+uses to translate virtual addresses to physical frames.</li>
+<li><strong>Segment and Region Descriptors:</strong> Tracks the
+boundaries and permissions (read, write, execute) of memory segments,
+including the text (code), data, heap, and stack regions.</li>
+<li><strong>Base and Limit Registers:</strong> In simpler or older
+systems without paging, the PCB stores base and limit values to define
+the contiguous physical memory bounds assigned to the process.</li>
+</ul>
+<p>If a process has <span class="math inline">\(N\)</span> virtual
+pages, the page table maps each virtual page number to a physical frame
+number, allowing the hardware to enforce memory isolation between
+processes.</p>
+<h2 id="open-file-descriptors-and-io-state">Open File Descriptors and
+I/O State</h2>
+<p>Processes interact with files, sockets, pipes, and devices through
+integer handles called file descriptors. The PCB manages these resources
+through a per-process file descriptor table.</p>
+<ul>
+<li><strong>File Descriptor Table:</strong> An array or table stored
+within (or referenced by) the PCB, indexed by non-negative integers
+(<span class="math inline">\(0\)</span> for standard input, <span
+class="math inline">\(1\)</span> for standard output, <span
+class="math inline">\(2\)</span> for standard error, and higher numbers
+for files or sockets opened later).</li>
+<li><strong>Open File Table Pointers:</strong> Each entry in the PCB's
+file descriptor table points to an entry in the system-wide open file
+table, which tracks the current file offset (read/write position),
+access mode (read-only, write-only, read-write), and reference
+count.</li>
+<li><strong>Inode or Vnode References:</strong> The system-wide open
+file table entry links to the underlying filesystem inode or kernel
+object representing the actual file or device.</li>
+</ul>
+<p>By keeping the file descriptor table inside the PCB, the operating
+system ensures that file offsets and access permissions remain isolated
+per process, while still allowing parent and child processes to share
+open file descriptions when appropriate.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-process-control-block-store-process-state';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

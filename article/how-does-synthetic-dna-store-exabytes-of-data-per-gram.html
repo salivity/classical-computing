@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How does synthetic DNA store exabytes of data per gram? - classical-computing</title>
+    <meta name="description" content="Synthetic DNA stores archival binary data by translating digital ones and zeros into sequences of the four nucleotide bases: adenine, cytosine, guanine, and thymine. Because each molecule is only nanometers wide and can be packed in three dimensions rathe">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-synthetic-dna-store-exabytes-of-data-per-gram">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How does synthetic DNA store exabytes of data per gram? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-synthetic-dna-store-exabytes-of-data-per-gram" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Synthetic DNA stores archival binary data by translating digital ones and zeros into sequences of the four nucleotide bases: adenine, cytosine, guanine, and thymine. Because each molecule is only nanometers wide and can be packed in three dimensions rathe" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-synthetic-dna-store-exabytes-of-data-per-gram">How does
+synthetic DNA store exabytes of data per gram?</h1>
+<p>Synthetic DNA stores archival binary data by translating digital ones
+and zeros into sequences of the four nucleotide bases: adenine,
+cytosine, guanine, and thymine. Because each molecule is only nanometers
+wide and can be packed in three dimensions rather than spread across a
+two-dimensional surface, DNA achieves a theoretical information density
+of hundreds of exabytes per gram. This makes it a promising medium for
+ultra-dense cold storage in classical computing, capable of preserving
+massive datasets for centuries without electrical power.</p>
+<h2 id="encoding-binary-data-into-nucleotides">Encoding Binary Data into
+Nucleotides</h2>
+<p>Classical computers represent information using binary digits (<span
+class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span>). In DNA data storage, an encoding
+algorithm maps these bits onto the four chemical bases: adenine (<span
+class="math inline">\(\text{A}\)</span>), cytosine (<span
+class="math inline">\(\text{C}\)</span>), guanine (<span
+class="math inline">\(\text{G}\)</span>), and thymine (<span
+class="math inline">\(\text{T}\)</span>). A straightforward mapping
+assigns two bits per base, such as:</p>
+<p><span class="math display">\[00 \rightarrow \text{A}, \quad 01
+\rightarrow \text{C}, \quad 10 \rightarrow \text{G}, \quad 11
+\rightarrow \text{T}\]</span></p>
+<p>In practice, raw two-bit mapping can produce long repeating runs of
+the same base (homopolymers) or unbalanced ratios of <span
+class="math inline">\(\text{G}\)</span> and <span
+class="math inline">\(\text{C}\)</span> bases, which cause errors during
+chemical synthesis and sequencing. To prevent this, modern encoders use
+constrained coding schemes—such as DNA Fountain or rotating base
+codes—that avoid repeats and maintain a balanced <span
+class="math inline">\(\text{GC}\)</span> content. Error-correcting
+codes, such as Reed-Solomon or low-density parity-check (LDPC) codes,
+are also added so that lost or mutated strands can be mathematically
+reconstructed.</p>
+<h2 id="why-dna-achieves-exabyte-per-gram-density">Why DNA Achieves
+Exabyte-per-Gram Density</h2>
+<p>Conventional magnetic tape and hard disk drives store bits on a flat,
+two-dimensional surface, where each bit occupies tens of nanometers in
+width and length. By contrast, a DNA double helix has a diameter of
+roughly <span class="math inline">\(2\text{ nm}\)</span>, and adjacent
+base pairs are spaced only <span class="math inline">\(0.34\text{
+nm}\)</span> apart along the strand.</p>
+<p>When accounting for the molecular weight of a base pair
+(approximately <span class="math inline">\(650\text{ Da}\)</span>, or
+<span class="math inline">\(1.08 \times 10^{-21}\text{ g}\)</span>) and
+a theoretical maximum of <span class="math inline">\(2\text{
+bits}\)</span> per base, the raw physical limit approaches <span
+class="math inline">\(455\text{ EB/g}\)</span> (<span
+class="math inline">\(4.55 \times 10^{20}\text{ bytes/g}\)</span>). Even
+after factoring in error-correction overhead, indexing primers, and
+encapsulation, practical demonstrations and models still reach hundreds
+of petabytes to several exabytes per gram—orders of magnitude denser
+than any silicon or magnetic medium.</p>
+<h2 id="writing-storing-and-reading-the-data">Writing, Storing, and
+Reading the Data</h2>
+<p>The lifecycle of DNA archival storage follows three main stages:</p>
+<ol type="1">
+<li><strong>Synthesis (Writing):</strong> Short DNA strands, typically
+<span class="math inline">\(100\)</span> to <span
+class="math inline">\(300\)</span> nucleotides long, are chemically
+synthesized base by base using phosphoramidite chemistry or enzymatic
+synthesis. Each strand includes a short address sequence (primer) so
+specific files can be identified later.</li>
+<li><strong>Preservation (Storage):</strong> The synthesized DNA pool is
+dried or encapsulated in silica nanoparticles and kept in a cool, dark,
+and dry environment. Under these conditions, DNA remains stable for
+hundreds to thousands of years with zero active power consumption.</li>
+<li><strong>Sequencing (Reading):</strong> To retrieve a file,
+polymerase chain reaction (PCR) selectively amplifies only the strands
+carrying the target file's primer. A DNA sequencer then reads the base
+sequences, and a decoder translates the <span
+class="math inline">\(\text{A}\)</span>, <span
+class="math inline">\(\text{C}\)</span>, <span
+class="math inline">\(\text{G}\)</span>, and <span
+class="math inline">\(\text{T}\)</span> characters back into binary
+files.</li>
+</ol>
+<h2 id="role-in-classical-computing">Role in Classical Computing</h2>
+<p>Synthetic DNA is not intended to replace fast primary memory like
+DRAM or solid-state drives. Chemical synthesis and sequencing currently
+have high latency and high cost per megabyte, making DNA unsuitable for
+frequently accessed data. Instead, it targets the deepest tier of
+classical archival storage: cold data such as scientific datasets,
+national archives, and long-term backups that are written once, stored
+for decades, and rarely read.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-synthetic-dna-store-exabytes-of-data-per-gram';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

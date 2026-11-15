@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Instruction Pipelining Increase CPU Throughput? - classical-computing</title>
+    <meta name="description" content="Dividing instruction execution into fetch, decode, execute, memory, and writeback stages increases throughput through a technique called instruction pipelining. Instead of waiting for one instruction to finish all its steps before starting the next, a pro">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-instruction-pipelining-increase-cpu-throughput">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Instruction Pipelining Increase CPU Throughput? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-instruction-pipelining-increase-cpu-throughput" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Dividing instruction execution into fetch, decode, execute, memory, and writeback stages increases throughput through a technique called instruction pipelining. Instead of waiting for one instruction to finish all its steps before starting the next, a pro" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-instruction-pipelining-increase-cpu-throughput">How
+Does Instruction Pipelining Increase CPU Throughput?</h1>
+<p>Dividing instruction execution into fetch, decode, execute, memory,
+and writeback stages increases throughput through a technique called
+instruction pipelining. Instead of waiting for one instruction to finish
+all its steps before starting the next, a processor overlaps the
+execution of multiple instructions simultaneously. Each stage handles a
+different instruction during every clock cycle, allowing the CPU to
+complete one instruction per cycle once the pipeline is full.</p>
+<h2 id="understanding-the-five-stage-pipeline">Understanding the
+Five-Stage Pipeline</h2>
+<p>In a classic five-stage RISC pipeline, every instruction passes
+through five distinct hardware units:</p>
+<ul>
+<li><strong>Fetch (IF):</strong> Retrieves the next instruction from
+instruction memory using the program counter.</li>
+<li><strong>Decode (ID):</strong> Interprets the instruction opcode and
+reads the required source registers.</li>
+<li><strong>Execute (EX):</strong> Performs arithmetic or logic
+operations in the ALU, or calculates memory addresses.</li>
+<li><strong>Memory (MEM):</strong> Reads from or writes to data memory
+if the instruction is a load or store.</li>
+<li><strong>Writeback (WB):</strong> Writes the final result back into
+the destination register.</li>
+</ul>
+<h2 id="overlapping-execution-vs-sequential-execution">Overlapping
+Execution vs. Sequential Execution</h2>
+<p>Without pipelining, a processor must complete all five stages for a
+single instruction before fetching the next one. If each stage takes
+<span class="math inline">\(1\)</span> clock cycle, a single-cycle or
+non-pipelined multi-cycle design completes at most one instruction every
+<span class="math inline">\(5\)</span> cycles, giving a throughput of
+<span class="math inline">\(0.2\)</span> instructions per cycle
+(IPC).</p>
+<p>With pipelining, each stage is separated by pipeline registers that
+hold intermediate results between clock ticks. As soon as Instruction 1
+moves from Fetch to Decode, Instruction 2 enters Fetch. By the fifth
+clock cycle, all five stages are active at the same time, each working
+on a different instruction.</p>
+<h2 id="the-math-behind-the-speedup">The Math Behind the Speedup</h2>
+<p>In an ideal <span class="math inline">\(k\)</span>-stage pipeline
+where each stage takes time <span class="math inline">\(t\)</span>, the
+clock period is determined by the longest stage rather than the sum of
+all stages. For <span class="math inline">\(n\)</span> instructions:</p>
+<p><span class="math display">\[\text{Non-pipelined time} = n \cdot k
+\cdot t\]</span></p>
+<p><span class="math display">\[\text{Pipelined time} = (k + n - 1)
+\cdot t\]</span></p>
+<p>The theoretical speedup <span class="math inline">\(S\)</span> as the
+number of instructions <span class="math inline">\(n\)</span> grows
+large is:</p>
+<p><span class="math display">\[S = \lim_{n \to \infty} \frac{n \cdot k
+\cdot t}{(k + n - 1) \cdot t} = k\]</span></p>
+<p>For a five-stage pipeline (<span class="math inline">\(k =
+5\)</span>), ideal throughput increases by a factor of <span
+class="math inline">\(5\)</span>, approaching <span
+class="math inline">\(1\)</span> instruction completed per clock cycle
+(<span class="math inline">\(\text{IPC} \approx 1\)</span>) rather than
+<span class="math inline">\(1\)</span> every <span
+class="math inline">\(5\)</span> cycles. Note that pipelining does not
+reduce the latency of an individual instruction—it still takes <span
+class="math inline">\(5\)</span> cycles from start to finish—but it
+dramatically increases the rate at which instructions finish.</p>
+<h2 id="practical-limits-to-pipeline-throughput">Practical Limits to
+Pipeline Throughput</h2>
+<p>Real-world processors rarely sustain the ideal speedup of <span
+class="math inline">\(k\)</span> due to pipeline hazards:</p>
+<ul>
+<li><strong>Structural hazards:</strong> Occur when two instructions
+need the same hardware resource in the same cycle.</li>
+<li><strong>Data hazards:</strong> Happen when an instruction depends on
+the result of a previous instruction that has not yet reached
+writeback.</li>
+<li><strong>Control hazards:</strong> Arise from branch and jump
+instructions that change the program counter, potentially invalidating
+instructions already fetched into the pipeline.</li>
+</ul>
+<p>Techniques such as data forwarding, branch prediction, and
+out-of-order execution help minimize these stalls and keep the five
+stages as busy as possible.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-instruction-pipelining-increase-cpu-throughput';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

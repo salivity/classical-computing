@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is the Difference Between LL and LR Parsing? - classical-computing</title>
+    <meta name="description" content="Top-down LL parsing and bottom-up LR shift-reduce parsing are two fundamental techniques used in classical computing to analyze the syntactic structure of source code and formal languages. While both methods read input tokens from left to right, they cons">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-is-the-difference-between-ll-and-lr-parsing">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is the Difference Between LL and LR Parsing? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-is-the-difference-between-ll-and-lr-parsing" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Top-down LL parsing and bottom-up LR shift-reduce parsing are two fundamental techniques used in classical computing to analyze the syntactic structure of source code and formal languages. While both methods read input tokens from left to right, they cons" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-is-the-difference-between-ll-and-lr-parsing">What Is the
+Difference Between LL and LR Parsing?</h1>
+<p>Top-down LL parsing and bottom-up LR shift-reduce parsing are two
+fundamental techniques used in classical computing to analyze the
+syntactic structure of source code and formal languages. While both
+methods read input tokens from left to right, they construct the parse
+tree in opposite directions and differ in the types of grammars they can
+handle, their implementation complexity, and their error-detection
+behavior.</p>
+<h2 id="top-down-ll-parsing">Top-Down LL Parsing</h2>
+<p>LL parsing stands for Left-to-right scan of the input, producing a
+Leftmost derivation. An <span class="math inline">\(LL(k)\)</span>
+parser starts from the start symbol of a context-free grammar and
+attempts to expand non-terminals down to the terminal tokens of the
+input string, using <span class="math inline">\(k\)</span> tokens of
+lookahead to decide which production rule to apply.</p>
+<p>Because it predicts which rule to use before seeing the entire
+right-hand side of a production, LL parsing is often called predictive
+parsing. It is commonly implemented using recursive descent, where each
+non-terminal in the grammar corresponds to a function in code, or using
+an explicit stack with a parsing table.</p>
+<p>A major limitation of LL parsers is that they cannot handle
+left-recursive grammars. For example, a rule of the form <span
+class="math inline">\(A \to A\alpha \mid \beta\)</span> causes infinite
+recursion in a top-down parser unless the grammar is first rewritten to
+eliminate left recursion.</p>
+<h2 id="bottom-up-lr-shift-reduce-parsing">Bottom-Up LR Shift-Reduce
+Parsing</h2>
+<p>LR parsing stands for Left-to-right scan of the input, producing a
+Rightmost derivation in reverse. An <span
+class="math inline">\(LR(k)\)</span> parser starts from the terminal
+tokens of the input and works upward toward the start symbol by
+recognizing complete right-hand sides of production rules.</p>
+<p>LR parsers operate using a stack and two primary actions:</p>
+<ul>
+<li><strong>Shift:</strong> Push the next input token onto the
+stack.</li>
+<li><strong>Reduce:</strong> When the top of the stack matches the
+right-hand side of a production rule <span class="math inline">\(A \to
+\alpha\)</span>, pop <span class="math inline">\(\alpha\)</span> from
+the stack and push the non-terminal <span
+class="math inline">\(A\)</span>.</li>
+</ul>
+<p>Because an LR parser delays its decision until it has seen all tokens
+belonging to a production's right-hand side, it can recognize a strictly
+larger class of deterministic context-free grammars than LL parsers.
+Notably, LR parsers naturally handle left-recursive rules without
+requiring grammar transformations.</p>
+<h2 id="key-differences">Key Differences</h2>
+<h3 id="direction-of-tree-construction">Direction of Tree
+Construction</h3>
+<p>LL parsers build the parse tree from the root down to the leaves,
+whereas LR parsers build the parse tree from the leaves up to the
+root.</p>
+<h3 id="grammar-expressiveness">Grammar Expressiveness</h3>
+<p>Every <span class="math inline">\(LL(k)\)</span> grammar is also an
+<span class="math inline">\(LR(k)\)</span> grammar, but the reverse is
+not true. LR parsers—including practical variants like <span
+class="math inline">\(SLR(1)\)</span> and <span
+class="math inline">\(LALR(1)\)</span>—can parse more complex language
+constructs without requiring grammar refactoring.</p>
+<h3 id="implementation-and-tooling">Implementation and Tooling</h3>
+<p>LL parsers are straightforward to write by hand as recursive descent
+parsers, making them popular for hand-crafted compilers and
+interpreters. LR parsers rely on complex state machines and large
+parsing tables, so they are almost always generated automatically using
+parser generators such as Yacc or Bison.</p>
+<h3 id="error-detection">Error Detection</h3>
+<p>Both <span class="math inline">\(LL(1)\)</span> and <span
+class="math inline">\(LR(1)\)</span> parsers detect syntax errors as
+soon as an invalid token is encountered, without reading further into
+the input. However, hand-written LL parsers often make it easier to
+produce clear, context-specific error messages because the parser's call
+stack directly reflects the expected grammar rules.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-is-the-difference-between-ll-and-lr-parsing';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

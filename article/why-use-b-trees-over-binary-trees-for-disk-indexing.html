@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Use B-Trees Over Binary Trees for Disk Indexing? - classical-computing</title>
+    <meta name="description" content="B-trees and B+ trees are favored over binary trees for indexing on-disk file system directories because they minimize expensive disk I/O operations. By packing many keys into a single node that matches the size of a disk block, these multi-way trees achie">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-use-b-trees-over-binary-trees-for-disk-indexing">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Use B-Trees Over Binary Trees for Disk Indexing? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-use-b-trees-over-binary-trees-for-disk-indexing" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="B-trees and B+ trees are favored over binary trees for indexing on-disk file system directories because they minimize expensive disk I/O operations. By packing many keys into a single node that matches the size of a disk block, these multi-way trees achie" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-use-b-trees-over-binary-trees-for-disk-indexing">Why Use
+B-Trees Over Binary Trees for Disk Indexing?</h1>
+<p>B-trees and B+ trees are favored over binary trees for indexing
+on-disk file system directories because they minimize expensive disk I/O
+operations. By packing many keys into a single node that matches the
+size of a disk block, these multi-way trees achieve a much higher
+branching factor and a dramatically shallower height than binary trees,
+allowing file systems to locate files in just a few disk reads.</p>
+<h2 id="the-cost-of-disk-io">The Cost of Disk I/O</h2>
+<p>In classical computing, accessing data in main memory (RAM) takes
+nanoseconds, whereas reading a block from a mechanical hard disk drive
+(HDD) or even a solid-state drive (SSD) takes microseconds to
+milliseconds. Storage devices read and write data in fixed-size chunks
+called blocks or pages, typically ranging from 4 KB to 64 KB.</p>
+<p>When a file system traverses a tree index stored on disk, each node
+lookup that is not already cached in memory requires a separate disk
+read. Therefore, the primary performance bottleneck for on-disk indexing
+is not CPU comparison time, but the total number of disk block reads
+required to reach the target entry.</p>
+<h2 id="branching-factor-and-tree-height">Branching Factor and Tree
+Height</h2>
+<p>A standard binary search tree (BST) has a branching factor of 2,
+meaning each node holds at most one key and two child pointers. For a
+directory containing <span class="math inline">\(N\)</span> files, a
+balanced binary tree has a height of:</p>
+<p><span class="math display">\[h \approx \log_2(N)\]</span></p>
+<p>If a directory contains <span class="math inline">\(N =
+1,000,000\)</span> entries, a balanced binary tree requires roughly
+<span class="math inline">\(\log_2(1,000,000) \approx 20\)</span>
+levels. Traversing from the root to a leaf could require up to 20
+separate disk reads. Worse, each small binary node wastes most of the 4
+KB disk block it occupies, leading to poor spatial locality.</p>
+<p>In contrast, B-trees and B+ trees are multi-way search trees with a
+high branching factor <span class="math inline">\(B\)</span> (often
+hundreds or thousands), chosen so that a single node fits neatly into
+one disk block. The height of a B-tree or B+ tree is:</p>
+<p><span class="math display">\[h \approx \log_B(N)\]</span></p>
+<p>With a branching factor of <span class="math inline">\(B =
+500\)</span>, indexing <span class="math inline">\(1,000,000\)</span>
+entries requires at most <span
+class="math inline">\(\log_{500}(1,000,000) \approx 3\)</span> levels.
+Finding any file in that directory takes at most 3 disk reads—and often
+fewer if the root and upper levels are cached in RAM.</p>
+<h2 id="why-b-trees-excel-for-directory-scans">Why B+ Trees Excel for
+Directory Scans</h2>
+<p>While both B-trees and B+ trees reduce tree height, B+ trees are
+especially common in modern file systems (such as NTFS, XFS, ext4 with
+HTree variants, and Btrfs) for two additional reasons:</p>
+<ul>
+<li><strong>Higher fanout in internal nodes:</strong> In a B-tree,
+internal nodes store both keys and data pointers (or file records). In a
+B+ tree, internal nodes store only keys and child pointers, while all
+actual directory entries or file pointers reside in the leaf nodes. This
+allows internal nodes to hold more keys per block, further increasing
+<span class="math inline">\(B\)</span> and reducing tree height.</li>
+<li><strong>Fast sequential range scans:</strong> In a B+ tree, all leaf
+nodes are linked together in a sequential linked list. Operations like
+listing a directory (<code>ls</code> or <code>readdir</code>) or finding
+all files matching a prefix can locate the first matching leaf and then
+scan sequentially across adjacent leaf blocks without traversing back up
+the tree.</li>
+</ul>
+<h2 id="cache-efficiency-and-write-amplification">Cache Efficiency and
+Write Amplification</h2>
+<p>Because B-trees and B+ trees have very few levels, the top levels of
+the tree easily fit in the operating system's page cache. In practice,
+the root node and the first level of internal nodes remain in memory,
+meaning a lookup often requires only a single disk read to fetch the
+leaf block.</p>
+<p>Additionally, balancing a binary tree on disk after insertions or
+deletions can trigger frequent pointer updates scattered across many
+different disk blocks. B-trees and B+ trees amortize these structural
+changes: nodes are kept at least half full, and splits or merges occur
+relatively infrequently, keeping disk writes localized and
+predictable.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-use-b-trees-over-binary-trees-for-disk-indexing';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

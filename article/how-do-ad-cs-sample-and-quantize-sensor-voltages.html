@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do ADCs Sample and Quantize Sensor Voltages? - classical-computing</title>
+    <meta name="description" content="Analog-to-Digital Converters (ADCs) bridge the physical world and classical computing by transforming continuous analog voltages from sensors into discrete binary numbers. This conversion happens through two primary stages: sampling the signal at regular">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-ad-cs-sample-and-quantize-sensor-voltages">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do ADCs Sample and Quantize Sensor Voltages? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-ad-cs-sample-and-quantize-sensor-voltages" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Analog-to-Digital Converters (ADCs) bridge the physical world and classical computing by transforming continuous analog voltages from sensors into discrete binary numbers. This conversion happens through two primary stages: sampling the signal at regular" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-adcs-sample-and-quantize-sensor-voltages">How Do ADCs
+Sample and Quantize Sensor Voltages?</h1>
+<p>Analog-to-Digital Converters (ADCs) bridge the physical world and
+classical computing by transforming continuous analog voltages from
+sensors into discrete binary numbers. This conversion happens through
+two primary stages: sampling the signal at regular time intervals and
+quantizing the measured voltage into finite amplitude levels. Once
+quantized, each level is encoded into a binary word that a
+microprocessor can store, process, and analyze.</p>
+<h2 id="sampling-in-time">Sampling in Time</h2>
+<p>A physical sensor, such as a microphone, thermocouple, or photodiode,
+produces a voltage <span class="math inline">\(V(t)\)</span> that varies
+continuously over time. Because a digital computer cannot store an
+infinite number of data points, an ADC must measure the voltage at
+discrete, evenly spaced instants.</p>
+<p>This process is governed by a sample-and-hold circuit. At each tick
+of a system clock, a switch briefly closes to charge a capacitor to the
+current input voltage, then opens to hold that voltage steady while the
+rest of the conversion takes place. The rate at which these snapshots
+occur is the sampling frequency <span
+class="math inline">\(f_s\)</span>, measured in Hertz (Hz), with a
+sampling period of:</p>
+<p><span class="math display">\[T_s = \frac{1}{f_s}\]</span></p>
+<p>To accurately reconstruct the original signal without distortion, the
+sampling rate must satisfy the Nyquist-Shannon sampling theorem. This
+theorem states that the sampling frequency must be at least twice the
+highest frequency component <span
+class="math inline">\(f_{\max}\)</span> present in the analog
+signal:</p>
+<p><span class="math display">\[f_s \ge 2 f_{\max}\]</span></p>
+<p>If <span class="math inline">\(f_s\)</span> is too low,
+higher-frequency components fold back into lower frequencies, a
+distortion known as aliasing. Engineers prevent this by placing an
+analog low-pass anti-aliasing filter before the ADC input.</p>
+<h2 id="quantization-in-amplitude">Quantization in Amplitude</h2>
+<p>After sampling holds the voltage steady for a moment, the ADC must
+map that continuous voltage to one of a finite set of discrete levels.
+This step is called quantization.</p>
+<p>An ADC has a defined input voltage range, from a minimum reference
+<span class="math inline">\(V_{\text{min}}\)</span> to a maximum
+reference <span class="math inline">\(V_{\text{max}}\)</span>, giving a
+full-scale range of <span class="math inline">\(V_{\text{FS}} =
+V_{\text{max}} - V_{\text{min}}\)</span>. The number of discrete levels
+available depends on the ADC's resolution, specified in bits (<span
+class="math inline">\(N\)</span>). An <span
+class="math inline">\(N\)</span>-bit ADC divides the full-scale range
+into <span class="math inline">\(2^N\)</span> distinct steps.</p>
+<p>The voltage difference between two adjacent levels is the
+quantization step size, or Least Significant Bit (LSB) voltage, denoted
+as <span class="math inline">\(\Delta\)</span>:</p>
+<p><span class="math display">\[\Delta =
+\frac{V_{\text{FS}}}{2^N}\]</span></p>
+<p>For example, a 12-bit ADC with a <span class="math inline">\(0\text{
+V}\)</span> to <span class="math inline">\(3.3\text{ V}\)</span> range
+has <span class="math inline">\(2^{12} = 4096\)</span> levels, resulting
+in a step size of <span class="math inline">\(\Delta \approx 0.806\text{
+mV}\)</span>. Any input voltage falling between two steps is rounded to
+the nearest discrete level. This rounding introduces an unavoidable
+discrepancy called quantization error, which is bounded between <span
+class="math inline">\(-\frac{\Delta}{2}\)</span> and <span
+class="math inline">\(+\frac{\Delta}{2}\)</span> for an ideal ADC.</p>
+<h2 id="binary-encoding">Binary Encoding</h2>
+<p>Once the sampled voltage is assigned to a specific quantization level
+<span class="math inline">\(k\)</span> (where <span
+class="math inline">\(k\)</span> is an integer from <span
+class="math inline">\(0\)</span> to <span class="math inline">\(2^N -
+1\)</span>), the ADC encodes that integer into an <span
+class="math inline">\(N\)</span>-bit binary word. For an unipolar ADC
+starting at <span class="math inline">\(0\text{ V}\)</span>, the digital
+output code <span class="math inline">\(D\)</span> is approximately:</p>
+<p><span class="math display">\[D =
+\text{round}\left(\frac{V_{\text{in}}}{\Delta}\right)\]</span></p>
+<p>This binary output is then transmitted to a microcontroller or
+processor over a parallel bus or a serial interface such as SPI or I2C,
+where it becomes standard digital data.</p>
+<h2 id="common-adc-architectures">Common ADC Architectures</h2>
+<p>Different applications balance speed, resolution, and power
+consumption using specialized ADC designs:</p>
+<ul>
+<li><strong>Successive Approximation Register (SAR):</strong> Uses a
+binary search algorithm with an internal Digital-to-Analog Converter
+(DAC) and a comparator to determine each bit from most significant to
+least significant. SAR ADCs are common in microcontrollers for
+medium-speed, medium-to-high-resolution tasks.</li>
+<li><strong>Flash (Parallel) ADC:</strong> Uses a bank of <span
+class="math inline">\(2^N - 1\)</span> comparators operating
+simultaneously to convert the voltage in a single clock cycle. Flash
+ADCs are the fastest type, suited for high-frequency applications like
+oscilloscopes, though they consume significant power and chip area at
+higher bit depths.</li>
+<li><strong>Sigma-Delta (<span
+class="math inline">\(\Sigma\Delta\)</span>) ADC:</strong> Oversamples
+the signal at a very high rate and uses noise shaping and digital
+filtering to achieve high resolution (often 16 to 24 bits) at lower
+bandwidths, making it ideal for audio and precision sensor
+measurements.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-ad-cs-sample-and-quantize-sensor-voltages';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

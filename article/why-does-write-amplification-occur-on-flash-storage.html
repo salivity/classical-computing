@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Does Write Amplification Occur on Flash Storage? - classical-computing</title>
+    <meta name="description" content="Write amplification occurs on flash storage because the smallest unit that can be written is much smaller than the smallest unit that can be erased. When an operating system performs small random file updates, the storage controller cannot overwrite the e">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-does-write-amplification-occur-on-flash-storage">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Does Write Amplification Occur on Flash Storage? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-does-write-amplification-occur-on-flash-storage" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Write amplification occurs on flash storage because the smallest unit that can be written is much smaller than the smallest unit that can be erased. When an operating system performs small random file updates, the storage controller cannot overwrite the e" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-does-write-amplification-occur-on-flash-storage">Why Does
+Write Amplification Occur on Flash Storage?</h1>
+<p>Write amplification occurs on flash storage because the smallest unit
+that can be written is much smaller than the smallest unit that can be
+erased. When an operating system performs small random file updates, the
+storage controller cannot overwrite the existing data in place. Instead,
+it must write the new data to a fresh location, mark the old data as
+invalid, and eventually copy all remaining valid data out of an entire
+erase block before that block can be wiped and reused.</p>
+<h2 id="pages-versus-erase-blocks">Pages Versus Erase Blocks</h2>
+<p>Flash memory, such as NAND flash found in solid-state drives, is
+organized into a strict hierarchy. Data is read and programmed in units
+called pages, which are typically 4 KB to 16 KB in size. However, pages
+are grouped together into much larger units called erase blocks, which
+commonly contain 128 to 512 pages and span several megabytes.</p>
+<p>While a single page can be written independently, flash physics
+prevents individual pages from being overwritten directly. Before a
+programmed page can be written again, its entire parent erase block must
+be reset to an erased state.</p>
+<h2
+id="out-of-place-updates-and-the-flash-translation-layer">Out-of-Place
+Updates and the Flash Translation Layer</h2>
+<p>When an application modifies a small portion of a file, the host
+system sends a small random write request to the drive. Because the
+Flash Translation Layer (FTL) cannot overwrite the old page in place, it
+performs an out-of-place update:</p>
+<ol type="1">
+<li>The FTL writes the updated data to a previously erased, empty page
+in a different location.</li>
+<li>It updates its internal logical-to-physical mapping table to point
+the file's logical block address to the new physical page.</li>
+<li>It marks the old physical page as stale or invalid.</li>
+</ol>
+<p>This process allows the write to complete quickly, but it leaves
+behind fragmented blocks containing a mix of valid and invalid
+pages.</p>
+<h2 id="garbage-collection-and-data-migration">Garbage Collection and
+Data Migration</h2>
+<p>As the drive fills up, the FTL must reclaim space from blocks that
+contain invalid pages. This background process is called garbage
+collection. To erase a block and make its pages available for future
+writes, the controller must first preserve any valid data still residing
+in that block.</p>
+<p>The controller reads every remaining valid page from the target
+block, writes those pages into a new block, updates the mapping table
+again, and finally erases the original block. Because small random
+updates scatter invalid pages across many different blocks, garbage
+collection is forced to copy a large amount of valid data just to free
+up a small amount of space.</p>
+<h2 id="quantifying-write-amplification">Quantifying Write
+Amplification</h2>
+<p>The ratio of actual physical data written to the flash media compared
+to the logical data sent by the host is known as the Write Amplification
+Factor (WAF):</p>
+<p><span class="math display">\[WAF = \frac{\text{Data Written to
+Flash}}{\text{Data Written by Host}}\]</span></p>
+<p>In an ideal sequential write workload, where entire blocks are
+written and invalidated together, <span
+class="math inline">\(WAF\)</span> approaches <span
+class="math inline">\(1\)</span>. Under heavy small random write
+workloads, however, each host write triggers additional internal page
+copies during garbage collection, pushing <span
+class="math inline">\(WAF\)</span> significantly higher than <span
+class="math inline">\(1\)</span>. This extra write traffic reduces
+sustained write performance and accelerates the wear of the flash cells,
+which have a finite number of program-erase cycles.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-does-write-amplification-occur-on-flash-storage';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

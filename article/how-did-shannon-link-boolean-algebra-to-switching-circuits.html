@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Did Shannon Link Boolean Algebra to Switching Circuits? - classical-computing</title>
+    <meta name="description" content="In 1937, Claude Shannon wrote a master&#39;s thesis at MIT that transformed electrical engineering and laid the foundation for digital computing. By showing that the on-and-off states of electrical relays and switches could be represented using the two-valued">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-did-shannon-link-boolean-algebra-to-switching-circuits">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Did Shannon Link Boolean Algebra to Switching Circuits? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-did-shannon-link-boolean-algebra-to-switching-circuits" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In 1937, Claude Shannon wrote a master&#39;s thesis at MIT that transformed electrical engineering and laid the foundation for digital computing. By showing that the on-and-off states of electrical relays and switches could be represented using the two-valued" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-did-shannon-link-boolean-algebra-to-switching-circuits">How
+Did Shannon Link Boolean Algebra to Switching Circuits?</h1>
+<p>In 1937, Claude Shannon wrote a master's thesis at MIT that
+transformed electrical engineering and laid the foundation for digital
+computing. By showing that the on-and-off states of electrical relays
+and switches could be represented using the two-valued logic of Boolean
+algebra, Shannon proved that complex circuit designs could be analyzed
+and simplified mathematically rather than through trial and error.</p>
+<h2 id="the-problem-before-1937">The Problem Before 1937</h2>
+<p>Before Shannon's thesis, <em>A Symbolic Analysis of Relay and
+Switching Circuits</em>, engineers designed telephone switching networks
+and early electromechanical calculators using intuition and ad-hoc
+diagrams. As circuits grew larger, verifying that a network behaved as
+intended—or finding a simpler circuit with the same behavior—became
+increasingly difficult. There was no systematic algebraic method to
+describe how switches interacted.</p>
+<h2 id="mapping-switches-to-boolean-values">Mapping Switches to Boolean
+Values</h2>
+<p>Shannon realized that a switch has two fundamental states: open (no
+current flows) and closed (current flows). He mapped these physical
+states directly to the two truth values of Boolean algebra, <span
+class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span>.</p>
+<p>In Shannon's convention, a hindrance function <span
+class="math inline">\(X_{ab}\)</span> represented the state between two
+terminals <span class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span>:</p>
+<ul>
+<li><span class="math inline">\(X_{ab} = 0\)</span> when the path is
+closed (zero hindrance, current flows).</li>
+<li><span class="math inline">\(X_{ab} = 1\)</span> when the path is
+open (infinite hindrance, no current flows).</li>
+</ul>
+<p>(Later conventions often reversed this so that <span
+class="math inline">\(1\)</span> represents "true" or "on" and <span
+class="math inline">\(0\)</span> represents "false" or "off," but the
+algebraic structure remains identical.)</p>
+<h2 id="series-and-parallel-connections-as-logical-operations">Series
+and Parallel Connections as Logical Operations</h2>
+<p>Shannon demonstrated that basic physical arrangements of switches
+correspond directly to Boolean operations:</p>
+<ul>
+<li><strong>Switches in series:</strong> Current flows through two
+switches <span class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span> in series only if both are closed.
+Under Shannon's hindrance convention, the combined hindrance is <span
+class="math inline">\(X + Y\)</span>, where <span
+class="math inline">\(0 + 0 = 0\)</span>, and any <span
+class="math inline">\(1\)</span> results in <span
+class="math inline">\(1\)</span>. Under the modern positive-logic
+convention, series switches correspond to logical AND (<span
+class="math inline">\(X \cdot Y\)</span>).</li>
+<li><strong>Switches in parallel:</strong> Current flows through two
+switches <span class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span> in parallel if at least one is closed.
+Under Shannon's hindrance convention, the combined hindrance is <span
+class="math inline">\(X \cdot Y\)</span>. Under modern positive logic,
+parallel switches correspond to logical OR (<span
+class="math inline">\(X + Y\)</span>).</li>
+<li><strong>Inversion (NOT):</strong> A normally closed relay contact
+that opens when energized represents logical negation (<span
+class="math inline">\(\neg X\)</span> or <span
+class="math inline">\(\overline{X}\)</span>).</li>
+</ul>
+<h2 id="simplifying-circuits-with-algebra">Simplifying Circuits with
+Algebra</h2>
+<p>Because switching networks obeyed the laws of Boolean algebra—such as
+commutativity, associativity, distributivity, and De Morgan's
+laws—engineers could write an algebraic expression for a desired circuit
+behavior and then simplify it using standard identities. For example, an
+expression like:</p>
+<p><span class="math display">\[A \cdot B + A \cdot \overline{B} = A
+\cdot (B + \overline{B}) = A \cdot 1 = A\]</span></p>
+<p>shows that a circuit with multiple switches can be reduced to a
+single switch <span class="math inline">\(A\)</span> without changing
+its function. This allowed engineers to minimize the number of relays,
+reducing cost, power consumption, and failure rates.</p>
+<h2 id="impact-on-classical-computing">Impact on Classical
+Computing</h2>
+<p>Shannon's insight bridged abstract mathematical logic and physical
+hardware. By proving that any logical or arithmetic operation could be
+built from combinations of simple two-state switches, his thesis
+provided the theoretical blueprint for logic gates, adders, memory
+elements, and the central processing units of classical digital
+computers.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-did-shannon-link-boolean-algebra-to-switching-circuits';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

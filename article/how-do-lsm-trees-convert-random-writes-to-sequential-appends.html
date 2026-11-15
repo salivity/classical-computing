@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do LSM-Trees Convert Random Writes to Sequential Appends? - classical-computing</title>
+    <meta name="description" content="Log-Structured Merge-trees, commonly known as LSM-trees, are data structures designed to optimize write-heavy workloads in classical computing databases. Instead of updating records in place on disk, which forces slow random I/O operations, an LSM-tree bu">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-lsm-trees-convert-random-writes-to-sequential-appends">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do LSM-Trees Convert Random Writes to Sequential Appends? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-lsm-trees-convert-random-writes-to-sequential-appends" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Log-Structured Merge-trees, commonly known as LSM-trees, are data structures designed to optimize write-heavy workloads in classical computing databases. Instead of updating records in place on disk, which forces slow random I/O operations, an LSM-tree bu" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1
+id="how-do-lsm-trees-convert-random-writes-to-sequential-appends">How Do
+LSM-Trees Convert Random Writes to Sequential Appends?</h1>
+<p>Log-Structured Merge-trees, commonly known as LSM-trees, are data
+structures designed to optimize write-heavy workloads in classical
+computing databases. Instead of updating records in place on disk, which
+forces slow random I/O operations, an LSM-tree buffers incoming writes
+in memory and appends them sequentially to disk logs. Periodically,
+background compaction processes merge and sort these immutable files to
+maintain read efficiency and reclaim space.</p>
+<h2 id="why-random-disk-writes-hurt-performance">Why Random Disk Writes
+Hurt Performance</h2>
+<p>Traditional database storage engines, such as those based on B-trees,
+store data in fixed-size pages on disk. When a record is inserted or
+updated, the database locates the corresponding page and modifies it in
+place. For workloads with high write throughput and keys distributed
+across a large keyspace, these updates translate into random disk
+seeks.</p>
+<p>Even on modern Solid State Drives (SSDs), random writes are
+significantly slower than sequential writes. Random writes cause
+internal flash page fragmentation, increase write amplification, and
+accelerate wear on flash memory blocks. On spinning Hard Disk Drives
+(HDDs), the penalty is even more severe due to mechanical seek times and
+rotational latency.</p>
+<h2 id="the-core-mechanism-of-lsm-trees">The Core Mechanism of
+LSM-Trees</h2>
+<p>An LSM-tree avoids in-place updates by decoupling the arrival of a
+write from its final physical placement on disk. Every mutation—whether
+an insert, an update, or a delete—is treated as a new append-only
+record.</p>
+<h3 id="1-write-ahead-log-wal-and-memtable">1. Write-Ahead Log (WAL) and
+Memtable</h3>
+<p>When a write request arrives, the database first appends the
+operation to an on-disk Write-Ahead Log (WAL). Because the WAL is
+strictly append-only, this disk write is sequential and fast, providing
+durability against crashes.</p>
+<p>Simultaneously, the database inserts the key-value pair into an
+in-memory sorted structure called a Memtable, typically implemented as a
+skip list or a balanced binary search tree. Reads can query the Memtable
+directly in memory without touching the disk.</p>
+<h3 id="2-flushing-to-immutable-sstables">2. Flushing to Immutable
+SSTables</h3>
+<p>Once the Memtable reaches a configured size threshold, it becomes
+immutable, and a new active Memtable is allocated to accept incoming
+writes. The immutable Memtable is then flushed to disk as a Sorted
+String Table (SSTable).</p>
+<p>Because the Memtable is already sorted by key, flushing it to disk
+requires only a single sequential write pass. Once written, an SSTable
+is never modified in place. Updates to existing keys are simply written
+as newer entries in subsequent SSTables, and deletions are recorded as
+special marker entries called tombstones.</p>
+<h2 id="compaction-and-space-reclamation">Compaction and Space
+Reclamation</h2>
+<p>Over time, flushing Memtables creates many overlapping SSTables on
+disk. If left unchecked, read operations would need to search through
+numerous files, degrading read performance and wasting storage on
+overwritten or deleted keys.</p>
+<p>LSM-trees solve this through background compaction. Compaction reads
+multiple SSTables sequentially, merges their sorted key ranges, discards
+obsolete values and tombstones, and writes out new, larger SSTables
+sequentially.</p>
+<p>Most implementations organize SSTables into levels (<span
+class="math inline">\(L_0, L_1, \dots, L_k\)</span>), where each level
+has a capacity <span class="math inline">\(C_i\)</span> that grows
+exponentially by a size ratio <span
+class="math inline">\(T\)</span>:</p>
+<p><span class="math display">\[C_i = T \cdot C_{i-1}\]</span></p>
+<p>In this leveled architecture, <span
+class="math inline">\(L_0\)</span> contains newly flushed SSTables with
+potentially overlapping key ranges, while deeper levels (<span
+class="math inline">\(L_1\)</span> and beyond) partition keys into
+non-overlapping SSTables.</p>
+<h2 id="trade-offs-in-classical-computing">Trade-offs in Classical
+Computing</h2>
+<p>Converting random writes into sequential appends shifts the
+performance bottleneck from write latency to background I/O and read
+amplification.</p>
+<ul>
+<li><strong>Write Amplification:</strong> A single logical write may be
+rewritten multiple times during compaction as it moves down the
+levels.</li>
+<li><strong>Read Amplification:</strong> A point lookup may need to
+check the Memtable and multiple SSTables across levels. Databases
+mitigate this using per-SSTable Bloom filters in memory, which quickly
+rule out files that do not contain the target key.</li>
+<li><strong>Space Amplification:</strong> Obsolete versions and
+tombstones occupy disk space until compaction removes them.</li>
+</ul>
+<p>By trading a manageable amount of background compaction work and
+memory for Bloom filters, LSM-trees achieve orders-of-magnitude higher
+write throughput than in-place update structures, making them the
+foundation for modern write-heavy databases like RocksDB, LevelDB, and
+Apache Cassandra.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-lsm-trees-convert-random-writes-to-sequential-appends';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

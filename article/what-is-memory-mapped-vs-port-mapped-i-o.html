@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is Memory-Mapped vs Port-Mapped I/O? - classical-computing</title>
+    <meta name="description" content="In classical computing, processors communicate with peripheral devices using two primary addressing architectures: memory-mapped I/O and isolated port-mapped I/O. Memory-mapped I/O places device registers into the same address space as main system memory,">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-is-memory-mapped-vs-port-mapped-i-o">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is Memory-Mapped vs Port-Mapped I/O? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-is-memory-mapped-vs-port-mapped-i-o" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="In classical computing, processors communicate with peripheral devices using two primary addressing architectures: memory-mapped I/O and isolated port-mapped I/O. Memory-mapped I/O places device registers into the same address space as main system memory," />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-is-memory-mapped-vs-port-mapped-io">What Is Memory-Mapped
+vs Port-Mapped I/O?</h1>
+<p>In classical computing, processors communicate with peripheral
+devices using two primary addressing architectures: memory-mapped I/O
+and isolated port-mapped I/O. Memory-mapped I/O places device registers
+into the same address space as main system memory, allowing standard
+memory instructions to access hardware. Isolated port-mapped I/O
+maintains a separate address space dedicated exclusively to peripherals,
+requiring specialized processor instructions and dedicated control
+signals.</p>
+<h2 id="address-space-organization">Address Space Organization</h2>
+<p>The fundamental architectural distinction lies in how the CPU
+organizes its addressable locations.</p>
+<p>In <strong>memory-mapped I/O (MMIO)</strong>, both RAM and peripheral
+control registers share a single unified address space. If a system has
+a 32-bit address bus, it can address <span
+class="math inline">\(2^{32}\)</span> bytes total, and a portion of that
+range is reserved for hardware devices rather than physical memory.
+Address decoding logic on the motherboard or system bus routes read and
+write requests to either RAM or the appropriate device depending on the
+target address.</p>
+<p>In <strong>isolated port-mapped I/O (PMIO)</strong>, also known as
+isolated I/O, the CPU maintains two distinct address spaces: one for
+memory and one for I/O ports. A device register at port address
+<code>0x60</code> does not conflict with memory address
+<code>0x60</code> because they are accessed through different
+mechanisms.</p>
+<h2 id="instruction-set-and-hardware-signals">Instruction Set and
+Hardware Signals</h2>
+<p>Because the address spaces differ, the CPU uses different
+instructions and bus signals to interact with them.</p>
+<p>With MMIO, the processor uses its standard memory-access
+instructions, such as <code>MOV</code>, <code>LOAD</code>, or
+<code>STORE</code>. Any instruction that can read from or write to RAM
+can also manipulate a peripheral register. This means the full power of
+the CPU's addressing modes and arithmetic operations is available for
+device control, and no extra opcodes are needed in the instruction set
+architecture.</p>
+<p>With PMIO, the CPU must provide dedicated I/O instructions, such as
+<code>IN</code> and <code>OUT</code> on x86 architectures. When
+executing these instructions, the processor asserts a specific control
+pin—such as an <span class="math inline">\(M/\overline{IO}\)</span>
+(Memory / Input-Output) signal—to inform the bus and chipset whether the
+current address on the bus refers to main memory or an I/O port.</p>
+<h2 id="trade-offs-and-modern-usage">Trade-offs and Modern Usage</h2>
+<p>Each approach carries distinct advantages and constraints:</p>
+<ul>
+<li><strong>Address Space Consumption:</strong> MMIO reduces the total
+amount of physical RAM a system can directly address, since device
+registers occupy part of the memory map. PMIO preserves the entire
+memory address space for RAM.</li>
+<li><strong>Instruction Complexity:</strong> MMIO keeps the instruction
+set simpler and more uniform, which is why RISC architectures like ARM
+and RISC-V rely almost exclusively on it. PMIO requires additional
+opcodes and control logic.</li>
+<li><strong>Security and Caching:</strong> MMIO benefits from standard
+virtual memory and page-table protection mechanisms, though device
+regions must be marked as uncacheable so the CPU does not read stale
+hardware state. PMIO separates device access at the hardware level,
+using dedicated privilege checks for I/O instructions.</li>
+</ul>
+<p>Modern x86 systems support both architectures, retaining legacy PMIO
+ports for backward compatibility while using MMIO for high-speed devices
+like graphics cards and NVMe drives. Most other modern architectures use
+MMIO exclusively.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-is-memory-mapped-vs-port-mapped-i-o';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do UART Peripherals Frame Serial Bytes Without a Clock? - classical-computing</title>
+    <meta name="description" content="Universal Asynchronous Receiver-Transmitter peripherals transmit and receive serial data over a single wire per direction without a shared clock signal by wrapping each byte in a standardized frame of start, data, parity, and stop bits. Because there is n">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-uart-peripherals-frame-serial-bytes-without-a-clock">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do UART Peripherals Frame Serial Bytes Without a Clock? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-uart-peripherals-frame-serial-bytes-without-a-clock" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Universal Asynchronous Receiver-Transmitter peripherals transmit and receive serial data over a single wire per direction without a shared clock signal by wrapping each byte in a standardized frame of start, data, parity, and stop bits. Because there is n" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-uart-peripherals-frame-serial-bytes-without-a-clock">How
+Do UART Peripherals Frame Serial Bytes Without a Clock?</h1>
+<p>Universal Asynchronous Receiver-Transmitter peripherals transmit and
+receive serial data over a single wire per direction without a shared
+clock signal by wrapping each byte in a standardized frame of start,
+data, parity, and stop bits. Because there is no clock line to tell the
+receiver when to sample each bit, both devices must agree in advance on
+a transmission speed, known as the baud rate, and rely on voltage
+transitions at the start of every frame to synchronize their internal
+timers.</p>
+<h2 id="asynchronous-timing-and-idle-state">Asynchronous Timing and Idle
+State</h2>
+<p>In an asynchronous serial link, the transmitter and receiver operate
+on independent local oscillators. When no data is being sent, the line
+is held at a logic high voltage, called the mark state. Holding the line
+high during idle periods allows the receiver to distinguish between an
+inactive line and the beginning of a transmission, as well as detect a
+disconnected wire if the line drops to zero volts indefinitely.</p>
+<p>Both sides must be configured to the same baud rate, which defines
+the duration of a single bit period <span
+class="math inline">\(T_{\text{bit}}\)</span>:</p>
+<p><span class="math display">\[T_{\text{bit}} = \frac{1}{\text{Baud
+Rate}}\]</span></p>
+<p>For example, at <span class="math inline">\(9600\text{
+baud}\)</span>, each bit lasts approximately <span
+class="math inline">\(104.17\text{ }\mu\text{s}\)</span>.</p>
+<h2 id="the-start-bit-and-synchronization">The Start Bit and
+Synchronization</h2>
+<p>Every UART frame begins with a start bit. To initiate a transfer, the
+transmitter pulls the line from the idle high state to a logic low
+state, called the space state, for one bit period.</p>
+<p>This high-to-low falling edge serves as the synchronization trigger
+for the receiver. Upon detecting the falling edge, the receiver starts
+an internal counter, typically oversampling the incoming line at <span
+class="math inline">\(16\times\)</span> the configured baud rate. By
+waiting half a bit period (<span class="math inline">\(8\)</span>
+oversample ticks) to verify the line is still low, the receiver confirms
+it has found a valid start bit rather than a brief noise spike, and
+aligns its sampling point to the center of every subsequent bit in the
+frame.</p>
+<h2 id="data-bits">Data Bits</h2>
+<p>Immediately following the start bit, the transmitter sends the
+payload data bits. Classical UART hardware supports <span
+class="math inline">\(5\)</span> to <span
+class="math inline">\(9\)</span> data bits per frame, with <span
+class="math inline">\(8\)</span> bits being the standard for modern
+byte-oriented communication.</p>
+<p>UART transmits data least significant bit (LSB) first. For instance,
+the ASCII character <code>A</code> (<span
+class="math inline">\(0\text{x}41\)</span>, or <code>01000001</code> in
+binary) is placed on the wire in the order
+<code>1, 0, 0, 0, 0, 0, 1, 0</code>.</p>
+<h2 id="the-optional-parity-bit">The Optional Parity Bit</h2>
+<p>After the data bits, the frame may include a single parity bit for
+basic error detection. Parity is configured as either even, odd, or
+none:</p>
+<ul>
+<li><strong>Even parity:</strong> The parity bit is set so that the
+total number of <code>1</code> bits in the data plus the parity bit is
+even.</li>
+<li><strong>Odd parity:</strong> The parity bit is set so that the total
+number of <code>1</code> bits in the data plus the parity bit is
+odd.</li>
+</ul>
+<p>If electrical noise flips a single bit during transmission, the
+receiver's calculated parity will not match the received parity bit, and
+the UART peripheral flags a parity error. However, a single parity bit
+cannot detect an even number of simultaneous bit flips.</p>
+<h2 id="stop-bits-and-frame-completion">Stop Bits and Frame
+Completion</h2>
+<p>The frame concludes with one or more stop bits, during which the
+transmitter drives the line back to the logic high (mark) state.
+Classical UARTs support <span class="math inline">\(1\)</span>, <span
+class="math inline">\(1.5\)</span>, or <span
+class="math inline">\(2\)</span> stop bits.</p>
+<p>Stop bits serve two purposes. First, they give the receiver's
+hardware a brief recovery window to transfer the assembled byte into a
+receive buffer before the next frame arrives. Second, because the stop
+bit is always high and the next start bit is always low, the line is
+guaranteed to have a falling edge at the start of the following byte,
+even if the preceding data bits ended with zeros. If the receiver
+samples a logic low where a stop bit should be, it flags a framing
+error, indicating clock drift or a baud rate mismatch.</p>
+<h2 id="clock-drift-tolerance">Clock Drift Tolerance</h2>
+<p>Because the receiver resynchronizes on every start bit, small
+frequency differences between the transmitter and receiver oscillators
+do not accumulate across multiple bytes. Over a standard <span
+class="math inline">\(10\)</span>-bit frame (<span
+class="math inline">\(1\)</span> start bit, <span
+class="math inline">\(8\)</span> data bits, <span
+class="math inline">\(1\)</span> stop bit), the combined clock error
+must remain small enough that the final stop bit is still sampled within
+its valid window, typically allowing a total clock mismatch of up to
+roughly <span class="math inline">\(\pm 2\%\)</span> to <span
+class="math inline">\(\pm 3\%\)</span>.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-uart-peripherals-frame-serial-bytes-without-a-clock';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

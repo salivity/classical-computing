@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Temporal and Spatial Locality Justify Memory Caching? - classical-computing</title>
+    <meta name="description" content="Temporal locality and spatial locality are two fundamental patterns in how computer programs access memory, and together they explain why caching recently accessed memory blocks dramatically improves system performance. Because processors execute instruct">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-temporal-and-spatial-locality-justify-memory-caching">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Temporal and Spatial Locality Justify Memory Caching? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-temporal-and-spatial-locality-justify-memory-caching" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Temporal locality and spatial locality are two fundamental patterns in how computer programs access memory, and together they explain why caching recently accessed memory blocks dramatically improves system performance. Because processors execute instruct" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-temporal-and-spatial-locality-justify-memory-caching">How
+Do Temporal and Spatial Locality Justify Memory Caching?</h1>
+<p>Temporal locality and spatial locality are two fundamental patterns
+in how computer programs access memory, and together they explain why
+caching recently accessed memory blocks dramatically improves system
+performance. Because processors execute instructions much faster than
+main memory can supply data, modern computers rely on small, high-speed
+caches to bridge this speed gap. By keeping recently used data and its
+nearby neighbors close to the processor, caches turn slow main memory
+accesses into fast cache hits.</p>
+<h2 id="the-speed-gap-between-processors-and-memory">The Speed Gap
+Between Processors and Memory</h2>
+<p>In classical computing, the central processing unit (CPU) operates at
+clock speeds that far exceed the access speeds of main memory (DRAM).
+Fetching a word from main memory can take hundreds of clock cycles,
+during which the processor would otherwise sit idle. To prevent this
+bottleneck, computer architects place a hierarchy of smaller, faster
+SRAM caches (such as L1, L2, and L3) between the CPU and main
+memory.</p>
+<p>However, because fast SRAM is expensive and physically limited in
+size, a cache can only hold a tiny fraction of the data stored in main
+memory. For a cache to be effective, the processor must find the data it
+needs in the cache most of the time. This is where the principle of
+locality becomes essential.</p>
+<h2 id="temporal-locality-reusing-recent-data">Temporal Locality:
+Reusing Recent Data</h2>
+<p>Temporal locality refers to the tendency of a program to access the
+same memory location repeatedly within a short period of time. Common
+examples include:</p>
+<ul>
+<li><strong>Loop variables and counters:</strong> A loop index or
+accumulator is read and updated on every iteration.</li>
+<li><strong>Frequently called functions:</strong> Instructions in a hot
+loop or utility function are fetched repeatedly.</li>
+<li><strong>Shared constants and flags:</strong> Configuration values or
+status flags are checked many times during execution.</li>
+</ul>
+<p>Temporal locality directly justifies <strong>retaining</strong>
+recently accessed data in the cache. If a memory address is accessed
+once, there is a high probability it will be needed again soon. By
+keeping that data in the cache rather than immediately discarding it,
+subsequent accesses result in fast cache hits instead of slow main
+memory fetches.</p>
+<h2 id="spatial-locality-accessing-nearby-data">Spatial Locality:
+Accessing Nearby Data</h2>
+<p>Spatial locality refers to the tendency of a program to access memory
+locations whose addresses are close to one another. Common examples
+include:</p>
+<ul>
+<li><strong>Sequential instruction execution:</strong> Programs
+typically execute instructions one after another in memory.</li>
+<li><strong>Array and struct traversal:</strong> Iterating through an
+array or reading fields of a data structure accesses contiguous memory
+addresses.</li>
+</ul>
+<p>Spatial locality justifies <strong>fetching entire blocks (cache
+lines)</strong> of memory rather than individual bytes or words. When a
+cache miss occurs for address <span class="math inline">\(A\)</span>,
+the memory controller loads a contiguous block of data—typically 64
+bytes—containing <span class="math inline">\(A\)</span> and its
+neighboring addresses. As a result, when the program moves on to <span
+class="math inline">\(A + 1\)</span>, <span class="math inline">\(A +
+2\)</span>, and so on, those values are already waiting in the
+cache.</p>
+<h2 id="how-both-principles-work-together">How Both Principles Work
+Together</h2>
+<p>Together, temporal and spatial locality determine both
+<strong>what</strong> gets loaded into the cache and <strong>how
+long</strong> it stays there. Spatial locality ensures that a single
+memory fetch preloads nearby data that is likely to be needed next,
+while temporal locality ensures that recently used blocks remain in the
+cache for repeated use.</p>
+<p>The performance benefit can be quantified using the Average Memory
+Access Time (AMAT):</p>
+<p><span class="math display">\[\text{AMAT} = \text{Hit Time} +
+(\text{Miss Rate} \times \text{Miss Penalty})\]</span></p>
+<p>By exploiting temporal and spatial locality, caches minimize the
+<span class="math inline">\(\text{Miss Rate}\)</span>, ensuring that the
+<span class="math inline">\(\text{Miss Penalty}\)</span> of accessing
+main memory is paid as rarely as possible. Without these two locality
+patterns, caching recently accessed memory blocks would offer little
+advantage over reading directly from main memory.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-temporal-and-spatial-locality-justify-memory-caching';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

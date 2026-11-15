@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does an OS Kernel Manage Hardware Access? - classical-computing</title>
+    <meta name="description" content="An operating system kernel acts as the central authority that coordinates how multiple applications share limited hardware resources in classical computing. Because modern systems run many programs concurrently, the kernel must prevent applications from i">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-an-os-kernel-manage-hardware-access">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does an OS Kernel Manage Hardware Access? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-an-os-kernel-manage-hardware-access" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="An operating system kernel acts as the central authority that coordinates how multiple applications share limited hardware resources in classical computing. Because modern systems run many programs concurrently, the kernel must prevent applications from i" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-an-os-kernel-manage-hardware-access">How Does an OS
+Kernel Manage Hardware Access?</h1>
+<p>An operating system kernel acts as the central authority that
+coordinates how multiple applications share limited hardware resources
+in classical computing. Because modern systems run many programs
+concurrently, the kernel must prevent applications from interfering with
+one another or monopolizing the CPU, memory, and input/output devices.
+It achieves this through hardware-enforced privilege levels, virtualized
+abstractions, scheduling algorithms, and controlled communication
+channels.</p>
+<h2 id="privilege-levels-and-system-calls">Privilege Levels and System
+Calls</h2>
+<p>Classical processors enforce separation between applications and
+hardware using hardware privilege rings. Most architectures define at
+least two modes: user mode, where applications execute with restricted
+permissions, and kernel mode, where the operating system has
+unrestricted access to the CPU and physical devices.</p>
+<p>Applications cannot directly execute privileged instructions, such as
+configuring memory tables or writing to disk controllers. Instead, when
+an application needs hardware access, it invokes a system call. A system
+call triggers a controlled software interrupt (or trap) that switches
+the processor from user mode to kernel mode. The kernel validates the
+request, performs the hardware operation on the application's behalf,
+and returns control to user mode.</p>
+<h2 id="cpu-scheduling-and-time-sharing">CPU Scheduling and
+Time-Sharing</h2>
+<p>To share a limited number of CPU cores among many competing
+processes, the kernel uses a scheduler. The scheduler divides processor
+time into short intervals called time slices or quanta.</p>
+<p>When a process's time slice expires, a hardware timer interrupt
+fires, transferring control back to the kernel. The kernel performs a
+context switch: it saves the current process's CPU registers and program
+counter, selects the next runnable process based on priority or fairness
+policies, and restores that process's state. In a system with <span
+class="math inline">\(n\)</span> processes and a total CPU capacity of
+<span class="math inline">\(C\)</span>, a fair scheduler aims to
+allocate roughly <span class="math inline">\(\frac{C}{n}\)</span> of
+processing time to each equal-priority task over time.</p>
+<h2 id="memory-management-and-isolation">Memory Management and
+Isolation</h2>
+<p>Applications also compete for physical RAM. If programs could read or
+write arbitrary physical memory addresses, one buggy or malicious
+application could corrupt another's data or crash the system.</p>
+<p>The kernel prevents this using virtual memory, supported by the CPU's
+Memory Management Unit (MMU). Each process is given its own isolated
+virtual address space, which the MMU translates into physical memory
+frames using page tables managed exclusively by the kernel. If an
+application attempts to access an unmapped or unauthorized address, the
+MMU raises a page fault, allowing the kernel to either allocate memory
+on demand or terminate the offending process.</p>
+<h2 id="device-drivers-interrupts-and-synchronization">Device Drivers,
+Interrupts, and Synchronization</h2>
+<p>Hardware devices such as network cards, storage drives, and GPUs are
+shared through kernel-space device drivers. Applications interact with
+devices through abstract interfaces like file descriptors or sockets
+rather than raw hardware ports.</p>
+<p>The kernel queues and serializes competing I/O requests so that data
+from different applications does not interleave. When a device completes
+an operation, it sends a hardware interrupt to the CPU, which the kernel
+handles by waking the waiting application. To prevent race conditions
+when multiple threads or processes access shared kernel structures
+simultaneously, the kernel uses synchronization primitives such as
+spinlocks, mutexes, and semaphores.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-an-os-kernel-manage-hardware-access';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

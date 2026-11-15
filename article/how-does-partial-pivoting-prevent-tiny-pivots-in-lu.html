@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Partial Pivoting Prevent Tiny Pivots in LU? - classical-computing</title>
+    <meta name="description" content="Gaussian elimination with partial pivoting prevents division by tiny numbers during LU decomposition by reordering the rows of a matrix before each elimination step. At every stage, the algorithm scans the current column from the diagonal downward, finds">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-partial-pivoting-prevent-tiny-pivots-in-lu">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Partial Pivoting Prevent Tiny Pivots in LU? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-partial-pivoting-prevent-tiny-pivots-in-lu" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Gaussian elimination with partial pivoting prevents division by tiny numbers during LU decomposition by reordering the rows of a matrix before each elimination step. At every stage, the algorithm scans the current column from the diagonal downward, finds" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-partial-pivoting-prevent-tiny-pivots-in-lu">How Does
+Partial Pivoting Prevent Tiny Pivots in LU?</h1>
+<p>Gaussian elimination with partial pivoting prevents division by tiny
+numbers during LU decomposition by reordering the rows of a matrix
+before each elimination step. At every stage, the algorithm scans the
+current column from the diagonal downward, finds the entry with the
+largest absolute value, and swaps its row into the pivot position. This
+simple row exchange keeps multipliers bounded, limits floating-point
+rounding errors, and produces a stable factorization of a permuted
+matrix.</p>
+<h2 id="why-tiny-pivots-cause-numerical-instability">Why Tiny Pivots
+Cause Numerical Instability</h2>
+<p>In classical computing, numbers are stored in finite-precision
+floating-point formats such as IEEE 754 double precision. During
+standard Gaussian elimination without pivoting, the algorithm divides
+each subdiagonal entry <span class="math inline">\(a_{ik}\)</span> by
+the diagonal pivot <span class="math inline">\(a_{kk}\)</span> to
+compute the multiplier:</p>
+<p><span class="math display">\[m_{ik} =
+\frac{a_{ik}}{a_{kk}}\]</span></p>
+<p>If <span class="math inline">\(a_{kk}\)</span> is zero, division by
+zero halts the algorithm. Even if <span
+class="math inline">\(a_{kk}\)</span> is nonzero but very small compared
+to <span class="math inline">\(a_{ik}\)</span>, the multiplier <span
+class="math inline">\(m_{ik}\)</span> becomes huge. When the algorithm
+updates the remaining submatrix using</p>
+<p><span class="math display">\[a_{ij} \leftarrow a_{ij} - m_{ik}
+a_{kj}\]</span></p>
+<p>the large product <span class="math inline">\(m_{ik} a_{kj}\)</span>
+can overwhelm <span class="math inline">\(a_{ij}\)</span>. In
+finite-precision arithmetic, adding or subtracting numbers of vastly
+different magnitudes causes significant digits of <span
+class="math inline">\(a_{ij}\)</span> to be lost, a phenomenon known as
+catastrophic cancellation or element growth.</p>
+<h2 id="how-partial-pivoting-works">How Partial Pivoting Works</h2>
+<p>Partial pivoting avoids small pivots by selecting the largest
+available entry in the current column at each step <span
+class="math inline">\(k\)</span> (for <span class="math inline">\(k = 1,
+\dots, n-1\)</span>). Specifically, it performs the following
+operations:</p>
+<ol type="1">
+<li>Search the entries <span class="math inline">\(a_{ik}\)</span> for
+<span class="math inline">\(i = k, k+1, \dots, n\)</span> to find the
+index <span class="math inline">\(p\)</span> that maximizes <span
+class="math inline">\(|a_{ik}|\)</span>.</li>
+<li>Swap row <span class="math inline">\(k\)</span> and row <span
+class="math inline">\(p\)</span> in the working matrix.</li>
+<li>Record the row swap in a permutation matrix <span
+class="math inline">\(P\)</span> (or a compact pivot index vector).</li>
+<li>Compute the multipliers <span class="math inline">\(m_{ik} = a_{ik}
+/ a_{kk}\)</span> for <span class="math inline">\(i &gt; k\)</span> and
+eliminate the entries below the diagonal.</li>
+</ol>
+<p>Because <span class="math inline">\(|a_{kk}| \ge |a_{ik}|\)</span>
+for all <span class="math inline">\(i &gt; k\)</span> after the swap,
+every multiplier satisfies:</p>
+<p><span class="math display">\[|m_{ik}| \le 1\]</span></p>
+<p>Bounding the multipliers by <span class="math inline">\(1\)</span>
+prevents them from amplifying rounding errors during the elimination
+updates.</p>
+<h2 id="the-resulting-pa--lu-factorization">The Resulting PA = LU
+Factorization</h2>
+<p>Swapping rows during elimination means the algorithm no longer
+factors the original matrix <span class="math inline">\(A\)</span>
+directly. Instead, it computes an LU decomposition of a row-permuted
+version of <span class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[PA = LU\]</span></p>
+<p>Here, <span class="math inline">\(P\)</span> is a permutation matrix
+whose rows are the identity matrix reordered according to the swaps,
+<span class="math inline">\(L\)</span> is a unit lower triangular matrix
+containing the multipliers <span class="math inline">\(m_{ik}\)</span>
+(all with magnitude at most <span class="math inline">\(1\)</span>), and
+<span class="math inline">\(U\)</span> is an upper triangular
+matrix.</p>
+<p>When solving a linear system <span class="math inline">\(Ax =
+b\)</span>, the permutation is applied to the right-hand side vector
+<span class="math inline">\(b\)</span> as well:</p>
+<p><span class="math display">\[PAx = Pb \implies LUx = Pb\]</span></p>
+<p>The system is then solved in two fast triangular stages: forward
+substitution for <span class="math inline">\(Ly = Pb\)</span>, followed
+by backward substitution for <span class="math inline">\(Ux =
+y\)</span>.</p>
+<h2 id="computational-cost-and-practical-reliability">Computational Cost
+and Practical Reliability</h2>
+<p>Partial pivoting adds only <span
+class="math inline">\(O(n^2)\)</span> comparisons across the entire
+<span class="math inline">\(O(n^3)\)</span> elimination process, making
+its overhead negligible for large dense matrices. While complete
+pivoting (searching both rows and columns) offers slightly tighter
+theoretical bounds on element growth, partial pivoting is the standard
+choice in classical numerical libraries such as LAPACK because it is
+much faster and achieves excellent numerical stability in practice.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-partial-pivoting-prevent-tiny-pivots-in-lu';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

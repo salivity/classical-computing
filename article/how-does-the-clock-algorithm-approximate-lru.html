@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does the Clock Algorithm Approximate LRU? - classical-computing</title>
+    <meta name="description" content="The Clock page replacement algorithm, also known as the second-chance algorithm, is a widely used operating system memory management technique that approximates Least Recently Used eviction without the high overhead of maintaining a strict recency list. B">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-the-clock-algorithm-approximate-lru">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does the Clock Algorithm Approximate LRU? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-the-clock-algorithm-approximate-lru" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Clock page replacement algorithm, also known as the second-chance algorithm, is a widely used operating system memory management technique that approximates Least Recently Used eviction without the high overhead of maintaining a strict recency list. B" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-the-clock-algorithm-approximate-lru">How Does the Clock
+Algorithm Approximate LRU?</h1>
+<p>The Clock page replacement algorithm, also known as the second-chance
+algorithm, is a widely used operating system memory management technique
+that approximates Least Recently Used eviction without the high overhead
+of maintaining a strict recency list. By organizing page frames into a
+circular buffer and tracking a single reference bit per page, the Clock
+algorithm achieves near-LRU hit rates with constant-time overhead on
+memory accesses.</p>
+<h2 id="why-exact-lru-is-expensive">Why Exact LRU Is Expensive</h2>
+<p>In an ideal Least Recently Used (LRU) policy, the operating system
+evicts the page that has gone the longest without being accessed.
+Implementing exact LRU in hardware or software requires updating a data
+structure—such as a doubly linked list or a timestamp counter—on every
+single memory reference.</p>
+<p>Because modern processors execute billions of memory accesses per
+second, updating a linked list or sorting timestamps on every read or
+write is prohibitively slow. Even with hardware support, maintaining a
+total ordering across <span class="math inline">\(N\)</span> page frames
+requires <span class="math inline">\(O(\log N)\)</span> or <span
+class="math inline">\(O(N)\)</span> work or complex associative
+hardware, which does not scale well to large physical memories.</p>
+<h2 id="how-the-clock-algorithm-works">How the Clock Algorithm
+Works</h2>
+<p>The Clock algorithm replaces exact recency ordering with a coarse,
+two-state approximation using a circular buffer (the "clock face") and a
+pointer (the "clock hand").</p>
+<p>Each page frame <span class="math inline">\(i\)</span> in physical
+memory has a single hardware-managed <strong>reference bit</strong>
+<span class="math inline">\(R_i \in \{0, 1\}\)</span>:</p>
+<ul>
+<li>Whenever a page is accessed (read or written), the Memory Management
+Unit (MMU) sets its reference bit to <span
+class="math inline">\(1\)</span>.</li>
+<li>The operating system maintains a clock hand pointing to the next
+candidate frame to inspect.</li>
+</ul>
+<p>When a page fault occurs and a frame must be evicted, the operating
+system advances the clock hand:</p>
+<ol type="1">
+<li>If the frame at the hand has <span class="math inline">\(R_i =
+0\)</span>, the page has not been accessed since the hand last passed
+it. It is evicted, the new page is loaded into that frame, its reference
+bit is set to <span class="math inline">\(1\)</span>, and the hand
+advances to the next frame.</li>
+<li>If the frame at the hand has <span class="math inline">\(R_i =
+1\)</span>, the page gets a "second chance." The operating system clears
+its reference bit (<span class="math inline">\(R_i \leftarrow
+0\)</span>) and advances the hand to the next frame, repeating the
+check.</li>
+</ol>
+<h2 id="why-it-approximates-lru">Why It Approximates LRU</h2>
+<p>The Clock algorithm divides pages into two rough categories: recently
+used (<span class="math inline">\(R_i = 1\)</span>) and not recently
+used (<span class="math inline">\(R_i = 0\)</span>). A page that is
+frequently accessed will repeatedly have its reference bit set back to
+<span class="math inline">\(1\)</span> by the MMU before the clock hand
+completes a full revolution, keeping it resident in memory. Conversely,
+a page that has not been used for at least one full sweep of the clock
+hand will have <span class="math inline">\(R_i = 0\)</span> when the
+hand returns, making it eligible for eviction.</p>
+<p>In the worst case, if all <span class="math inline">\(N\)</span>
+pages have <span class="math inline">\(R_i = 1\)</span>, the clock hand
+sweeps through all <span class="math inline">\(N\)</span> frames,
+clearing every bit, and evicts the original frame—taking <span
+class="math inline">\(O(N)\)</span> steps for that single fault.
+However, across a sequence of <span class="math inline">\(k\)</span>
+page faults, the amortized cost per eviction remains <span
+class="math inline">\(O(1)\)</span> as long as a reasonable fraction of
+pages are inactive, while normal memory hits require zero operating
+system intervention.</p>
+<h2 id="common-variants">Common Variants</h2>
+<p>Several practical extensions improve the Clock algorithm's
+accuracy:</p>
+<ul>
+<li><strong>Enhanced Second-Chance (Clock-Pro / Two-Bit Clock):</strong>
+Uses both the reference bit <span class="math inline">\(R\)</span> and
+the dirty (modified) bit <span class="math inline">\(M\)</span>. Pages
+with <span class="math inline">\((R=0, M=0)\)</span> are evicted first
+because they require no disk writeback, followed by <span
+class="math inline">\((R=0, M=1)\)</span>, preferring to keep clean or
+recently used pages.</li>
+<li><strong>Two-Handed Clock:</strong> Uses a leading hand to clear
+reference bits and a trailing hand (separated by a fixed angular
+distance) to evict pages whose bits are still <span
+class="math inline">\(0\)</span>. This bounds how long a page can remain
+unreferenced before eviction, which is useful when physical memory is
+very large.</li>
+</ul></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-the-clock-algorithm-approximate-lru';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

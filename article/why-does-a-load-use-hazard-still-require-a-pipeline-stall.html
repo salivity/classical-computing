@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Does a Load-Use Hazard Still Require a Pipeline Stall? - classical-computing</title>
+    <meta name="description" content="A load-use hazard occurs when an instruction immediately following a memory load depends on the loaded value. Even in a classical pipelined processor equipped with full data forwarding paths, this specific hazard cannot be resolved by forwarding alone and">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-does-a-load-use-hazard-still-require-a-pipeline-stall">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Does a Load-Use Hazard Still Require a Pipeline Stall? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-does-a-load-use-hazard-still-require-a-pipeline-stall" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A load-use hazard occurs when an instruction immediately following a memory load depends on the loaded value. Even in a classical pipelined processor equipped with full data forwarding paths, this specific hazard cannot be resolved by forwarding alone and" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-does-a-load-use-hazard-still-require-a-pipeline-stall">Why
+Does a Load-Use Hazard Still Require a Pipeline Stall?</h1>
+<p>A load-use hazard occurs when an instruction immediately following a
+memory load depends on the loaded value. Even in a classical pipelined
+processor equipped with full data forwarding paths, this specific hazard
+cannot be resolved by forwarding alone and still requires a one-cycle
+pipeline stall. The reason lies in the timing of when the loaded data
+becomes available compared to when the next instruction needs it.</p>
+<h2 id="how-a-classical-five-stage-pipeline-works">How a Classical
+Five-Stage Pipeline Works</h2>
+<p>In a standard five-stage RISC pipeline, instructions pass through
+five sequential stages:</p>
+<ol type="1">
+<li><strong>IF (Instruction Fetch):</strong> Reads the instruction from
+instruction memory.</li>
+<li><strong>ID (Instruction Decode):</strong> Decodes the instruction
+and reads source registers from the register file.</li>
+<li><strong>EX (Execute):</strong> Performs arithmetic or logic
+operations in the ALU, or computes a memory address.</li>
+<li><strong>MEM (Memory Access):</strong> Reads from or writes to data
+memory.</li>
+<li><strong>WB (Write Back):</strong> Writes the result back into the
+register file.</li>
+</ol>
+<p>Normally, if an instruction writes a result to a register in the WB
+stage, a subsequent instruction reading that register in the ID stage
+would get stale data. Data forwarding (bypassing) solves most of these
+data hazards by routing results directly from later pipeline registers
+back to the ALU inputs in the EX stage.</p>
+<h2 id="why-forwarding-solves-alu-to-alu-hazards">Why Forwarding Solves
+ALU-to-ALU Hazards</h2>
+<p>Consider two back-to-back arithmetic instructions, such as an
+<code>ADD</code> followed by a <code>SUB</code> that uses the sum:</p>
+<pre class="text"><code>ADD R1, R2, R3   (IF -&gt; ID -&gt; EX -&gt; MEM -&gt; WB)
+SUB R4, R1, R5        (IF -&gt; ID -&gt; EX  -&gt; MEM -&gt; WB)</code></pre>
+<p>The <code>ADD</code> instruction computes the new value of
+<code>R1</code> at the end of its <strong>EX</strong> stage. At that
+exact moment, the <code>SUB</code> instruction is finishing its
+<strong>ID</strong> stage and is about to enter its <strong>EX</strong>
+stage. Forwarding paths route the ALU output from the
+<code>EX/MEM</code> pipeline register directly into the ALU input of the
+<code>SUB</code> instruction. Because the data is ready before
+<code>SUB</code> needs it in <strong>EX</strong>, no stall is
+required.</p>
+<h2 id="the-timing-problem-in-a-load-use-hazard">The Timing Problem in a
+Load-Use Hazard</h2>
+<p>Now consider a load instruction followed immediately by an arithmetic
+instruction that uses the loaded value:</p>
+<pre class="text"><code>LW  R1, 0(R2)    (IF -&gt; ID -&gt; EX -&gt; MEM -&gt; WB)
+ADD R3, R1, R4        (IF -&gt; ID -&gt; EX  -&gt; MEM -&gt; WB)</code></pre>
+<p>During the <code>LW</code> instruction's <strong>EX</strong> stage,
+the ALU only calculates the memory address <code>0 + R2</code>. The
+actual data from memory is not read until the <strong>MEM</strong>
+stage, meaning the value of <code>R1</code> is only available at the end
+of <code>LW</code>'s <strong>MEM</strong> stage.</p>
+<p>However, by the time <code>LW</code> is in its <strong>MEM</strong>
+stage, the <code>ADD</code> instruction is already in its
+<strong>EX</strong> stage. <code>ADD</code> needs the value of
+<code>R1</code> at the <em>beginning</em> of its <strong>EX</strong>
+stage, whereas <code>LW</code> does not produce <code>R1</code> until
+the <em>end</em> of its <strong>MEM</strong> stage. Forwarding cannot
+send data backward in time, so no forwarding path can deliver
+<code>R1</code> to <code>ADD</code> without delaying
+<code>ADD</code>.</p>
+<h2 id="how-the-pipeline-resolves-it">How the Pipeline Resolves It</h2>
+<p>To resolve a load-use hazard, the hazard detection unit inserts a
+one-cycle stall (a pipeline bubble or <code>NOP</code>) between the load
+and the dependent instruction:</p>
+<pre class="text"><code>LW  R1, 0(R2)    (IF -&gt; ID -&gt; EX  -&gt; MEM -&gt; WB)
+[stall / bubble]      (IF -&gt; ID  -&gt; NOP -&gt; NOP -&gt; NOP)
+ADD R3, R1, R4             (IF   -&gt; ID  -&gt; EX  -&gt; MEM -&gt; WB)</code></pre>
+<p>With the one-cycle stall, <code>ADD</code> enters its
+<strong>EX</strong> stage at the same time <code>LW</code> enters its
+<strong>WB</strong> stage. At that point, the loaded value is sitting in
+the <code>MEM/WB</code> pipeline register and can be forwarded directly
+to the ALU input of <code>ADD</code> in <strong>EX</strong>.</p>
+<h2 id="summary">Summary</h2>
+<p>Forwarding paths eliminate stalls whenever an instruction produces
+its result in the <strong>EX</strong> stage, because that result is
+ready in time for the next instruction's <strong>EX</strong> stage. A
+load instruction, however, does not produce its data until the end of
+the <strong>MEM</strong> stage. Because the immediately following
+instruction reaches <strong>EX</strong> one cycle too early, a
+single-cycle stall is unavoidable before forwarding can complete the
+handoff.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-does-a-load-use-hazard-still-require-a-pipeline-stall';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

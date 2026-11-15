@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does UTF-8 Stay Compatible With ASCII? - classical-computing</title>
+    <meta name="description" content="UTF-8 maintains backward compatibility with ASCII by using a variable-width encoding scheme where every standard ASCII character is represented by the exact same single byte as in ASCII, while non-ASCII characters from global writing systems are encoded u">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-utf-8-stay-compatible-with-ascii">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does UTF-8 Stay Compatible With ASCII? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-utf-8-stay-compatible-with-ascii" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="UTF-8 maintains backward compatibility with ASCII by using a variable-width encoding scheme where every standard ASCII character is represented by the exact same single byte as in ASCII, while non-ASCII characters from global writing systems are encoded u" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-utf-8-stay-compatible-with-ascii">How Does UTF-8 Stay
+Compatible With ASCII?</h1>
+<p>UTF-8 maintains backward compatibility with ASCII by using a
+variable-width encoding scheme where every standard ASCII character is
+represented by the exact same single byte as in ASCII, while non-ASCII
+characters from global writing systems are encoded using two to four
+bytes. Because multi-byte sequences never contain bytes that overlap
+with ASCII values, existing software designed for ASCII text can process
+UTF-8 strings safely without misinterpreting characters or breaking
+string-handling logic.</p>
+<h2 id="single-byte-encoding-for-ascii">Single-Byte Encoding for
+ASCII</h2>
+<p>In classical computing, standard ASCII uses 7 bits to represent 128
+characters, ranging from decimal <span class="math inline">\(0\)</span>
+to <span class="math inline">\(127\)</span> (or <span
+class="math inline">\(0\text{x}00\)</span> to <span
+class="math inline">\(0\text{x}7\text{F}\)</span> in hexadecimal). When
+stored in an 8-bit byte, the most significant bit is always <span
+class="math inline">\(0\)</span>, giving every ASCII byte the binary
+pattern <code>0xxxxxxx</code>.</p>
+<p>UTF-8 preserves this exact mapping. Any Unicode code point from <span
+class="math inline">\(\text{U+0000}\)</span> to <span
+class="math inline">\(\text{U+007F}\)</span> is encoded as a single byte
+with its leading bit set to <span class="math inline">\(0\)</span>. As a
+result, any valid ASCII file is already a valid UTF-8 file, and any
+program that only expects ASCII characters will read the ASCII portion
+of a UTF-8 stream identically.</p>
+<h2 id="multi-byte-encoding-for-global-characters">Multi-Byte Encoding
+for Global Characters</h2>
+<p>To represent the rest of the Unicode standard—which covers over a
+million code points across global scripts, symbols, and emojis—UTF-8
+uses sequences of 2, 3, or 4 bytes. The structure of the leading byte
+indicates how many bytes belong to the character, while every subsequent
+byte in the sequence is marked as a continuation byte:</p>
+<ul>
+<li><strong>1-byte sequence (ASCII):</strong> <code>0xxxxxxx</code> (7
+payload bits, covering <span class="math inline">\(0\)</span> to <span
+class="math inline">\(127\)</span>)</li>
+<li><strong>2-byte sequence:</strong> <code>110xxxxx 10xxxxxx</code> (11
+payload bits, covering <span class="math inline">\(128\)</span> to <span
+class="math inline">\(2047\)</span>)</li>
+<li><strong>3-byte sequence:</strong>
+<code>1110xxxx 10xxxxxx 10xxxxxx</code> (16 payload bits, covering <span
+class="math inline">\(2048\)</span> to <span
+class="math inline">\(65535\)</span>)</li>
+<li><strong>4-byte sequence:</strong>
+<code>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</code> (21 payload bits,
+covering up to <span
+class="math inline">\(\text{U+10FFFF}\)</span>)</li>
+</ul>
+<p>Because the leading bits of multi-byte sequences always begin with
+<code>1</code> (<code>110</code>, <code>1110</code>, <code>11110</code>,
+or <code>10</code>), their byte values are always <span
+class="math inline">\(128\)</span> (<span
+class="math inline">\(0\text{x}80\)</span>) or higher.</p>
+<h2 id="why-legacy-systems-do-not-break">Why Legacy Systems Do Not
+Break</h2>
+<p>The separation between <code>0xxxxxxx</code> and
+<code>1xxxxxxx</code> byte patterns provides two critical guarantees for
+classical computing systems:</p>
+<ol type="1">
+<li><strong>No False ASCII Matches:</strong> A continuation byte
+(<code>10xxxxxx</code>) or leading byte (<code>11xxxxxx</code>) can
+never be mistaken for an ASCII character. For example, the null
+terminator (<span class="math inline">\(0\text{x}00\)</span>), newline
+(<span class="math inline">\(0\text{x}0\text{A}\)</span>), and forward
+slash (<span class="math inline">\(0\text{x}2\text{F}\)</span>) never
+appear inside a multi-byte character. C-style string functions and file
+path parsers can safely scan for these control bytes without corrupting
+multi-byte text.</li>
+<li><strong>Self-Synchronization:</strong> If a stream of bytes is
+sliced or corrupted mid-character, a parser can immediately find the
+start of the next valid character by scanning forward until it
+encounters a byte that does not begin with <code>10</code>.</li>
+</ol>
+<h2 id="byte-order-independence">Byte-Order Independence</h2>
+<p>Unlike 16-bit or 32-bit fixed-width encodings such as UTF-16 or
+UTF-32, UTF-8 operates on 8-bit bytes in a fixed order. It does not
+depend on the endianness of the underlying CPU architecture, eliminating
+the need for Byte Order Marks (BOM) when exchanging text across
+different computing platforms.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-utf-8-stay-compatible-with-ascii';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

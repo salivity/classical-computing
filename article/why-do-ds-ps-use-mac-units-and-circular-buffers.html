@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why do DSPs use MAC units and circular buffers? - classical-computing</title>
+    <meta name="description" content="Digital signal processors include specialized multiply-accumulate units and circular addressing buffers to execute real-time signal processing algorithms with deterministic timing and high throughput. Unlike general-purpose processors optimized for branch">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-do-ds-ps-use-mac-units-and-circular-buffers">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why do DSPs use MAC units and circular buffers? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-do-ds-ps-use-mac-units-and-circular-buffers" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Digital signal processors include specialized multiply-accumulate units and circular addressing buffers to execute real-time signal processing algorithms with deterministic timing and high throughput. Unlike general-purpose processors optimized for branch" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-do-dsps-use-mac-units-and-circular-buffers">Why do DSPs use
+MAC units and circular buffers?</h1>
+<p>Digital signal processors include specialized multiply-accumulate
+units and circular addressing buffers to execute real-time signal
+processing algorithms with deterministic timing and high throughput.
+Unlike general-purpose processors optimized for branching and irregular
+memory access, digital signal processors are tailored for repetitive
+arithmetic over continuous streams of sampled data.</p>
+<h2 id="the-role-of-multiply-accumulate-units">The Role of
+Multiply-Accumulate Units</h2>
+<p>Many fundamental signal processing operations—such as finite impulse
+response (FIR) filtering, infinite impulse response (IIR) filtering,
+convolution, and the Fast Fourier Transform (FFT)—rely on computing sums
+of products. For an <span class="math inline">\(N\)</span>-tap FIR
+filter, each output sample <span class="math inline">\(y[n]\)</span> is
+calculated as:</p>
+<p><span class="math display">\[y[n] = \sum_{k=0}^{N-1} h[k] \, x[n -
+k]\]</span></p>
+<p>where <span class="math inline">\(h[k]\)</span> represents the filter
+coefficients and <span class="math inline">\(x[n - k]\)</span>
+represents the delayed input samples.</p>
+<p>On a general-purpose processor, each term in this summation typically
+requires separate instructions to fetch operands, multiply them, add the
+result to a running total, and update loop counters. A hardware
+multiply-accumulate (MAC) unit combines multiplication and addition into
+a single operation, often completing one MAC per clock cycle through
+pipelining. Dedicated wide accumulator registers also provide extra
+guard bits to prevent overflow during long summations without requiring
+frequent scaling.</p>
+<h2 id="the-role-of-circular-addressing-buffers">The Role of Circular
+Addressing Buffers</h2>
+<p>Signal processing algorithms operate on sliding windows of recent
+samples. In a standard linear buffer, shifting <span
+class="math inline">\(N\)</span> samples in memory every time a new
+sample arrives requires <span class="math inline">\(O(N)\)</span> memory
+moves, which wastes cycles and memory bandwidth.</p>
+<p>Circular addressing hardware solves this by treating a contiguous
+block of memory as a ring. When a pointer reaches the end of the
+allocated buffer, the hardware automatically wraps it back to the start
+address using modulo arithmetic:</p>
+<p><span class="math display">\[\text{addr}_{\text{next}} = \text{base}
++ \left( (\text{addr}_{\text{current}} - \text{base} + \text{step})
+\bmod L \right)\]</span></p>
+<p>where <span class="math inline">\(L\)</span> is the buffer length.
+Because this wrap-around happens in hardware as part of the address
+generation unit, the processor avoids conditional branch instructions
+and software modulo checks. This keeps the instruction pipeline full and
+guarantees constant-time memory access for every sample.</p>
+<h2 id="real-time-determinism-and-efficiency">Real-Time Determinism and
+Efficiency</h2>
+<p>In classical computing, digital signal processors must often meet
+strict real-time deadlines where missing a sample window causes audio
+glitches, dropped communications, or control-loop instability. By
+pairing single-cycle MAC units with zero-overhead circular buffers—and
+often supporting dual-memory fetches in the same cycle—DSPs sustain high
+arithmetic density while keeping clock speeds and power consumption low
+compared to general-purpose CPUs.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-do-ds-ps-use-mac-units-and-circular-buffers';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

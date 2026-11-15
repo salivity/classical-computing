@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a Single-Tape Turing Machine Model Computation? - classical-computing</title>
+    <meta name="description" content="A single-tape Turing machine models general algorithmic computation by combining an infinite linear tape, a movable read-write head, and a finite set of state transitions. At each step, the machine reads the symbol under its head, consults its current int">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-single-tape-turing-machine-model-computation">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a Single-Tape Turing Machine Model Computation? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-single-tape-turing-machine-model-computation" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A single-tape Turing machine models general algorithmic computation by combining an infinite linear tape, a movable read-write head, and a finite set of state transitions. At each step, the machine reads the symbol under its head, consults its current int" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-single-tape-turing-machine-model-computation">How
+Does a Single-Tape Turing Machine Model Computation?</h1>
+<p>A single-tape Turing machine models general algorithmic computation
+by combining an infinite linear tape, a movable read-write head, and a
+finite set of state transitions. At each step, the machine reads the
+symbol under its head, consults its current internal state, writes a new
+symbol, moves the head left or right, and transitions to a new state.
+Despite this simple mechanical structure, it captures the full power of
+classical algorithms.</p>
+<h2 id="components-of-a-single-tape-turing-machine">Components of a
+Single-Tape Turing Machine</h2>
+<p>Formally, a deterministic single-tape Turing machine is defined as a
+7-tuple:</p>
+<p><span class="math display">\[M = (Q, \Sigma, \Gamma, \delta, q_0,
+q_{\text{accept}}, q_{\text{reject}})\]</span></p>
+<p>Each component plays a specific role in the computation:</p>
+<ul>
+<li><strong><span class="math inline">\(Q\)</span></strong>: A finite,
+non-empty set of internal states.</li>
+<li><strong><span class="math inline">\(\Sigma\)</span></strong>: The
+finite input alphabet, which does not contain the blank symbol <span
+class="math inline">\(\sqcup\)</span>.</li>
+<li><strong><span class="math inline">\(\Gamma\)</span></strong>: The
+finite tape alphabet, where <span class="math inline">\(\Sigma \subset
+\Gamma\)</span> and <span class="math inline">\(\sqcup \in
+\Gamma\)</span>.</li>
+<li><strong><span class="math inline">\(\delta\)</span></strong>: The
+transition function, defined as <span class="math inline">\(\delta: Q
+\times \Gamma \rightarrow Q \times \Gamma \times \{L, R\}\)</span>.</li>
+<li><strong><span class="math inline">\(q_0 \in Q\)</span></strong>: The
+initial state where computation begins.</li>
+<li><strong><span class="math inline">\(q_{\text{accept}} \in
+Q\)</span></strong>: The accepting halting state.</li>
+<li><strong><span class="math inline">\(q_{\text{reject}} \in
+Q\)</span></strong>: The rejecting halting state, with <span
+class="math inline">\(q_{\text{accept}} \neq
+q_{\text{reject}}\)</span>.</li>
+</ul>
+<h2 id="the-read-write-head-and-tape">The Read-Write Head and Tape</h2>
+<p>The tape serves as both the input medium and the working memory of
+the machine. It is divided into discrete cells extending infinitely to
+the right (or in both directions, depending on the convention).
+Initially, the input string <span class="math inline">\(w \in
+\Sigma^*\)</span> is written on the leftmost cells, while all remaining
+cells contain the blank symbol <span
+class="math inline">\(\sqcup\)</span>.</p>
+<p>The read-write head is positioned over a single cell at any given
+step. Unlike a finite automaton, which can only read input symbols and
+move forward, the Turing machine head can overwrite symbols on the tape
+and move in either direction (<span class="math inline">\(L\)</span> for
+left, <span class="math inline">\(R\)</span> for right). This ability to
+read, write, and revisit earlier cells allows the machine to store
+intermediate results, maintain counters, and manipulate data structures
+of arbitrary size.</p>
+<h2 id="state-transitions-and-execution">State Transitions and
+Execution</h2>
+<p>Computation proceeds in discrete steps governed by the transition
+function <span class="math inline">\(\delta\)</span>. If the machine is
+in state <span class="math inline">\(q \in Q\)</span> and the head is
+scanning symbol <span class="math inline">\(a \in \Gamma\)</span>, the
+transition:</p>
+<p><span class="math display">\[\delta(q, a) = (q&#39;, b,
+D)\]</span></p>
+<p>instructs the machine to perform three actions atomically:</p>
+<ol type="1">
+<li>Overwrite the current cell's symbol <span
+class="math inline">\(a\)</span> with <span class="math inline">\(b \in
+\Gamma\)</span>.</li>
+<li>Move the read-write head one cell in direction <span
+class="math inline">\(D \in \{L, R\}\)</span>.</li>
+<li>Update the internal state from <span
+class="math inline">\(q\)</span> to <span class="math inline">\(q&#39;
+\in Q\)</span>.</li>
+</ol>
+<p>A snapshot of the computation at any moment is called a
+configuration, which records the current state, the tape contents, and
+the head position. The machine halts immediately if it enters <span
+class="math inline">\(q_{\text{accept}}\)</span> or <span
+class="math inline">\(q_{\text{reject}}\)</span>. If it never enters
+either halting state, the computation runs indefinitely.</p>
+<h2 id="modeling-general-algorithmic-computation">Modeling General
+Algorithmic Computation</h2>
+<p>By chaining simple read-write operations and state transitions, a
+single-tape Turing machine can simulate any classical algorithm. Complex
+operations such as arithmetic, sorting, conditional branching, and loops
+are broken down into sequences of local tape edits and head movements.
+For example, to add two binary numbers, the machine shuttles its head
+back and forth across the tape, tracking carries using its finite states
+<span class="math inline">\(Q\)</span> and writing the sum bit by
+bit.</p>
+<p>According to the Church-Turing thesis, any function that can be
+computed by an effective classical algorithm can be computed by a Turing
+machine. Even multi-tape Turing machines, random-access machines, and
+modern programming languages do not exceed the computational power of a
+single-tape Turing machine; they only differ in execution speed, which
+is at most polynomially faster.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-single-tape-turing-machine-model-computation';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

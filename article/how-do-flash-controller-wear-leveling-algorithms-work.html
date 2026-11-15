@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Flash Controller Wear-Leveling Algorithms Work? - classical-computing</title>
+    <meta name="description" content="Wear-leveling algorithms inside flash controllers distribute program and erase cycles evenly across NAND flash memory blocks so that no single block wears out prematurely. Because flash memory cells degrade physically each time they are erased and reprogr">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-flash-controller-wear-leveling-algorithms-work">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do Flash Controller Wear-Leveling Algorithms Work? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-flash-controller-wear-leveling-algorithms-work" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Wear-leveling algorithms inside flash controllers distribute program and erase cycles evenly across NAND flash memory blocks so that no single block wears out prematurely. Because flash memory cells degrade physically each time they are erased and reprogr" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-flash-controller-wear-leveling-algorithms-work">How Do
+Flash Controller Wear-Leveling Algorithms Work?</h1>
+<p>Wear-leveling algorithms inside flash controllers distribute program
+and erase cycles evenly across NAND flash memory blocks so that no
+single block wears out prematurely. Because flash memory cells degrade
+physically each time they are erased and reprogrammed, concentrating
+writes on a small set of blocks would cause early device failure. By
+using a Flash Translation Layer to decouple logical addresses from
+physical locations, controllers track erase counts and relocate data
+dynamically or statically to maximize the lifespan of the storage
+device.</p>
+<h2 id="why-flash-memory-requires-wear-leveling">Why Flash Memory
+Requires Wear Leveling</h2>
+<p>NAND flash memory organizes storage into pages and blocks. While data
+is read and written at the page level, it can only be erased at the much
+larger block level. Each program-erase (P/E) cycle stresses the thin
+oxide layer inside the floating-gate or charge-trap transistors,
+eventually trapping electrons and preventing the cell from reliably
+holding a charge.</p>
+<p>If an operating system repeatedly updates a specific file, such as a
+file system journal or a swap file, the same logical block address (LBA)
+is written over and over. Without wear leveling, that single physical
+block would reach its maximum P/E limit—often between <span
+class="math inline">\(1,000\)</span> and <span
+class="math inline">\(100,000\)</span> cycles depending on the cell
+technology—long before the rest of the drive sees significant use.</p>
+<h2 id="the-role-of-the-flash-translation-layer">The Role of the Flash
+Translation Layer</h2>
+<p>The Flash Translation Layer (FTL) is firmware inside the flash
+controller that acts as an intermediary between the host system and the
+raw NAND flash chips. The FTL maintains a mapping table that translates
+logical block addresses requested by the operating system into physical
+block addresses (PBAs) on the flash die.</p>
+<p>Because flash memory cannot overwrite data in place without first
+erasing the entire block, the FTL uses out-of-place updates. When the
+host modifies data, the controller writes the new data to a fresh,
+pre-erased page in a different physical block, updates the mapping
+table, and marks the old page as invalid. This indirection is the
+foundation that allows wear-leveling algorithms to move data freely
+without the host noticing.</p>
+<h2 id="dynamic-wear-leveling">Dynamic Wear Leveling</h2>
+<p>Dynamic wear leveling targets blocks that are actively being written
+or updated. Whenever the host issues a write command, the controller
+selects a free, erased block from a pool of available blocks. Instead of
+picking any arbitrary free block, the algorithm chooses the one with the
+lowest erase count.</p>
+<p>While dynamic wear leveling is fast and introduces minimal write
+amplification, it has a major limitation: it only manages blocks that
+are frequently updated. Data that is written once and rarely
+changed—known as "cold" data, such as operating system files or media
+archives—remains locked in its original physical blocks. As a result,
+the remaining "hot" blocks must absorb all the new writes, causing them
+to wear out faster than the blocks holding cold data.</p>
+<h2 id="static-wear-leveling">Static Wear Leveling</h2>
+<p>Static wear leveling solves the cold-data problem by periodically
+relocating static data to blocks with higher erase counts. The
+controller monitors the difference between the maximum and minimum erase
+counts across all blocks in the drive. When this difference exceeds a
+predefined threshold <span class="math inline">\(T\)</span>, the
+algorithm intervenes:</p>
+<p><span class="math display">\[\max(E_i) - \min(E_i) &gt;
+T\]</span></p>
+<p>Here, <span class="math inline">\(E_i\)</span> represents the erase
+count of block <span class="math inline">\(i\)</span>. When triggered,
+the controller copies cold data from a low-erase-count block to a block
+with a higher erase count, erases the original block, and places it into
+the free pool for active writes. Although this process introduces extra
+internal data movement—increasing write amplification slightly—it
+ensures that every block on the device ages at a nearly uniform
+rate.</p>
+<h2 id="global-wear-leveling-and-block-management">Global Wear Leveling
+and Block Management</h2>
+<p>Modern solid-state drives (SSDs) use multiple NAND flash channels,
+dies, and planes operating in parallel. Global wear leveling extends the
+static and dynamic strategies across all dies and channels rather than
+confining them to a single chip.</p>
+<p>To keep overhead low, controllers often group blocks into
+wear-leveling pools or use wear-leveling tables stored in controller
+DRAM and periodically flushed to flash. When a block eventually fails or
+exceeds its error-correction threshold, the controller retires it as a
+bad block and replaces it with a spare block from an over-provisioned
+pool, maintaining both capacity and even wear distribution across the
+remaining healthy memory.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-flash-controller-wear-leveling-algorithms-work';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

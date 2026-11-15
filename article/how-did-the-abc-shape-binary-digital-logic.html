@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How did the ABC shape binary digital logic? - classical-computing</title>
+    <meta name="description" content="The Atanasoff-Berry Computer, built between 1937 and 1942 by John Vincent Atanasoff and Clifford Berry at Iowa State College, was a pioneering special-purpose electronic device designed to solve systems of linear algebraic equations. It introduced several">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-did-the-abc-shape-binary-digital-logic">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How did the ABC shape binary digital logic? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-did-the-abc-shape-binary-digital-logic" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Atanasoff-Berry Computer, built between 1937 and 1942 by John Vincent Atanasoff and Clifford Berry at Iowa State College, was a pioneering special-purpose electronic device designed to solve systems of linear algebraic equations. It introduced several" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-did-the-abc-shape-binary-digital-logic">How did the ABC
+shape binary digital logic?</h1>
+<p>The Atanasoff-Berry Computer, built between 1937 and 1942 by John
+Vincent Atanasoff and Clifford Berry at Iowa State College, was a
+pioneering special-purpose electronic device designed to solve systems
+of linear algebraic equations. It introduced several foundational
+concepts that defined modern digital computing, including binary number
+representation, all-electronic vacuum-tube logic, regenerative capacitor
+memory, and the separation of memory from processing.</p>
+<h2 id="binary-number-representation">Binary Number Representation</h2>
+<p>Before the Atanasoff-Berry Computer (ABC), most calculating
+machines—such as mechanical desk calculators and early electromechanical
+systems—operated in base-10 (decimal). Representing ten distinct states
+reliably in electronic hardware was complex and error-prone.</p>
+<p>Atanasoff recognized that electronic circuits naturally lend
+themselves to two-state operation: on or off, high voltage or low
+voltage. By adopting base-<span class="math inline">\(2\)</span>
+(binary) arithmetic, the ABC simplified the design of its arithmetic and
+logic circuits. Numbers were represented as <span
+class="math inline">\(50\)</span>-bit binary words, allowing the machine
+to perform addition and subtraction through straightforward logical
+operations rather than complex decimal carry mechanisms.</p>
+<h2 id="electronic-switching-with-vacuum-tubes">Electronic Switching
+with Vacuum Tubes</h2>
+<p>The ABC was one of the first machines to use vacuum tubes for digital
+logic and arithmetic rather than mechanical gears or electromechanical
+relays. Vacuum tubes allowed switching speeds orders of magnitude faster
+than mechanical components.</p>
+<p>Using roughly <span class="math inline">\(300\)</span> vacuum tubes,
+the ABC implemented electronic add-subtract mechanisms capable of
+operating on binary digits directly. This shift from mechanical motion
+to electronic switching demonstrated that high-speed, reliable digital
+computation could be achieved without moving parts in the logic
+unit.</p>
+<h2 id="regenerative-capacitor-memory">Regenerative Capacitor
+Memory</h2>
+<p>To store data economically, Atanasoff and Berry developed a rotating
+drum memory system composed of capacitors. Each of the two drums held
+<span class="math inline">\(1,600\)</span> capacitors arranged in <span
+class="math inline">\(32\)</span> bands of <span
+class="math inline">\(50\)</span> capacitors each, storing <span
+class="math inline">\(30\)</span> binary numbers per drum (with two
+spare bands).</p>
+<p>Because capacitors gradually lose their electrical charge over time,
+the ABC used a "jogging" or regenerative circuit that periodically read
+and refreshed the charge on each capacitor as the drum rotated. This
+technique was a direct conceptual precursor to modern dynamic
+random-access memory (DRAM), which still relies on periodic refreshing
+to retain binary data.</p>
+<h2 id="separation-of-memory-and-processing">Separation of Memory and
+Processing</h2>
+<p>Unlike earlier calculators where storage and arithmetic were tightly
+coupled in mechanical wheels, the ABC cleanly separated its memory drums
+from its electronic computing unit. Data was read from the drums,
+processed by the vacuum-tube add-subtract circuits, and written back to
+the drums. This architectural separation became a standard principle in
+classical computer design.</p>
+<h2 id="solving-linear-systems-and-legacy">Solving Linear Systems and
+Legacy</h2>
+<p>The ABC was built specifically to solve systems of up to <span
+class="math inline">\(29\)</span> linear equations with <span
+class="math inline">\(29\)</span> unknowns, of the form:</p>
+<p><span class="math display">\[Ax = b\]</span></p>
+<p>It performed Gaussian elimination by electronically subtracting
+multiples of one equation from another, using binary logic to eliminate
+variables one by one. Although the ABC was not programmable in the
+general-purpose sense—its operations were fixed for linear equations—its
+core innovations in binary logic, electronic switching, and regenerative
+memory laid essential groundwork for later electronic computers.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-did-the-abc-shape-binary-digital-logic';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

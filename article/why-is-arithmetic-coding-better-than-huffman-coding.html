@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Is Arithmetic Coding Better Than Huffman Coding? - classical-computing</title>
+    <meta name="description" content="Arithmetic coding surpasses Huffman coding by representing an entire message as a single fractional number within a subinterval of zero to one, rather than assigning a separate integer-length codeword to each symbol. This approach eliminates the rounding">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-is-arithmetic-coding-better-than-huffman-coding">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Is Arithmetic Coding Better Than Huffman Coding? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-is-arithmetic-coding-better-than-huffman-coding" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Arithmetic coding surpasses Huffman coding by representing an entire message as a single fractional number within a subinterval of zero to one, rather than assigning a separate integer-length codeword to each symbol. This approach eliminates the rounding" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-is-arithmetic-coding-better-than-huffman-coding">Why Is
+Arithmetic Coding Better Than Huffman Coding?</h1>
+<p>Arithmetic coding surpasses Huffman coding by representing an entire
+message as a single fractional number within a subinterval of zero to
+one, rather than assigning a separate integer-length codeword to each
+symbol. This approach eliminates the rounding overhead inherent in
+Huffman coding, allowing arithmetic coding to achieve compression ratios
+that closely approach the theoretical Shannon entropy limit. In
+classical computing, this makes arithmetic coding especially effective
+when symbol probabilities are highly skewed or when alphabets are
+small.</p>
+<h2 id="the-integer-bit-limitation-of-huffman-coding">The Integer-Bit
+Limitation of Huffman Coding</h2>
+<p>Huffman coding works by building a prefix-free binary tree where more
+frequent symbols receive shorter bit sequences and less frequent symbols
+receive longer ones. While optimal for symbol-by-symbol coding, every
+symbol must be mapped to a whole number of bits.</p>
+<p>According to Shannon's source coding theorem, the ideal average code
+length for a symbol <span class="math inline">\(s\)</span> with
+probability <span class="math inline">\(p(s)\)</span> is its
+self-information:</p>
+<p><span class="math display">\[I(s) = -\log_2 p(s)\]</span></p>
+<p>When <span class="math inline">\(p(s)\)</span> is not an exact power
+of two, <span class="math inline">\(-\log_2 p(s)\)</span> is a
+fractional number. Huffman coding must round this up to an integer bit
+length. For example, if a symbol has a probability of <span
+class="math inline">\(0.9\)</span>, its ideal information content is
+<span class="math inline">\(-\log_2(0.9) \approx 0.152\)</span> bits.
+However, Huffman coding must assign it at least <span
+class="math inline">\(1\)</span> bit, resulting in a significant <span
+class="math inline">\(0.848\)</span> bits of wasted space per
+occurrence.</p>
+<h2 id="encoding-a-message-as-a-fractional-interval">Encoding a Message
+as a Fractional Interval</h2>
+<p>Arithmetic coding bypasses the integer-bit constraint by treating the
+entire input sequence as a single unit. It starts with the half-open
+interval <span class="math inline">\([0, 1)\)</span> and iteratively
+narrows it down as each symbol in the message is processed.</p>
+<p>The process follows these steps:</p>
+<ol type="1">
+<li><strong>Partition the current interval</strong>: The current
+interval <span class="math inline">\([L, H)\)</span> is divided into
+subintervals proportional to the probabilities of each symbol in the
+alphabet.</li>
+<li><strong>Select the subinterval</strong>: When the next symbol <span
+class="math inline">\(s_i\)</span> is read, the encoder selects the
+subinterval corresponding to <span class="math inline">\(s_i\)</span> as
+the new active interval <span class="math inline">\([L_{new},
+H_{new})\)</span>.</li>
+<li><strong>Update bounds</strong>: If <span
+class="math inline">\(s_i\)</span> has cumulative probability range
+<span class="math inline">\([C_{low}, C_{high})\)</span> within the
+model, the new bounds are computed as:</li>
+</ol>
+<p><span class="math display">\[L_{new} = L + (H - L) \cdot
+C_{low}\]</span> <span class="math display">\[H_{new} = L + (H - L)
+\cdot C_{high}\]</span></p>
+<p>After all symbols in the message have been processed, the encoder
+outputs any single binary fraction that lies inside the final interval
+<span class="math inline">\([L_{final}, H_{final})\)</span>. Because a
+narrower interval requires more bits to specify a unique point within
+it, probable sequences produce wider intervals and shorter bitstrings,
+while improbable sequences produce narrower intervals and longer
+bitstrings.</p>
+<h2 id="approaching-the-shannon-entropy-limit">Approaching the Shannon
+Entropy Limit</h2>
+<p>For a message of length <span class="math inline">\(N\)</span>, the
+width of the final interval is equal to the product of the probabilities
+of all symbols in the message:</p>
+<p><span class="math display">\[W = \prod_{i=1}^{N} p(s_i)\]</span></p>
+<p>To uniquely identify a number within an interval of width <span
+class="math inline">\(W\)</span>, the encoder needs approximately <span
+class="math inline">\(-\log_2(W)\)</span> bits. Using the properties of
+logarithms, this becomes:</p>
+<p><span class="math display">\[-\log_2\left(\prod_{i=1}^{N}
+p(s_i)\right) = \sum_{i=1}^{N} -\log_2 p(s_i)\]</span></p>
+<p>This sum equals the exact total information content of the message,
+plus at most <span class="math inline">\(1\)</span> or <span
+class="math inline">\(2\)</span> extra bits of overhead for the entire
+message to terminate the binary fraction. Unlike Huffman coding, where
+rounding errors accumulate with every single symbol, arithmetic coding
+amortizes this tiny overhead across the whole message, converging to the
+Shannon entropy <span class="math inline">\(H(X)\)</span> as <span
+class="math inline">\(N\)</span> grows large.</p>
+<h2 id="practical-considerations-in-classical-computing">Practical
+Considerations in Classical Computing</h2>
+<p>In classical computing, infinite-precision real numbers cannot be
+stored directly in finite hardware registers. Practical implementations
+of arithmetic coding use fixed-point integer arithmetic (such as 32-bit
+or 64-bit integers) combined with a technique called renormalization.
+Whenever the most significant bits of <span
+class="math inline">\(L\)</span> and <span
+class="math inline">\(H\)</span> match, those bits are shifted out to
+the output stream, and the remaining interval is scaled up to maintain
+precision.</p>
+<p>Additionally, arithmetic coding cleanly separates the probability
+model from the coding engine. This allows the probability distribution
+to be adaptive—updating dynamically as the message is read—without
+needing to rebuild a Huffman tree, making it the foundation for modern
+compression standards like JPEG, H.264, and H.265.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-is-arithmetic-coding-better-than-huffman-coding';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

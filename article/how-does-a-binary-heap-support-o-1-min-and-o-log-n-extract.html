@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does a Binary Heap Support O(1) Min and O(log n) Extract? - classical-computing</title>
+    <meta name="description" content="A binary heap is a complete binary tree data structure that satisfies the heap-order property, allowing a priority queue to inspect its smallest element in constant time and remove it in logarithmic time. By storing the tree in a contiguous array and main">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-a-binary-heap-support-o-1-min-and-o-log-n-extract">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does a Binary Heap Support O(1) Min and O(log n) Extract? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-a-binary-heap-support-o-1-min-and-o-log-n-extract" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="A binary heap is a complete binary tree data structure that satisfies the heap-order property, allowing a priority queue to inspect its smallest element in constant time and remove it in logarithmic time. By storing the tree in a contiguous array and main" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-a-binary-heap-support-o1-min-and-olog-n-extract">How
+Does a Binary Heap Support O(1) Min and O(log n) Extract?</h1>
+<p>A binary heap is a complete binary tree data structure that satisfies
+the heap-order property, allowing a priority queue to inspect its
+smallest element in constant time and remove it in logarithmic time. By
+storing the tree in a contiguous array and maintaining a partial order
+between parent and child nodes, the minimum value always sits at the
+root while structural updates remain bounded by the height of the
+tree.</p>
+<h2 id="structure-and-the-heap-order-property">Structure and the
+Heap-Order Property</h2>
+<p>A min-binary heap is a binary tree that obeys two invariants:</p>
+<ol type="1">
+<li><strong>Shape property</strong>: The tree is complete, meaning every
+level is completely filled except possibly the last, which is filled
+from left to right.</li>
+<li><strong>Heap-order property</strong>: For every node <span
+class="math inline">\(i\)</span> other than the root, the key of its
+parent is less than or equal to the key of <span
+class="math inline">\(i\)</span>: <span
+class="math display">\[\text{key}(\text{parent}(i)) \le
+\text{key}(i)\]</span></li>
+</ol>
+<p>Because the tree is complete, it can be stored compactly in a
+zero-indexed array <span class="math inline">\(A\)</span> of length
+<span class="math inline">\(n\)</span> without explicit pointers. For
+any node at index <span class="math inline">\(i\)</span>:</p>
+<ul>
+<li>Its left child is at index <span class="math inline">\(2i +
+1\)</span>.</li>
+<li>Its right child is at index <span class="math inline">\(2i +
+2\)</span>.</li>
+<li>Its parent is at index <span class="math inline">\(\lfloor (i - 1) /
+2 \rfloor\)</span>.</li>
+</ul>
+<h2 id="why-minimum-inspection-takes-o1-time">Why Minimum Inspection
+Takes <span class="math inline">\(O(1)\)</span> Time</h2>
+<p>By induction on the heap-order property, no node in the tree can have
+a smaller key than its parent, and therefore no node can have a smaller
+key than the root. As a result, the minimum element is always located at
+index <span class="math inline">\(0\)</span> of the underlying array
+<span class="math inline">\(A[0]\)</span>.</p>
+<p>Inspecting the minimum element—often called <code>peek</code> or
+<code>find-min</code>—simply reads and returns <span
+class="math inline">\(A[0]\)</span>. Because array indexing takes
+constant time and no tree traversal or restructuring is required,
+minimum inspection runs in <span class="math inline">\(O(1)\)</span>
+time.</p>
+<h2 id="why-extraction-takes-olog-n-time">Why Extraction Takes <span
+class="math inline">\(O(\log n)\)</span> Time</h2>
+<p>Removing the minimum element—often called
+<code>extract-min</code>—must both return <span
+class="math inline">\(A[0]\)</span> and restore the shape and heap-order
+invariants for the remaining <span class="math inline">\(n - 1\)</span>
+elements. This is done in three steps:</p>
+<ol type="1">
+<li><strong>Save the root</strong>: Store <span
+class="math inline">\(A[0]\)</span> to return at the end.</li>
+<li><strong>Replace and shrink</strong>: Move the last element <span
+class="math inline">\(A[n - 1]\)</span> into <span
+class="math inline">\(A[0]\)</span> and decrement the heap size <span
+class="math inline">\(n\)</span> by <span
+class="math inline">\(1\)</span>. Moving the last element preserves the
+complete-tree shape property.</li>
+<li><strong>Sift down (heapify-down)</strong>: The new root may violate
+the heap-order property. Compare it with its smaller child; if the root
+is larger, swap them and repeat the process downward until the node is
+smaller than both of its children or becomes a leaf.</li>
+</ol>
+<p>Because a complete binary tree with <span
+class="math inline">\(n\)</span> nodes has height <span
+class="math inline">\(h = \lfloor \log_2 n \rfloor\)</span>, any
+root-to-leaf path has at most <span class="math inline">\(h + 1\)</span>
+nodes. Each step of the sift-down procedure performs at most two
+comparisons (to find the smaller child and compare it with the current
+node) and one swap, advancing one level deeper in the tree. Therefore,
+the total work for <code>extract-min</code> is bounded by <span
+class="math inline">\(O(\log n)\)</span> in the worst case.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-a-binary-heap-support-o-1-min-and-o-log-n-extract';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Operand Forwarding Resolve Pipeline Data Hazards? - classical-computing</title>
+    <meta name="description" content="Operand forwarding, also known as bypassing, is a hardware technique used in pipelined processors to resolve read-after-write data hazards without stalling the pipeline. Instead of waiting for a producing instruction to write its result back to the regist">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-operand-forwarding-resolve-pipeline-data-hazards">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Operand Forwarding Resolve Pipeline Data Hazards? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-operand-forwarding-resolve-pipeline-data-hazards" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Operand forwarding, also known as bypassing, is a hardware technique used in pipelined processors to resolve read-after-write data hazards without stalling the pipeline. Instead of waiting for a producing instruction to write its result back to the regist" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-operand-forwarding-resolve-pipeline-data-hazards">How
+Does Operand Forwarding Resolve Pipeline Data Hazards?</h1>
+<p>Operand forwarding, also known as bypassing, is a hardware technique
+used in pipelined processors to resolve read-after-write data hazards
+without stalling the pipeline. Instead of waiting for a producing
+instruction to write its result back to the register file, forwarding
+routes the computed value directly from an intermediate pipeline
+register to the execution inputs of a subsequent instruction. This
+eliminates unnecessary clock-cycle delays and preserves high instruction
+throughput.</p>
+<h2 id="understanding-read-after-write-data-hazards">Understanding
+Read-After-Write Data Hazards</h2>
+<p>In a classic five-stage RISC pipeline—Instruction Fetch (IF),
+Instruction Decode (ID), Execute (EX), Memory Access (MEM), and Write
+Back (WB)—instructions overlap in execution. A read-after-write (RAW)
+data hazard occurs when an instruction depends on the result of a
+preceding instruction that has not yet reached the WB stage.</p>
+<p>Consider two consecutive instructions:</p>
+<ol type="1">
+<li><code>ADD R1, R2, R3</code></li>
+<li><code>SUB R4, R1, R5</code></li>
+</ol>
+<p>The <code>ADD</code> instruction computes the new value of
+<code>$R_1$</code> during its EX stage, but it does not write that value
+into the register file until its WB stage. Meanwhile, the
+<code>SUB</code> instruction reads its source operands during its ID
+stage—two cycles earlier than <code>ADD</code> writes back. Without
+intervention, <code>SUB</code> would read the stale value of
+<code>$R_1$</code> from the register file.</p>
+<h2 id="how-the-forwarding-path-works">How the Forwarding Path
+Works</h2>
+<p>Operand forwarding solves this problem by adding dedicated data paths
+and multiplexers (MUXes) at the inputs of the Arithmetic Logic Unit
+(ALU) in the EX stage. Because the result of <code>ADD</code> is already
+available in the <code>EX/MEM</code> pipeline register at the end of its
+EX stage, and in the <code>MEM/WB</code> pipeline register at the end of
+its MEM stage, the hardware can tap into those registers directly.</p>
+<p>A <strong>forwarding unit</strong> compares the destination register
+address of instructions currently in the <code>EX/MEM</code> and
+<code>MEM/WB</code> stages against the source register addresses of the
+instruction in the <code>ID/EX</code> stage. When a match is
+detected—and the producing instruction is set to write to a register—the
+forwarding unit asserts control signals on the ALU input multiplexers.
+Instead of selecting the value read from the register file, the
+multiplexer selects the forwarded result from <code>EX/MEM</code> or
+<code>MEM/WB</code>.</p>
+<h2 id="forwarding-priority-and-edge-cases">Forwarding Priority and Edge
+Cases</h2>
+<p>When multiple instructions in the pipeline write to the same
+destination register, the forwarding unit must select the most recent
+value. For example, if both the <code>EX/MEM</code> and
+<code>MEM/WB</code> stages hold pending writes to <code>$R_1$</code>,
+the value in <code>EX/MEM</code> is newer and takes priority over
+<code>MEM/WB</code>.</p>
+<p>While operand forwarding eliminates stalls for most ALU-to-ALU
+dependencies, it cannot resolve every hazard on its own. A
+<strong>load-use hazard</strong> occurs when a <code>LOAD</code>
+instruction is immediately followed by an instruction that uses the
+loaded value. Because data from memory is not available until the end of
+the MEM stage, it cannot be forwarded backward in time to the EX stage
+of the very next instruction. In this case, a hazard detection unit must
+insert a single-cycle stall (a pipeline bubble) before forwarding the
+loaded value from <code>MEM/WB</code>.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-operand-forwarding-resolve-pipeline-data-hazards';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

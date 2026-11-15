@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do XOR Gates Enable Parity Checking and Binary Addition? - classical-computing</title>
+    <meta name="description" content="Exclusive OR (XOR) gates are fundamental building blocks in classical digital logic, serving as the primary mechanism for both error detection through parity checking and arithmetic computation through binary addition. By outputting a high signal only whe">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-do-xor-gates-enable-parity-checking-and-binary-addition">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Do XOR Gates Enable Parity Checking and Binary Addition? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-do-xor-gates-enable-parity-checking-and-binary-addition" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Exclusive OR (XOR) gates are fundamental building blocks in classical digital logic, serving as the primary mechanism for both error detection through parity checking and arithmetic computation through binary addition. By outputting a high signal only whe" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-do-xor-gates-enable-parity-checking-and-binary-addition">How
+Do XOR Gates Enable Parity Checking and Binary Addition?</h1>
+<p>Exclusive OR (XOR) gates are fundamental building blocks in classical
+digital logic, serving as the primary mechanism for both error detection
+through parity checking and arithmetic computation through binary
+addition. By outputting a high signal only when its inputs differ, the
+XOR gate naturally performs modulo-2 addition. This single mathematical
+property allows hardware designers to determine whether a set of bits
+contains an odd or even number of ones and to calculate the sum bit of
+binary numbers without carry propagation.</p>
+<h2 id="understanding-the-xor-gate">Understanding the XOR Gate</h2>
+<p>The XOR gate is a digital logic gate that implements exclusive
+disjunction. For two binary inputs <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>, the output <span
+class="math inline">\(Y = A \oplus B\)</span> is <span
+class="math inline">\(1\)</span> if and only if <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> have different values. Its Boolean
+expression is:</p>
+<p><span class="math display">\[Y = A \oplus B = A\overline{B} +
+\overline{A}B\]</span></p>
+<p>In arithmetic terms, the XOR operation is equivalent to addition
+modulo 2:</p>
+<p><span class="math display">\[A \oplus B = (A + B) \bmod
+2\]</span></p>
+<p>Because of this equivalence, the XOR gate is uniquely suited for
+tasks that depend on the count of <span
+class="math inline">\(1\)</span>s in a binary sequence rather than their
+positional weights.</p>
+<h2 id="role-of-xor-gates-in-parity-checking">Role of XOR Gates in
+Parity Checking</h2>
+<p>Parity checking is a basic error-detection technique used in digital
+communication and memory systems to identify single-bit errors. A parity
+bit is appended to a data word so that the total number of <span
+class="math inline">\(1\)</span>s in the transmitted word is either even
+(even parity) or odd (odd parity).</p>
+<h3 id="parity-generation">Parity Generation</h3>
+<p>To generate an even parity bit <span class="math inline">\(P\)</span>
+for an <span class="math inline">\(n\)</span>-bit data word <span
+class="math inline">\(D_0, D_1, \dots, D_{n-1}\)</span>, a tree or chain
+of XOR gates combines all the data bits:</p>
+<p><span class="math display">\[P = D_0 \oplus D_1 \oplus \dots \oplus
+D_{n-1}\]</span></p>
+<p>If the data word contains an odd number of <span
+class="math inline">\(1\)</span>s, the XOR chain evaluates to <span
+class="math inline">\(1\)</span>, making the total number of <span
+class="math inline">\(1\)</span>s (data plus parity) even. If the data
+word already contains an even number of <span
+class="math inline">\(1\)</span>s, <span
+class="math inline">\(P\)</span> evaluates to <span
+class="math inline">\(0\)</span>. For odd parity, the output of the XOR
+chain is simply inverted using a NOT gate (or replaced with an XNOR
+gate).</p>
+<h3 id="error-detection">Error Detection</h3>
+<p>At the receiving end, the same XOR network evaluates all received
+bits, including the parity bit. For an even-parity system, the check bit
+<span class="math inline">\(C\)</span> is computed as:</p>
+<p><span class="math display">\[C = D_0 \oplus D_1 \oplus \dots \oplus
+D_{n-1} \oplus P\]</span></p>
+<p>If no single-bit error occurred during transmission, <span
+class="math inline">\(C = 0\)</span>. If any single bit flipped, the
+parity changes and <span class="math inline">\(C = 1\)</span>, signaling
+an error. Because XOR is both associative and commutative, the gates can
+be arranged in a balanced binary tree, minimizing propagation delay to
+<span class="math inline">\(O(\log_2 n)\)</span> gate levels.</p>
+<h2 id="role-of-xor-gates-in-binary-addition">Role of XOR Gates in
+Binary Addition</h2>
+<p>Binary addition requires computing two outputs for each bit position:
+a sum bit and a carry-out bit. The XOR gate directly computes the sum
+bit.</p>
+<h3 id="half-adder">Half Adder</h3>
+<p>A half adder adds two single binary digits, <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>. The sum <span
+class="math inline">\(S\)</span> and carry <span
+class="math inline">\(C\)</span> are given by:</p>
+<p><span class="math display">\[S = A \oplus B\]</span> <span
+class="math display">\[C = A \cdot B\]</span></p>
+<p>When <span class="math inline">\(A = 1\)</span> and <span
+class="math inline">\(B = 1\)</span>, the binary result is <span
+class="math inline">\(10_2\)</span>. The XOR gate produces <span
+class="math inline">\(S = 0\)</span> for the least significant bit,
+while an AND gate produces <span class="math inline">\(C = 1\)</span>
+for the carry bit.</p>
+<h3 id="full-adder">Full Adder</h3>
+<p>A full adder extends this by accepting a carry-in bit <span
+class="math inline">\(C_{\text{in}}\)</span> from a previous stage. It
+uses two XOR gates in series to compute the final sum bit:</p>
+<p><span class="math display">\[S = (A \oplus B) \oplus
+C_{\text{in}}\]</span></p>
+<p>The carry-out bit <span class="math inline">\(C_{\text{out}}\)</span>
+is computed using AND and OR gates:</p>
+<p><span class="math display">\[C_{\text{out}} = (A \cdot B) +
+(C_{\text{in}} \cdot (A \oplus B))\]</span></p>
+<p>Notice that the intermediate value <span class="math inline">\(A
+\oplus B\)</span> is reused in the carry-out logic, which reduces the
+total gate count in practical arithmetic logic units (ALUs). Multi-bit
+adders, such as ripple-carry adders, chain these full adders together to
+add arbitrarily wide binary numbers.</p>
+<h2 id="why-xor-is-indispensable">Why XOR Is Indispensable</h2>
+<p>In classical computing, the XOR gate bridges the gap between simple
+logical comparison and arithmetic. Its ability to perform modulo-2
+addition makes it the standard choice for parity trees, cyclic
+redundancy checks (CRCs), and the sum stage of binary adders, forming
+the backbone of reliable data transmission and processor arithmetic.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-do-xor-gates-enable-parity-checking-and-binary-addition';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

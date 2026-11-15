@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What were the 2TB and 4-partition limits of legacy MBR? - classical-computing</title>
+    <meta name="description" content="The legacy Master Boot Record partitioning scheme in classical computing was constrained by a maximum addressable disk size of roughly two terabytes and a limit of four primary partitions per drive. Both restrictions stemmed directly from the fixed 512-by">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/what-were-the-2-tb-and-4-partition-limits-of-legacy-mbr">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What were the 2TB and 4-partition limits of legacy MBR? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/what-were-the-2-tb-and-4-partition-limits-of-legacy-mbr" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The legacy Master Boot Record partitioning scheme in classical computing was constrained by a maximum addressable disk size of roughly two terabytes and a limit of four primary partitions per drive. Both restrictions stemmed directly from the fixed 512-by" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-were-the-2tb-and-4-partition-limits-of-legacy-mbr">What
+were the 2TB and 4-partition limits of legacy MBR?</h1>
+<p>The legacy Master Boot Record partitioning scheme in classical
+computing was constrained by a maximum addressable disk size of roughly
+two terabytes and a limit of four primary partitions per drive. Both
+restrictions stemmed directly from the fixed 512-byte layout of the
+first sector on a storage device and the 32-bit addressing fields
+designed during the early era of personal computers.</p>
+<h2 id="the-two-terabyte-disk-size-limitation">The Two-Terabyte Disk
+Size Limitation</h2>
+<p>The Master Boot Record (MBR) uses 32-bit values to store Logical
+Block Addressing (LBA) sector counts and starting offsets. With 32 bits,
+the maximum number of sectors that can be addressed is:</p>
+<p><span class="math display">\[2^{32} = 4,294,967,296 \text{
+sectors}\]</span></p>
+<p>Because traditional hard drives and legacy BIOS interfaces
+standardized on a sector size of <span
+class="math inline">\(512\)</span> bytes, the maximum addressable
+storage capacity is calculated as:</p>
+<p><span class="math display">\[2^{32} \times 512 \text{ bytes} =
+2,199,023,255,552 \text{ bytes}\]</span></p>
+<p>In binary units, this equals <span class="math inline">\(2\text{
+TiB}\)</span> (tebibytes), or approximately <span
+class="math inline">\(2.199\text{ TB}\)</span> in decimal terabytes. Any
+storage capacity beyond this boundary could not be addressed by standard
+32-bit MBR partition entries, leaving the remaining space unusable on
+drives larger than <span class="math inline">\(2\text{ TiB}\)</span>
+unless non-standard sector sizes such as <span
+class="math inline">\(4096\)</span> bytes were used.</p>
+<h2 id="the-four-primary-partition-limitation">The
+Four-Primary-Partition Limitation</h2>
+<p>The MBR resides in the very first <span
+class="math inline">\(512\)</span>-byte sector of a disk (LBA 0). Its
+internal structure is divided into three fixed regions:</p>
+<ul>
+<li><strong>Bootstrap code:</strong> <span
+class="math inline">\(446\)</span> bytes reserved for the bootloader
+program.</li>
+<li><strong>Partition table:</strong> <span
+class="math inline">\(64\)</span> bytes reserved for describing disk
+partitions.</li>
+<li><strong>Boot signature:</strong> <span
+class="math inline">\(2\)</span> bytes (<code>0x55AA</code>) at the end
+of the sector to mark it as bootable.</li>
+</ul>
+<p>Each partition entry in the partition table requires <span
+class="math inline">\(16\)</span> bytes to store metadata such as the
+boot indicator, starting and ending Cylinder-Head-Sector (CHS) values,
+partition type, starting LBA, and total sector count. Dividing the <span
+class="math inline">\(64\)</span>-byte partition table by <span
+class="math inline">\(16\)</span> bytes per entry yields:</p>
+<p><span class="math display">\[\frac{64}{16} = 4 \text{ primary
+partitions}\]</span></p>
+<h2 id="workarounds-and-modern-replacement">Workarounds and Modern
+Replacement</h2>
+<p>To work around the four-partition limit without breaking
+compatibility, the Extended Boot Record (EBR) mechanism was introduced.
+One of the four primary partition entries could be designated as an
+extended partition, which acted as a container holding a linked list of
+logical partitions. However, this workaround did not solve the <span
+class="math inline">\(2\text{ TiB}\)</span> capacity ceiling.</p>
+<p>Both limitations were eventually resolved by the GUID Partition Table
+(GPT) standard, which is part of the Unified Extensible Firmware
+Interface (UEFI) specification. GPT uses 64-bit LBA addressing and
+supports up to <span class="math inline">\(128\)</span> primary
+partitions by default on Windows systems, removing the practical
+constraints of legacy MBR.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/what-were-the-2-tb-and-4-partition-limits-of-legacy-mbr';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

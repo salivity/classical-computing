@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does Processing-in-Memory Embed Logic in DRAM? - classical-computing</title>
+    <meta name="description" content="Processing-in-Memory architecture addresses the memory bus bottleneck in classical computing by placing computational logic directly inside or adjacent to DRAM arrays. Instead of transferring massive datasets back and forth between main memory and the pro">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-processing-in-memory-embed-logic-in-dram">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does Processing-in-Memory Embed Logic in DRAM? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-processing-in-memory-embed-logic-in-dram" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Processing-in-Memory architecture addresses the memory bus bottleneck in classical computing by placing computational logic directly inside or adjacent to DRAM arrays. Instead of transferring massive datasets back and forth between main memory and the pro" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-processing-in-memory-embed-logic-in-dram">How Does
+Processing-in-Memory Embed Logic in DRAM?</h1>
+<p>Processing-in-Memory architecture addresses the memory bus bottleneck
+in classical computing by placing computational logic directly inside or
+adjacent to DRAM arrays. Instead of transferring massive datasets back
+and forth between main memory and the processor, PIM executes operations
+where the data already resides. This approach reduces data movement,
+lowers energy consumption, and increases effective memory bandwidth for
+data-intensive workloads.</p>
+<h2 id="the-memory-bus-bottleneck-in-classical-computing">The Memory Bus
+Bottleneck in Classical Computing</h2>
+<p>In traditional von Neumann architectures, the central processing unit
+and main memory are physically separated and connected by a shared
+memory bus. Every arithmetic or logical operation requires fetching
+operands from DRAM across this bus, processing them in CPU registers,
+and writing results back.</p>
+<p>Because processor speeds have scaled much faster than memory access
+speeds, the bus has become a severe performance limiter. Data movement
+often consumes more time and energy than the computation itself. If a
+workload processes <span class="math inline">\(N\)</span> bytes of data
+with low arithmetic intensity, the total execution time <span
+class="math inline">\(T\)</span> is dominated by memory transfer
+latency:</p>
+<p><span class="math display">\[T \approx
+\frac{N}{B_{\text{bus}}}\]</span></p>
+<p>where <span class="math inline">\(B_{\text{bus}}\)</span> represents
+the peak bandwidth of the external memory channel.</p>
+<h2 id="dram-array-organization">DRAM Array Organization</h2>
+<p>To understand how PIM embeds logic, it is necessary to look at how a
+DRAM chip is structured. A DRAM die is divided into multiple banks, and
+each bank consists of two-dimensional subarrays of memory cells.</p>
+<p>Each memory cell stores a single bit as an electrical charge in a
+capacitor, accessed through an access transistor. Cells in the same row
+share a wordline, while cells in the same column share a bitline. At the
+edge of each subarray sits a row buffer composed of sense amplifiers,
+which detect and amplify the small voltage changes on the bitlines when
+a row is activated.</p>
+<h2 id="embedding-logic-inside-dram-arrays">Embedding Logic Inside DRAM
+Arrays</h2>
+<p>PIM architectures embed computation at different levels of the DRAM
+hierarchy, depending on the target workload and hardware
+constraints.</p>
+<h3 id="analog-charge-sharing-in-subarrays">Analog Charge-Sharing in
+Subarrays</h3>
+<p>Some PIM designs perform bitwise operations directly within the DRAM
+subarray without adding complex digital logic. By simultaneously
+activating multiple wordlines in the same subarray, the charge stored in
+different cells shares across the bitline.</p>
+<p>The sense amplifier then resolves the resulting voltage to a logic
+high or low. For example, activating three rows simultaneously can
+compute a bitwise majority function:</p>
+<p><span class="math display">\[\text{MAJ}(A, B, C) = (A \land B) \lor
+(B \land C) \lor (A \land C)\]</span></p>
+<p>By setting one of the rows to a fixed <span
+class="math inline">\(0\)</span> or <span
+class="math inline">\(1\)</span>, the same mechanism performs bitwise
+AND or OR operations across an entire row of thousands of bits in
+parallel.</p>
+<h3 id="digital-logic-near-sense-amplifiers-and-banks">Digital Logic
+Near Sense Amplifiers and Banks</h3>
+<p>Other PIM implementations place lightweight digital processing
+units—such as arithmetic logic units (ALUs), vector units, or
+programmable cores—directly next to the row buffers or at the DRAM bank
+level.</p>
+<p>Because these units sit behind the external I/O pins, they access
+data at the full internal bank bandwidth rather than the narrow external
+bus. Multiple banks can operate concurrently, multiplying aggregate
+throughput by the number of banks <span
+class="math inline">\(K\)</span>:</p>
+<p><span class="math display">\[B_{\text{internal}} = K \times
+B_{\text{bank}}\]</span></p>
+<h3 id="3d-stacked-memory-logic-layers">3D-Stacked Memory Logic
+Layers</h3>
+<p>In 3D-stacked memory technologies such as High Bandwidth Memory
+(HBM), multiple DRAM dies are stacked vertically and connected using
+Through-Silicon Vias (TSVs). A dedicated logic die at the base of the
+stack houses processing elements. The dense vertical interconnects
+provide high-bandwidth, low-energy pathways between the memory layers
+and the logic layer.</p>
+<h2 id="overcoming-classical-limitations">Overcoming Classical
+Limitations</h2>
+<p>By keeping data inside the DRAM chip during computation, PIM
+eliminates unnecessary round-trip transfers over the memory bus. The CPU
+offloads data-parallel kernels—such as vector additions, matrix-vector
+multiplications, and database scans—to the memory-side logic and
+retrieves only the final aggregated results. This division of labor
+relieves pressure on the memory channel and improves both system
+throughput and energy efficiency.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-processing-in-memory-embed-logic-in-dram';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

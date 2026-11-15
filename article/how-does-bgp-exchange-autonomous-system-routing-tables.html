@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does BGP Exchange Autonomous System Routing Tables? - classical-computing</title>
+    <meta name="description" content="The Border Gateway Protocol is the core routing protocol that connects independent networks, known as autonomous systems, across the global internet. By establishing reliable transport sessions between border routers, BGP exchanges reachability informatio">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-bgp-exchange-autonomous-system-routing-tables">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does BGP Exchange Autonomous System Routing Tables? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-bgp-exchange-autonomous-system-routing-tables" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The Border Gateway Protocol is the core routing protocol that connects independent networks, known as autonomous systems, across the global internet. By establishing reliable transport sessions between border routers, BGP exchanges reachability informatio" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-bgp-exchange-autonomous-system-routing-tables">How Does
+BGP Exchange Autonomous System Routing Tables?</h1>
+<p>The Border Gateway Protocol is the core routing protocol that
+connects independent networks, known as autonomous systems, across the
+global internet. By establishing reliable transport sessions between
+border routers, BGP exchanges reachability information and policy-driven
+path attributes rather than raw link metrics. This mechanism allows
+thousands of autonomous systems to maintain a coherent view of global
+internet routes without relying on a central authority.</p>
+<h2 id="autonomous-systems-and-bgp-sessions">Autonomous Systems and BGP
+Sessions</h2>
+<p>The global internet is divided into tens of thousands of autonomous
+systems, each operated by an internet service provider, enterprise, or
+cloud network under a single administrative domain. Every autonomous
+system is identified by a unique Autonomous System Number (ASN) and owns
+specific blocks of IP address prefixes.</p>
+<p>To exchange routing information, routers at the edges of these
+networks form BGP peering sessions. Unlike interior gateway protocols
+such as OSPF or IS-IS that discover neighbors automatically on local
+links, BGP peers must be explicitly configured. BGP runs over TCP on
+port 179, which provides reliable, ordered delivery of routing updates
+without requiring BGP itself to implement packet retransmission or
+fragmentation.</p>
+<p>There are two primary types of BGP sessions:</p>
+<ul>
+<li><strong>External BGP (eBGP)</strong>: Runs between routers in
+different autonomous systems to exchange external reachability
+information.</li>
+<li><strong>Internal BGP (iBGP)</strong>: Runs between routers within
+the same autonomous system to distribute externally learned routes
+across the internal network.</li>
+</ul>
+<h2 id="establishing-a-peering-relationship">Establishing a Peering
+Relationship</h2>
+<p>Before any routing tables are exchanged, two BGP speakers must
+complete a finite state machine handshake over their TCP connection.
+Once the TCP three-way handshake succeeds, each router sends an
+<code>OPEN</code> message containing its BGP version, ASN, hold time,
+and BGP identifier.</p>
+<p>If both routers accept the parameters, they respond with
+<code>KEEPALIVE</code> messages to confirm the session is active. From
+that point forward, routers periodically exchange <code>KEEPALIVE</code>
+messages to verify that the peer remains reachable. If a router fails to
+receive a <code>KEEPALIVE</code> or <code>UPDATE</code> message before
+the hold timer expires, it tears down the session and withdraws all
+routes learned from that peer.</p>
+<h2 id="exchanging-routing-tables-with-update-messages">Exchanging
+Routing Tables with UPDATE Messages</h2>
+<p>When a BGP session first reaches the established state, the peers
+exchange their entire relevant routing tables. After this initial
+synchronization, BGP operates incrementally: routers only send
+<code>UPDATE</code> messages when routes are added, modified, or
+withdrawn.</p>
+<p>Each <code>UPDATE</code> message can contain:</p>
+<ul>
+<li><strong>Withdrawn Routes</strong>: A list of IP prefixes that are no
+longer reachable through the advertising router.</li>
+<li><strong>Network Layer Reachability Information (NLRI)</strong>:
+Newly advertised or updated IP prefixes.</li>
+<li><strong>Path Attributes</strong>: Metadata describing the route,
+such as the <code>AS_PATH</code>, <code>NEXT_HOP</code>, and
+<code>LOCAL_PREF</code>.</li>
+</ul>
+<p>The <code>AS_PATH</code> attribute is fundamental to BGP's operation.
+As a route advertisement travels from one autonomous system to another,
+each transit AS prepends its own ASN to the <code>AS_PATH</code>. This
+creates an ordered list of autonomous systems that the traffic must
+traverse to reach the destination prefix.</p>
+<h2 id="loop-prevention-and-path-selection">Loop Prevention and Path
+Selection</h2>
+<p>Because BGP operates across an arbitrary mesh of interconnected
+networks, preventing routing loops is critical. When a router receives
+an <code>UPDATE</code> message, it inspects the <code>AS_PATH</code>
+attribute. If the router sees its own ASN already listed in the
+<code>AS_PATH</code>, it immediately discards the route, ensuring that
+routing loops cannot form between autonomous systems.</p>
+<p>When a router learns multiple valid paths to the same destination
+prefix, it runs the BGP best-path selection algorithm. Rather than
+picking the shortest physical path, BGP evaluates attributes in a strict
+order of preference, typically prioritizing:</p>
+<ol type="1">
+<li>Highest <code>LOCAL_PREF</code> (an internal policy metric set by
+the network operator).</li>
+<li>Shortest <code>AS_PATH</code> (fewest autonomous systems
+traversed).</li>
+<li>Lowest <code>ORIGIN</code> type and Multi-Exit Discriminator
+(<code>MED</code>).</li>
+<li>Preference for eBGP-learned routes over iBGP-learned routes.</li>
+<li>Lowest IGP metric to the <code>NEXT_HOP</code> address.</li>
+</ol>
+<p>Once the best path is selected, it is installed into the router's
+Routing Information Base (RIB) and Forwarding Information Base (FIB),
+and then advertised to other eligible BGP peers according to the
+network's routing policies.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-bgp-exchange-autonomous-system-routing-tables';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

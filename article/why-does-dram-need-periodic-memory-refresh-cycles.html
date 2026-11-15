@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Does DRAM Need Periodic Memory Refresh Cycles? - classical-computing</title>
+    <meta name="description" content="Dynamic Random-Access Memory (DRAM) relies on tiny capacitors to store binary data as electrical charge, but these capacitors naturally lose their charge over time due to leakage currents. Without periodic refresh cycles that read and rewrite the stored d">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/why-does-dram-need-periodic-memory-refresh-cycles">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why Does DRAM Need Periodic Memory Refresh Cycles? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/why-does-dram-need-periodic-memory-refresh-cycles" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Dynamic Random-Access Memory (DRAM) relies on tiny capacitors to store binary data as electrical charge, but these capacitors naturally lose their charge over time due to leakage currents. Without periodic refresh cycles that read and rewrite the stored d" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-does-dram-need-periodic-memory-refresh-cycles">Why Does DRAM
+Need Periodic Memory Refresh Cycles?</h1>
+<p>Dynamic Random-Access Memory (DRAM) relies on tiny capacitors to
+store binary data as electrical charge, but these capacitors naturally
+lose their charge over time due to leakage currents. Without periodic
+refresh cycles that read and rewrite the stored data, the voltage
+representing each bit would decay below recognizable thresholds, leading
+to silent data corruption and system instability.</p>
+<h2 id="how-dram-stores-information">How DRAM Stores Information</h2>
+<p>In classical computing, a single DRAM cell consists of one transistor
+and one capacitor (1T1C). The capacitor holds an electrical charge that
+represents a binary value: a charged capacitor typically represents a
+logical 1, while a discharged capacitor represents a logical 0. The
+transistor acts as a switch that connects the capacitor to a bitline,
+allowing the memory controller to read or write the stored charge.</p>
+<p>The amount of charge <span class="math inline">\(Q\)</span> stored in
+a capacitor is directly proportional to its capacitance <span
+class="math inline">\(C\)</span> and the applied voltage <span
+class="math inline">\(V\)</span>:</p>
+<p><span class="math display">\[Q = C \cdot V\]</span></p>
+<p>Because modern memory chips pack billions of cells into a tiny area,
+each cell's capacitor is extremely small, often measured in femtofarads
+(<span class="math inline">\(10^{-15}\text{ F}\)</span>). This means
+each cell holds only a minuscule amount of charge, making it highly
+sensitive to even tiny electrical losses.</p>
+<h2 id="the-physics-of-charge-leakage">The Physics of Charge
+Leakage</h2>
+<p>No capacitor or transistor is an ideal insulator. Even when the
+access transistor is turned off, small leakage currents continuously
+drain charge from the capacitor. These losses occur through several
+physical mechanisms:</p>
+<ul>
+<li><strong>Subthreshold leakage:</strong> Current continues to trickle
+through the access transistor even when it is in the off state.</li>
+<li><strong>Gate-oxide tunneling:</strong> Electrons
+quantum-mechanically tunnel through the ultra-thin insulating layer of
+the transistor.</li>
+<li><strong>Junction leakage:</strong> Charge leaks across the p-n
+junction between the capacitor's storage node and the silicon
+substrate.</li>
+</ul>
+<p>As charge leaks away, the voltage across the capacitor decays
+exponentially over time:</p>
+<p><span class="math display">\[V(t) = V_0 e^{-t / (R_{\text{leak}}
+C)}\]</span></p>
+<p>Here, <span class="math inline">\(V_0\)</span> is the initial
+voltage, <span class="math inline">\(R_{\text{leak}}\)</span> is the
+effective leakage resistance, and <span class="math inline">\(t\)</span>
+is the elapsed time. Once the voltage drops below the sense amplifier's
+detection threshold, the memory controller can no longer reliably
+distinguish a 1 from a 0.</p>
+<h2 id="why-refresh-cycles-are-mandatory">Why Refresh Cycles Are
+Mandatory</h2>
+<p>To prevent data loss, DRAM must undergo periodic refresh cycles.
+During a refresh, the memory controller activates a row of cells, reads
+the weakened charge using sense amplifiers, and immediately writes the
+full voltage back into the capacitors. This restores each cell to its
+original logic level before the charge decays too far.</p>
+<p>Standard DRAM specifications typically require every row to be
+refreshed within a retention window, commonly <span
+class="math inline">\(64\text{ ms}\)</span> (or <span
+class="math inline">\(32\text{ ms}\)</span> at higher temperatures).
+Because leakage currents increase exponentially with temperature, higher
+operating temperatures accelerate charge loss and require more frequent
+refreshes.</p>
+<h2 id="trade-offs-in-system-performance">Trade-offs in System
+Performance</h2>
+<p>While mandatory for data integrity, refresh cycles introduce
+overhead. During a refresh operation, the affected memory bank cannot
+serve normal read or write requests from the processor, which slightly
+reduces available memory bandwidth and increases latency. Additionally,
+the continuous charging and discharging of capacitors consumes power,
+even when the system is idle. Despite these costs, periodic refreshing
+remains an essential trade-off that enables DRAM to achieve high density
+and low cost per bit compared to static memory alternatives like
+SRAM.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/why-does-dram-need-periodic-memory-refresh-cycles';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

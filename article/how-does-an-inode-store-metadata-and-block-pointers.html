@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does an Inode Store Metadata and Block Pointers? - classical-computing</title>
+    <meta name="description" content="An inode, short for index node, is a fundamental data structure in Unix and Unix-like file systems that stores all the attributes and disk location pointers for a file or directory, completely separate from its human-readable filename. By decoupling a fil">
+    <link rel="canonical" href="https://salivity.github.io/classical-computing/article/how-does-an-inode-store-metadata-and-block-pointers">
+    <link rel="search" type="application/opensearchdescription+xml" title="classical-computing" href="/classical-computing/opensearch.xml">
+    <link rel="icon" href="/classical-computing/favicon.ico">
+    <link rel="stylesheet" href="/classical-computing/css/style.css">
+    <link media="print" rel="stylesheet" href="/classical-computing/css/print.css">
+    <script src="/classical-computing/js/fuse.min.js"></script>
+    <script src="/classical-computing/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does an Inode Store Metadata and Block Pointers? - classical-computing" />
+    <meta property="og:url" content="https://salivity.github.io/classical-computing/article/how-does-an-inode-store-metadata-and-block-pointers" />
+    <meta property="og:image" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/classical-computing/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="An inode, short for index node, is a fundamental data structure in Unix and Unix-like file systems that stores all the attributes and disk location pointers for a file or directory, completely separate from its human-readable filename. By decoupling a fil" />
+    <link rel="manifest" href="/classical-computing/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/classical-computing/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>classical-computing</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/classical-computing/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-an-inode-store-metadata-and-block-pointers">How Does an
+Inode Store Metadata and Block Pointers?</h1>
+<p>An inode, short for index node, is a fundamental data structure in
+Unix and Unix-like file systems that stores all the attributes and disk
+location pointers for a file or directory, completely separate from its
+human-readable filename. By decoupling a file's identity and physical
+storage layout from its name, the file system can support features like
+hard links, atomic renames, and consistent permission enforcement.</p>
+<h2 id="separation-of-filenames-and-inodes">Separation of Filenames and
+Inodes</h2>
+<p>In classical Unix file systems, a directory is simply a special type
+of file that contains a mapping table of filenames to inode numbers.
+When a user or program accesses a file by its path, the kernel traverses
+the directory entries to resolve the filename into its corresponding
+integer inode number. Once the inode number is found, the filename is no
+longer needed to read, write, or manage the file's data.</p>
+<p>Because the filename lives in the directory entry rather than the
+inode itself, multiple filenames in the same or different directories
+can point to the exact same inode number. This mechanism is known as a
+hard link. The inode tracks how many directory entries reference it
+using a link count field, and the file's data blocks are only freed when
+this link count drops to zero and no processes have the file open.</p>
+<h2 id="metadata-stored-inside-an-inode">Metadata Stored Inside an
+Inode</h2>
+<p>Every inode has a fixed size, typically 128 or 256 bytes depending on
+the file system implementation, and resides in a dedicated inode table
+on disk. Inside this structure, the file system records essential
+metadata about the object:</p>
+<ul>
+<li><strong>File type and permissions</strong>: Indicates whether the
+object is a regular file, directory, symbolic link, or device node,
+along with read, write, and execute bits for the owner, group, and
+others.</li>
+<li><strong>Ownership</strong>: Numeric user ID (UID) and group ID (GID)
+of the file's owner.</li>
+<li><strong>Timestamps</strong>: Creation or change time
+(<code>ctime</code>), last modification time (<code>mtime</code>), and
+last access time (<code>atime</code>).</li>
+<li><strong>Size and link count</strong>: The total size of the file in
+bytes and the number of hard links pointing to the inode.</li>
+</ul>
+<h2 id="direct-and-indirect-block-pointers">Direct and Indirect Block
+Pointers</h2>
+<p>To locate the actual file contents on the storage device, an inode
+contains an array of block pointers. In classical Unix file systems such
+as the Berkeley Fast File System (FFS) or ext2, an inode typically holds
+15 pointers:</p>
+<ol type="1">
+<li><strong>Direct pointers</strong>: The first 12 pointers reference
+data blocks directly. For small files, the kernel can read the data in a
+single disk lookup after reading the inode.</li>
+<li><strong>Single indirect pointer</strong>: The 13th pointer points to
+a block that contains an array of block addresses, rather than file
+data.</li>
+<li><strong>Double indirect pointer</strong>: The 14th pointer points to
+a block of pointers, each of which points to another block of pointers
+to data blocks.</li>
+<li><strong>Triple indirect pointer</strong>: The 15th pointer adds a
+third level of indirection for very large files.</li>
+</ol>
+<p>If a block size is <span class="math inline">\(B\)</span> bytes and
+each block pointer is <span class="math inline">\(P\)</span> bytes, a
+single indirect block can address <span
+class="math inline">\(\frac{B}{P}\)</span> data blocks. Consequently,
+the maximum number of data blocks addressable by direct, single, double,
+and triple indirect pointers is:</p>
+<p><span class="math display">\[N_{\text{blocks}} = 12 +
+\left(\frac{B}{P}\right) + \left(\frac{B}{P}\right)^2 +
+\left(\frac{B}{P}\right)^3\]</span></p>
+<p>This hierarchical pointer design keeps the inode compact for small
+files while still allowing the file system to scale to large files
+without wasting metadata space.</p></article>
+        <div id='disqus_thread'></div>
+        <script>
+
+            var disqus_config = function () {
+                this.page.url =         'https://salivity.github.io/classical-computing/article/how-does-an-inode-store-metadata-and-block-pointers';  
+                //this.page.identifier =  PAGE_IDENTIFIER; 
+            };
+            
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://salivity-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="https://smvc.dev/contact">Contact</a></li>
+                <li><a href="/classical-computing/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/classical-computing/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>
